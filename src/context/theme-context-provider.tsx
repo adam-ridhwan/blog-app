@@ -41,13 +41,16 @@ export default function ThemeContextProvider({ children }: { children: ReactNode
   }, []);
 
   useEffect(() => {
-    if (!mounted || !ref.current) return;
-
+    if (!mounted || !ref.current || !darkQuery) return;
     const div = ref.current;
 
-    if (theme === 'system' && darkQuery) darkQuery.matches ? div.classList.add('dark') : div.classList.remove('dark');
-    if (theme === 'dark') div.classList.add('dark');
-    if (theme === 'light') div.classList.remove('dark');
+    const themeActions = {
+      system: () => (darkQuery.matches ? div.classList.add('dark') : div.classList.remove('dark')),
+      dark: () => div.classList.add('dark'),
+      light: () => div.classList.remove('dark'),
+    };
+
+    themeActions[theme] && themeActions[theme]();
   }, [theme, mounted, darkQuery]);
 
   useEffect(() => {
@@ -57,7 +60,6 @@ export default function ThemeContextProvider({ children }: { children: ReactNode
       if (!ref.current) return;
 
       const div = ref.current;
-
       darkQuery.matches ? div.classList.add('dark') : div.classList.remove('dark');
     };
 
