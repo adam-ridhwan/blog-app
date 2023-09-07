@@ -4,7 +4,7 @@ import { Menu } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import AuthLinks from '@/components/auth-links';
-import NavBarSide from '@/components/nav-bar-side';
+import NavBarMobile from '@/components/nav-bar-mobile';
 import ThemeToggle from '@/components/theme-toggle';
 
 const NavBar = () => {
@@ -32,7 +32,7 @@ const NavBar = () => {
             </Link>
             <AuthLinks />
           </div>
-          <NavBarSide />
+          <NavBarMobile />
         </div>
       </div>
     </>

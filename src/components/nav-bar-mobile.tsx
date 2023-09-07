@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import AuthLinks from '@/components/auth-links';
 
-const NavBarSide = () => {
+const NavBarMobile = () => {
   return (
     <>
       <Sheet>
@@ -16,10 +16,10 @@ const NavBarSide = () => {
             <Menu />
           </Button>
         </SheetTrigger>
-        <SheetContent>
+        <SheetContent side='bottom' className='flex h-[450px] items-center justify-end'>
           <SheetHeader>
             <SheetTitle></SheetTitle>
-            <SheetDescription className='flex flex-col gap-3 text-2xl'>
+            <SheetDescription className='flex flex-col gap-10 text-right text-3xl'>
               <Link href='' className=''>
                 Homepage
               </Link>
@@ -38,4 +38,4 @@ const NavBarSide = () => {
   );
 };
 
-export default NavBarSide;
+export default NavBarMobile;
