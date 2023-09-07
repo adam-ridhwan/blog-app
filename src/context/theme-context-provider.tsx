@@ -15,7 +15,7 @@ import {
 export type ThemeContextType = {
   theme: Theme;
   setTheme: Dispatch<SetStateAction<Theme>>;
-  ref: RefObject<HTMLDivElement>;
+  divRef: RefObject<HTMLDivElement>;
 };
 
 export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -32,7 +32,7 @@ const getThemeFromLocalStorage = (): Theme => {
 export default function ThemeContextProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(getThemeFromLocalStorage());
   const [mounted, setMounted] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const divRef = useRef<HTMLDivElement>(null);
   const [darkQuery, setDarkQuery] = useState<MediaQueryList | null>(null);
 
   useEffect(() => {
@@ -41,9 +41,9 @@ export default function ThemeContextProvider({ children }: { children: ReactNode
   }, []);
 
   useEffect(() => {
-    if (!mounted || !ref.current || !darkQuery) return;
-    const div = ref.current;
+    if (!mounted || !divRef.current || !darkQuery) return;
 
+    const div = divRef.current;
     const themeActions = {
       system: () => (darkQuery.matches ? div.classList.add('dark') : div.classList.remove('dark')),
       dark: () => div.classList.add('dark'),
@@ -57,9 +57,9 @@ export default function ThemeContextProvider({ children }: { children: ReactNode
     if (theme !== 'system' || !darkQuery) return;
 
     const handleChange = () => {
-      if (!ref.current) return;
+      if (!divRef.current) return;
 
-      const div = ref.current;
+      const div = divRef.current;
       darkQuery.matches ? div.classList.add('dark') : div.classList.remove('dark');
     };
 
@@ -69,7 +69,7 @@ export default function ThemeContextProvider({ children }: { children: ReactNode
 
   return (
     <>
-      <ThemeContext.Provider value={{ theme, setTheme, ref }}>{children}</ThemeContext.Provider>
+      <ThemeContext.Provider value={{ theme, setTheme, divRef }}>{children}</ThemeContext.Provider>
     </>
   );
 }

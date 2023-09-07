@@ -6,7 +6,7 @@ import { ChevronRight, Monitor, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const ThemeToggle = () => {
-  const { theme, setTheme, ref } = useThemeContext();
+  const { theme, setTheme } = useThemeContext();
 
   const themeIcons = {
     light: <Sun className='h-4 w-4' />,
