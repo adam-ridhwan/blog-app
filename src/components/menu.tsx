@@ -1,7 +1,7 @@
 const Menu = () => {
   return (
     <>
-      <div>menu</div>
+      <div className='flex-[2]'>Menu</div>
     </>
   );
 };

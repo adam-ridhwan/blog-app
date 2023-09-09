@@ -12,7 +12,7 @@ const Featured = () => {
 
         <div className='mt-14 flex items-center gap-8'>
           <div className='relative h-[500px] flex-1'>
-            <Image src='/p1.jpeg' alt='' fill className='object-cover' />
+            <Image src='/sand.jpg' alt='' fill className='object-cover' />
           </div>
 
           <div className='flex flex-1 flex-col gap-5'>

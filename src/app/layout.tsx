@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={`${inter.className}`}>
         <ThemeContextProvider>
           <ThemeProvider>
-            <main className='h-[100dvh] w-full max-w-[100vw] overflow-hidden'>
+            <main className='min-h-screen w-full max-w-[100vw] overflow-hidden'>
               <div className='container mx-auto'>
                 <NavBar />
                 {children}

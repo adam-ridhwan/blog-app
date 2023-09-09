@@ -1,55 +1,28 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import { capitalize } from '@/util';
+import { cn } from '@/util/cn';
 
 const CategoryList = () => {
+  const categories = ['lifestyle', 'health', 'coding', 'business', 'fashion', 'education'];
+  const colors = ['bg-blue', 'bg-pink', 'bg-green', 'bg-red', 'bg-orange', 'bg-purple'];
+
   return (
     <>
       <div className=''>
-        <h1 className='my-12 text-2xl font-medium'>Popular categories</h1>
+        <h1 className='mb-6 mt-12 text-2xl font-medium'>Popular categories</h1>
 
-        <div className='flex flex-wrap justify-between'>
-          <Link
-            href='/blog?category=style'
-            className='flex h-[80px] w-[15%] items-center justify-center gap-2 rounded-md'
-          >
-            <Image src='/style.png' alt='' width={32} height={32} className='rounded-full' />
-            Style
-          </Link>
-          <Link
-            href='/blog?category=fashion'
-            className='flex h-[80px] w-[15%] items-center justify-center gap-2 rounded-md'
-          >
-            <Image src='/style.png' alt='' width={32} height={32} className='rounded-full' />
-            Fashion
-          </Link>
-          <Link
-            href='/blog?categoryegory=food'
-            className='flex h-[80px] w-[15%] items-center justify-center gap-2 rounded-md'
-          >
-            <Image src='/style.png' alt='' width={32} height={32} className='rounded-full' />
-            Food
-          </Link>
-          <Link
-            href='/blog?category=travel'
-            className='flex h-[80px] w-[15%] items-center justify-center gap-2 rounded-md'
-          >
-            <Image src='/style.png' alt='' width={32} height={32} className='rounded-full' />
-            Travel
-          </Link>
-          <Link
-            href='/blog?category=culture'
-            className='flex h-[80px] w-[15%] items-center justify-center gap-2 rounded-md'
-          >
-            <Image src='/style.png' alt='' width={32} height={32} className='rounded-full' />
-            Culture
-          </Link>
-          <Link
-            href='/blog?category=coding'
-            className='flex h-[80px] w-[15%] items-center justify-center gap-2 rounded-md'
-          >
-            <Image src='/style.png' alt='' width={32} height={32} className='rounded-full' />
-            Coding
-          </Link>
+        <div className='mb-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'>
+          {categories.map((category, index) => {
+            return (
+              <Link
+                key={category}
+                href={`/blog?category=${category}`}
+                className={cn(`flex h-[80px] min-w-[150px] items-center justify-center rounded-md`, `${colors[index]}`)}
+              >
+                <span className='whitespace-nowrap text-lg text-primary'>{capitalize(category)}</span>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </>

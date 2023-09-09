@@ -1,17 +1,6 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { ClassValue, clsx } from 'clsx';
-import { cleanEnv, str } from 'envalid';
-import { twMerge } from 'tailwind-merge';
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
-//* ──────────────────────────────────────────────────��
-
-export const env = cleanEnv(process.env, {});
-
-//* ──────────────────────────────────────────────────��
 
 export const MOBILE = 'tablet';
 export const TABLET = 'desktop';
