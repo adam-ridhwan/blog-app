@@ -51,6 +51,13 @@ module.exports = {
         red: 'hsl(var(--red))',
         orange: 'hsl(var(--orange))',
         purple: 'hsl(var(--purple))',
+
+        darkBlue: 'hsl(var(--dark-blue))',
+        darkPink: 'hsl(var(--dark-pink))',
+        darkGreen: 'hsl(var(--dark-green))',
+        darkRed: 'hsl(var(--dark-red))',
+        darkOrange: 'hsl(var(--dark-orange))',
+        darkPurple: 'hsl(var(--dark-purple))',
       },
       borderRadius: {
         lg: 'var(--radius)',

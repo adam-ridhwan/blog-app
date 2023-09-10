@@ -1,18 +1,11 @@
-import CardList from '@/components/card-list';
-import CategoryList from '@/components/category-list';
-import Featured from '@/components/featured';
-import Menu from '@/components/menu';
+import MainSection from '@/components/main-section';
+import SideMenu from '@/components/side-menu';
 
 export default function Home() {
   return (
-    <div className=''>
-      <Featured />
-      <CategoryList />
-
-      <div className='flex flex-row gap-10'>
-        <CardList />
-        <Menu />
-      </div>
+    <div className='container flex flex-col lg:flex-row'>
+      <MainSection />
+      <SideMenu />
     </div>
   );
 }

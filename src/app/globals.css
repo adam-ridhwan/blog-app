@@ -5,7 +5,7 @@
 
 @layer base {
     :root {
-        --background: 0 0% 100%;
+        --background: 0 0% 98%;
         --foreground: 20 14.3% 4.1%;
 
         --card: 0 0% 100%;
@@ -41,11 +41,18 @@
         --red: 12, 100%, 67%, 0.21;
         --orange: 33, 100%, 65%, 0.27;
         --purple: 245, 100%, 65%, 0.19;
+
+        --dark-blue: 201, 100%, 47%, 0.19;
+        --dark-pink: 313, 53%, 49%, 0.19;
+        --dark-green: 122, 29%, 41%, 0.2;
+        --dark-red: 12, 100%, 47%, 0.21;
+        --dark-orange: 33, 100%, 45%, 0.27;
+        --dark-purple: 245, 100%, 45%, 0.19;
     }
 
 
     .dark {
-        --background: 20 14.3% 4.1%;
+        --background: 20 14.3% 6.1%;
         --foreground: 60 9.1% 97.8%;
 
         --card: 20 14.3% 4.1%;
@@ -72,6 +79,20 @@
         --border: 12 6.5% 15.1%;
         --input: 12 6.5% 15.1%;
         --ring: 24 5.7% 82.9%;
+
+        --blue: 201, 100%, 67%, 0.19;
+        --pink: 313, 53%, 69%, 0.19;
+        --green: 122, 29%, 61%, 0.2;
+        --red: 12, 100%, 67%, 0.21;
+        --orange: 33, 100%, 65%, 0.27;
+        --purple: 245, 100%, 70%, 0.19;
+
+        --dark-blue: 201, 100%, 27%;
+        --dark-pink: 313, 53%, 29%;
+        --dark-green: 122, 29%, 21%;
+        --dark-red: 12, 100%, 27%;
+        --dark-orange: 33, 100%, 25%;
+        --dark-purple: 245, 100%, 30%;
     }
 }
 
@@ -80,7 +101,27 @@
         @apply border-border;
     }
 
-    main {
+    .main-container {
         @apply bg-background text-foreground;
     }
+}
+
+
+.multi-line-ellipsis {
+    display: none;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    max-height: 4.5em;
+}
+
+@media (min-width: 768px) {
+    .multi-line-ellipsis {
+        display: -webkit-box !important;
+    }
+}
+
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
 }

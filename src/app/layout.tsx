@@ -6,8 +6,7 @@ import { Inter } from 'next/font/google';
 import ThemeContextProvider from '@/context/theme-context-provider';
 import ThemeProvider from '@/provider/theme-provider';
 
-import Footer from '@/components/footer';
-import NavBar from '@/components/nav-bar';
+import NavBarDesktop from '@/components/nav-bar-desktop';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,16 +18,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang='en'>
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} max-h-screen min-h-screen w-full max-w-[100vw]`}>
         <ThemeContextProvider>
           <ThemeProvider>
-            <main className='min-h-screen w-full max-w-[100vw] overflow-hidden'>
-              <div className='container mx-auto'>
-                <NavBar />
-                {children}
-                <Footer />
-              </div>
-            </main>
+            <div className='main-container '>
+              <NavBarDesktop />
+              {children}
+            </div>
           </ThemeProvider>
         </ThemeContextProvider>
       </body>
