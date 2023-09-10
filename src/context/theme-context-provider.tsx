@@ -43,11 +43,11 @@ export default function ThemeContextProvider({ children }: { children: ReactNode
   useEffect(() => {
     if (!mounted || !divRef.current || !darkQuery) return;
 
-    const div = divRef.current;
+    const bodyElement = document.body;
     const themeActions = {
-      system: () => (darkQuery.matches ? div.classList.add('dark') : div.classList.remove('dark')),
-      dark: () => div.classList.add('dark'),
-      light: () => div.classList.remove('dark'),
+      system: () => (darkQuery.matches ? bodyElement.classList.add('dark') : bodyElement.classList.remove('dark')),
+      dark: () => bodyElement.classList.add('dark'),
+      light: () => bodyElement.classList.remove('dark'),
     };
 
     themeActions[theme] && themeActions[theme]();
@@ -59,8 +59,8 @@ export default function ThemeContextProvider({ children }: { children: ReactNode
     const handleChange = () => {
       if (!divRef.current) return;
 
-      const div = divRef.current;
-      darkQuery.matches ? div.classList.add('dark') : div.classList.remove('dark');
+      const bodyElement = document.body;
+      darkQuery.matches ? bodyElement.classList.add('dark') : bodyElement.classList.remove('dark');
     };
 
     darkQuery.addEventListener('change', handleChange);

@@ -20,7 +20,7 @@ const PopularCategories = () => {
   return (
     <>
       <div
-        className='hide-scrollbar absolute mb-10 flex w-0 flex-row gap-2 overflow-x-auto'
+        className='hide-scrollbar absolute top-[40px] mb-10 flex w-0 flex-row gap-2 overflow-x-auto'
         style={{ width: `${width}px` }}
       >
         {categories.map(category => {

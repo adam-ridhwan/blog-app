@@ -45,7 +45,7 @@ const MainSection = () => {
           placeholder
         </div>
 
-        <div className='mt-[70px]'>
+        <div className='mt-[120px]'>
           {recentPosts.map(post => {
             return (
               <>
