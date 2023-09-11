@@ -12,7 +12,7 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const theme = useAtomValue(themeAtom);
   const [darkQuery, setDarkQuery] = useState<MediaQueryList | null>(null);
   const [mounted, setMounted] = useState(false);
-  const divRef = useRef<HTMLDivElement>(null);
+  const mainContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -20,21 +20,21 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const addDarkClass = () => {
-    const node = divRef.current;
+    const node = mainContainerRef.current;
     const body = document.body;
     body.classList.add('dark');
     node?.classList.add('dark');
   };
 
   const removeDarkClass = () => {
-    const node = divRef.current;
+    const node = mainContainerRef.current;
     const body = document.body;
     body.classList.remove('dark');
     node?.classList.remove('dark');
   };
 
   useEffect(() => {
-    const node = divRef.current;
+    const node = mainContainerRef.current;
     if (!mounted || !darkQuery || !node) return;
 
     const themeActions = {
@@ -47,7 +47,7 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }, [theme, mounted, darkQuery]);
 
   useEffect(() => {
-    const node = divRef.current;
+    const node = mainContainerRef.current;
     if (theme !== 'system' || !darkQuery || !node) return;
 
     const handleChange = () => (darkQuery.matches ? addDarkClass() : removeDarkClass());
@@ -59,7 +59,7 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
   return (
     <>
       {!mounted ? null : (
-        <div ref={divRef} className='main-container'>
+        <div ref={mainContainerRef} className='main-container'>
           {children}
         </div>
       )}
