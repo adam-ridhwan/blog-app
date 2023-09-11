@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { ThemeContext, useThemeContext } from '@/context/theme-context-provider';
 import { ChevronRight, Monitor, Moon, Sun } from 'lucide-react';
 
@@ -7,6 +8,7 @@ import { Button } from '@/components/ui/button';
 
 const ThemeToggle = () => {
   const { theme, setTheme } = useThemeContext();
+  const [isMounted, setIsMounted] = useState(false);
 
   const themeIcons = {
     light: <Sun className='h-4 w-4' />,
@@ -25,6 +27,10 @@ const ThemeToggle = () => {
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
   };
+
+  useEffect(() => setIsMounted(true), []);
+
+  if (!isMounted) return null;
 
   return (
     <>

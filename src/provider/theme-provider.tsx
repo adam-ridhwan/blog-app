@@ -13,7 +13,9 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <>
-      <div ref={divRef}>{children}</div>
+      <div ref={divRef} className='main-container'>
+        {children}
+      </div>
     </>
   );
 };

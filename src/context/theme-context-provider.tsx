@@ -41,13 +41,22 @@ export default function ThemeContextProvider({ children }: { children: ReactNode
   }, []);
 
   useEffect(() => {
-    if (!mounted || !divRef.current || !darkQuery) return;
+    if (!mounted || !darkQuery) return;
 
     const bodyElement = document.body;
     const themeActions = {
-      system: () => (darkQuery.matches ? bodyElement.classList.add('dark') : bodyElement.classList.remove('dark')),
-      dark: () => bodyElement.classList.add('dark'),
-      light: () => bodyElement.classList.remove('dark'),
+      system: () => {
+        darkQuery.matches ? bodyElement.classList.add('dark') : bodyElement.classList.remove('dark');
+        darkQuery.matches ? divRef?.current?.classList.add('dark') : divRef?.current?.classList.remove('dark');
+      },
+      dark: () => {
+        bodyElement.classList.add('dark');
+        divRef?.current?.classList.add('dark');
+      },
+      light: () => {
+        bodyElement.classList.remove('dark');
+        divRef?.current?.classList.remove('dark');
+      },
     };
 
     themeActions[theme] && themeActions[theme]();
@@ -57,8 +66,6 @@ export default function ThemeContextProvider({ children }: { children: ReactNode
     if (theme !== 'system' || !darkQuery) return;
 
     const handleChange = () => {
-      if (!divRef.current) return;
-
       const bodyElement = document.body;
       darkQuery.matches ? bodyElement.classList.add('dark') : bodyElement.classList.remove('dark');
     };

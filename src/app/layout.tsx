@@ -21,10 +21,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={`${inter.className} max-h-screen min-h-screen w-full max-w-[100vw]`}>
         <ThemeContextProvider>
           <ThemeProvider>
-            <div className='main-container '>
-              <NavBarDesktop />
-              {children}
-            </div>
+            <NavBarDesktop />
+            {children}
           </ThemeProvider>
         </ThemeContextProvider>
       </body>
