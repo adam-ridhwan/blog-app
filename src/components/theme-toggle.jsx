@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ThemeContext, useThemeContext } from '@/context/theme-context-provider';
-import { ChevronRight, Monitor, Moon, Sun } from 'lucide-react';
+import { themeAtom } from '@/provider/theme-provider';
+import { useAtom } from 'jotai';
+import { Monitor, Moon, Sun } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
 const ThemeToggle = () => {
-  const { theme, setTheme } = useThemeContext();
+  const [theme, setTheme] = useAtom(themeAtom);
+
   const [isMounted, setIsMounted] = useState(false);
 
   const themeIcons = {
@@ -25,7 +27,7 @@ const ThemeToggle = () => {
   const toggleTheme = () => {
     const newTheme = themeToggles[theme] || 'light';
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    // localStorage.setItem('theme', newTheme);
   };
 
   useEffect(() => setIsMounted(true), []);

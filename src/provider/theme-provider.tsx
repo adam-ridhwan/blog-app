@@ -1,21 +1,68 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
-import { useThemeContext } from '@/context/theme-context-provider';
+import { ReactNode, useEffect, useRef, useState } from 'react';
+import { useAtomValue } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
+
+export type Theme = 'light' | 'dark' | 'system';
+
+export const themeAtom = atomWithStorage<Theme>('theme', 'system');
 
 const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const { divRef } = useThemeContext();
+  const theme = useAtomValue(themeAtom);
+  const [darkQuery, setDarkQuery] = useState<MediaQueryList | null>(null);
   const [mounted, setMounted] = useState(false);
+  const divRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    setDarkQuery(window.matchMedia('(prefers-color-scheme: dark)'));
+  }, []);
 
-  if (!mounted) return null;
+  const addDarkClass = () => {
+    const node = divRef.current;
+    const body = document.body;
+    body.classList.add('dark');
+    node?.classList.add('dark');
+  };
+
+  const removeDarkClass = () => {
+    const node = divRef.current;
+    const body = document.body;
+    body.classList.remove('dark');
+    node?.classList.remove('dark');
+  };
+
+  useEffect(() => {
+    const node = divRef.current;
+    if (!mounted || !darkQuery || !node) return;
+
+    const themeActions = {
+      system: () => (darkQuery.matches ? addDarkClass() : removeDarkClass()),
+      dark: () => addDarkClass(),
+      light: () => removeDarkClass(),
+    };
+
+    themeActions[theme] && themeActions[theme]();
+  }, [theme, mounted, darkQuery]);
+
+  useEffect(() => {
+    const node = divRef.current;
+    if (theme !== 'system' || !darkQuery || !node) return;
+
+    const handleChange = () => (darkQuery.matches ? addDarkClass() : removeDarkClass());
+
+    darkQuery.addEventListener('change', handleChange);
+    return () => darkQuery.removeEventListener('change', handleChange);
+  }, [theme, darkQuery]);
 
   return (
     <>
-      <div ref={divRef} className='main-container'>
-        {children}
-      </div>
+      {!mounted ? null : (
+        <div ref={divRef} className='main-container'>
+          {children}
+        </div>
+      )}
     </>
   );
 };

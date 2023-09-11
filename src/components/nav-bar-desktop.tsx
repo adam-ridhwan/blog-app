@@ -29,11 +29,10 @@ const NavBarDesktop = () => {
       const currentScrollY = window.scrollY;
       const scrollAmount = currentScrollY - prevBodyScrollY.current;
 
-      if (currentScrollY > prevBodyScrollY.current) {
-        navbarPositionRef.current = Math.max(navbarPositionRef.current - scrollAmount, -navbarRef.current.offsetHeight);
-      } else {
-        navbarPositionRef.current = Math.min(navbarPositionRef.current - scrollAmount, 0);
-      }
+      navbarPositionRef.current =
+        currentScrollY > prevBodyScrollY.current
+          ? Math.max(navbarPositionRef.current - scrollAmount, -navbarRef.current.offsetHeight)
+          : Math.min(navbarPositionRef.current - scrollAmount, 0);
 
       navbarRef.current.style.transform = `translateY(${navbarPositionRef.current}px)`;
 
@@ -53,10 +52,7 @@ const NavBarDesktop = () => {
 
       if (currentScrollY < 64) return (sidebarRef.current.scrollTop = 0);
 
-      console.log('i am here' + '');
-
-      if (currentScrollY > prevSidebarScrollY.current) sidebarRef.current.scrollTop += scrollAmount; // scrolling down
-      if (currentScrollY < prevSidebarScrollY.current) sidebarRef.current.scrollTop += scrollAmount; // scrolling up
+      sidebarRef.current.scrollTop += scrollAmount;
 
       prevSidebarScrollY.current = currentScrollY;
     };
