@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
-export const options: NextAuthOptions = {
+export const OPTIONS: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID ?? '',
@@ -10,6 +10,6 @@ export const options: NextAuthOptions = {
   ],
 };
 
-export const handler = NextAuth(options);
+export const handler = NextAuth(OPTIONS);
 
 export { handler as GET, handler as POST };
