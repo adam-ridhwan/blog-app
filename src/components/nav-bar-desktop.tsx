@@ -45,7 +45,7 @@ const NavBarDesktop = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (!navbarRef.current) return;
+      if (!navbarRef.current || pathname === '/write-a-post') return;
 
       const currentScrollY = window.scrollY;
       const scrollAmount = currentScrollY - prevBodyScrollY.current;
@@ -108,35 +108,7 @@ const NavBarDesktop = () => {
 
               <ThemeToggle />
 
-              {status !== 'authenticated' ? (
-                <Dialog>
-                  <DialogTrigger>
-                    <Avatar>
-                      <AvatarImage src='https://github.com/shadcn.png' />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                  </DialogTrigger>
-                  <DialogContent className='flex h-[400px] justify-center p-[40px] text-center'>
-                    <DialogHeader className='flex items-center'>
-                      <DialogTitle className='text-center text-2xl'>Welcome back.</DialogTitle>
-                      <DialogDescription className='flex flex-col gap-4 py-[40px] text-primary '>
-                        <Button variant='outline' className='w-[250px]' onClick={() => signIn('google')}>
-                          Sign in with Google
-                        </Button>
-                        <Button variant='outline' className='w-[250px]'>
-                          Sign in with Email
-                        </Button>
-                      </DialogDescription>
-                      <div>
-                        <span className=''>Don&apos;t have an account? </span>
-                        <span className='cursor-pointer font-semibold text-primary hover:text-primary/80'>
-                          Create one
-                        </span>
-                      </div>
-                    </DialogHeader>
-                  </DialogContent>
-                </Dialog>
-              ) : (
+              {status === 'authenticated' ? (
                 <DropdownMenu open={isAvatarDropdownOpen} onOpenChange={setIsAvatarDropdownOpen} modal={false}>
                   <DropdownMenuTrigger>
                     <Avatar>
@@ -173,6 +145,34 @@ const NavBarDesktop = () => {
                     </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
+              ) : (
+                <Dialog>
+                  <DialogTrigger>
+                    <Avatar>
+                      <AvatarImage src='https://github.com/shadcn.png' />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  </DialogTrigger>
+                  <DialogContent className='flex h-[400px] justify-center p-[40px] text-center'>
+                    <DialogHeader className='flex items-center'>
+                      <DialogTitle className='text-center text-2xl text-primary'>Welcome back.</DialogTitle>
+                      <DialogDescription className='flex flex-col gap-4 py-[40px] text-primary '>
+                        <Button variant='outline' className='w-[250px]' onClick={() => signIn('google')}>
+                          Sign in with Google
+                        </Button>
+                        <Button variant='outline' className='w-[250px]'>
+                          Sign in with Email
+                        </Button>
+                      </DialogDescription>
+                      <div>
+                        <span className='text-primary'>Don&apos;t have an account? </span>
+                        <span className='cursor-pointer font-semibold text-primary hover:text-primary/80'>
+                          Create one
+                        </span>
+                      </div>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               )}
             </div>
           </div>

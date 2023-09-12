@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { redirect } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { Plus } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Quill from 'quill';
 import ReactQuill from 'react-quill';
 
@@ -33,39 +35,38 @@ const modules = {
 const postAtom = atomWithStorage('post', '');
 
 const WriteAPost = () => {
+  const { data: session, status } = useSession();
   const [postValue, setPostValue] = useAtom(postAtom);
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true);
   const [position, setPosition] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
+
   const quillRef = useRef<ReactQuill | null>(null);
 
+  useEffect(() => setScrollY(window.scrollY), []);
+
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * HANDLES MOUSEUP AND KEYUP EVENTS
+   * - Determines where to position the add button
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
     const handleClick = () => {
-      if (quillRef.current) {
-        const quill = quillRef.current.getEditor();
-        const range = quill.getSelection();
-        const bounds = quill.getBounds(range?.index || 0);
-        const height = Math.floor(bounds.height);
+      setScrollY(window.scrollY);
 
-        quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
-          return delta.compose(new Delta().retain(delta.length(), { background: null, color: null, align: 'left' }));
-        });
+      if (!quillRef.current) return;
 
-        // todo: fix highlighting of code blocks
-        // quill.on('text-change', function () {
-        //   const nodes = document.querySelectorAll('pre.ql-syntax');
-        //   nodes.forEach(node => {
-        //     hljs.highlightElement(node);
-        //   });
-        // });
+      const quill = quillRef.current.getEditor();
+      const range = quill.getSelection();
+      const bounds = quill.getBounds(range?.index || 0);
+      const height = Math.floor(bounds.height);
 
-        const [leaf] = quill.getLeaf(range?.index || 0);
+      const [leaf] = quill.getLeaf(range?.index || 0);
 
-        leaf.text ? setIsAddButtonVisible(false) : setIsAddButtonVisible(true);
+      leaf.text ? setIsAddButtonVisible(false) : setIsAddButtonVisible(true);
 
-        if (height === textAreaSize.h1.height) return setPosition(bounds.bottom + textAreaSize.h1.padding);
-        if (height === textAreaSize.h2.height) return setPosition(bounds.bottom + textAreaSize.h2.padding);
-        if (height === textAreaSize.p.height) return setPosition(bounds.bottom + textAreaSize.p.padding);
-      }
+      if (height === textAreaSize.h1.height) return setPosition(bounds.bottom + textAreaSize.h1.padding);
+      if (height === textAreaSize.h2.height) return setPosition(bounds.bottom + textAreaSize.h2.padding);
+      if (height === textAreaSize.p.height) return setPosition(bounds.bottom + textAreaSize.p.padding);
     };
 
     document.addEventListener('mouseup', handleClick);
@@ -74,11 +75,79 @@ const WriteAPost = () => {
       document.removeEventListener('mouseup', handleClick);
       document.removeEventListener('keyup', handleClick);
     };
-  }, [position, postValue]);
+  }, [position, postValue, scrollY]);
+
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * HANDLES PASTE EVENT
+   * - Removes formatting from pasted text
+   * - Scrolls to the position the user was at before pasting
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  useEffect(() => {
+    const handlePaste = () => {
+      if (!quillRef.current) return;
+
+      const quill = quillRef.current.getEditor();
+
+      quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
+        return delta.compose(new Delta().retain(delta.length(), { background: null, color: null, align: 'left' }));
+      });
+
+      // IMPORTANT: this prevents the page from scrolling to the top when pasting
+      setTimeout(() => {
+        window.scrollTo(0, scrollY);
+      }, 1);
+    };
+
+    document.addEventListener('paste', handlePaste);
+    return () => document.removeEventListener('paste', handlePaste);
+  }, [scrollY]);
+
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * HANDLE SCROLL EVENT
+   * - updates the position of scrollRef
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    document.addEventListener('scroll', handleScroll);
+    return () => document.removeEventListener('scroll', handleScroll);
+  }, [scrollY]);
+
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * HANDLE ENTER KEY
+   * - automatic scroll down when cursor is at the bottom of the viewport
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  const navbarHeight = 64;
+  const threshold = 150;
+  useEffect(() => {
+    const handleEnterKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Enter') return;
+      if (!quillRef.current) return;
+
+      const quill = quillRef.current.getEditor();
+      const range = quill.getSelection();
+      const bounds = quill.getBounds(range?.index || 0);
+      const height = Math.floor(bounds.height);
+      const bottomOfViewport = window.scrollY + window.innerHeight - navbarHeight - threshold;
+
+      if (bounds.bottom > bottomOfViewport) {
+        const extraScrollThreshold = bounds.bottom - bottomOfViewport + height;
+        window.scrollTo({ top: window.scrollY + extraScrollThreshold, behavior: 'smooth' });
+      }
+    };
+    document.addEventListener('keydown', handleEnterKey);
+    return () => document.removeEventListener('keydown', handleEnterKey);
+  }, [scrollY]);
+
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * LOADING AND REDIRECTING
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  if (status === 'loading') return <div className='h-screen pt-[400px]'>loading</div>;
+  if (!session) redirect('/');
 
   return (
     <>
-      <div className='flex h-full min-h-screen flex-col items-center bg-secondary'>
+      <div className='fixed left-[50%] z-50 translate-x-[-50%]'>{scrollY}</div>
+      <div className='flex h-full min-h-screen flex-col items-center bg-secondary pb-[100px]'>
         <div className='relative  w-full max-w-[840px] pt-[94px]'>
           <div className='absolute translate-x-[-32px]' style={{ top: `${position}px` }}>
             {isAddButtonVisible && (
