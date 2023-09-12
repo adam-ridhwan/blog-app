@@ -3,6 +3,7 @@ import { cn } from '@/util/cn';
 import { Dot } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
+import SeparatorDot from '@/components/ui/separator-dot';
 
 const MostPopularPosts = () => {
   const mostPopularPosts = [
@@ -44,7 +45,7 @@ const MostPopularPosts = () => {
                     Fashion
                   </Badge>
                   <span>{post.author}</span>
-                  <Dot size={15} />
+                  <SeparatorDot />
                   <span>{post.date}</span>
                 </div>
                 <h3 className='font-semibold text-muted-foreground'>
