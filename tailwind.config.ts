@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import { blue, red } from '@radix-ui/colors';
+
 module.exports = {
   darkMode: ['class'],
   content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],

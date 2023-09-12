@@ -1,8 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import DOMPurify from 'dompurify';
-import hljs from 'highlight.js';
 import { useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { Plus } from 'lucide-react';
