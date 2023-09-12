@@ -1,17 +1,19 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import DOMPurify from 'dompurify';
+import hljs from 'highlight.js';
+import { useAtom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
 import { Plus } from 'lucide-react';
+import Quill from 'quill';
+import ReactQuill from 'react-quill';
 
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 import 'react-quill/dist/quill.bubble.css';
-
-import { useAtom } from 'jotai';
-import { atomWithStorage } from 'jotai/utils';
-import Quill from 'quill';
-import ReactQuill from 'react-quill';
+import 'highlight.js/styles/github.css';
 
 const Delta = Quill.import('delta');
 
@@ -19,6 +21,15 @@ const textAreaSize = {
   h1: { height: 48, padding: 57 },
   h2: { height: 36, padding: 62 },
   p: { height: 24, padding: 66 },
+};
+
+const modules = {
+  toolbar: [
+    [{ header: '1' }, { header: '2' }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+    ['code-block'],
+  ],
 };
 
 const postAtom = atomWithStorage('post', '');
@@ -38,9 +49,16 @@ const WriteAPost = () => {
         const height = Math.floor(bounds.height);
 
         quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
-          console.log(node);
-          return delta.compose(new Delta().retain(delta.length(), { background: null, color: null }));
+          return delta.compose(new Delta().retain(delta.length(), { background: null, color: null, align: 'left' }));
         });
+
+        // todo: fix highlighting of code blocks
+        // quill.on('text-change', function () {
+        //   const nodes = document.querySelectorAll('pre.ql-syntax');
+        //   nodes.forEach(node => {
+        //     hljs.highlightElement(node);
+        //   });
+        // });
 
         const [leaf] = quill.getLeaf(range?.index || 0);
 
@@ -85,6 +103,7 @@ const WriteAPost = () => {
             value={postValue}
             onChange={setPostValue}
             placeholder='Write a new post...'
+            modules={modules}
           />
         </div>
       </div>
