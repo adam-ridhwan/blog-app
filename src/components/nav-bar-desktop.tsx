@@ -61,7 +61,7 @@ const NavBarDesktop = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
