@@ -10,6 +10,6 @@ export const options: NextAuthOptions = {
   ],
 };
 
-const handler = NextAuth(options);
+export const handler = NextAuth(options);
 
 export { handler as GET, handler as POST };
