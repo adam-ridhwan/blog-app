@@ -1,12 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { capitalize } from '@/util';
 import { cn } from '@/util/cn';
 import { categories } from '@/util/constants';
 
-const PopularCategories = () => {
+import { Category } from '.prisma/client';
+
+type AllCategoriesProps = {
+  categories: Category[];
+};
+
+const AllCategories: FC<AllCategoriesProps> = ({ categories }) => {
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
@@ -26,28 +32,14 @@ const PopularCategories = () => {
         {categories.map(category => {
           return (
             <Link
-              key={category}
+              key={category.id}
               href={`/blog?category=${category}`}
               className={cn(
                 `flex h-[40px] items-center justify-center rounded-md border 
-                border-input bg-background px-5 hover:bg-accent hover:text-accent-foreground`
+                border-input bg-secondary px-5 hover:bg-accent hover:text-accent-foreground`
               )}
             >
-              <span className='whitespace-nowrap text-lg text-primary'>{capitalize(category)}</span>
-            </Link>
-          );
-        })}
-        {categories.map(category => {
-          return (
-            <Link
-              key={category}
-              href={`/blog?category=${category}`}
-              className={cn(
-                `flex h-[40px] items-center justify-center rounded-md border 
-                border-input bg-background px-5 hover:bg-accent hover:text-accent-foreground`
-              )}
-            >
-              <span className='whitespace-nowrap text-lg text-primary'>{capitalize(category)}</span>
+              <span className='whitespace-nowrap text-lg text-primary'>{capitalize(category.title)}</span>
             </Link>
           );
         })}
@@ -56,4 +48,4 @@ const PopularCategories = () => {
   );
 };
 
-export default PopularCategories;
+export default AllCategories;

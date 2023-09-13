@@ -1,8 +1,11 @@
+import { getCategories } from '@/lib/getCategories';
 import { Separator } from '@/components/ui/separator';
+import AllCategories from '@/components/all-categories';
 import Card from '@/components/card';
-import PopularCategories from '@/components/popular-categories';
 
-const MainSection = () => {
+const MainSection = async () => {
+  const categories = await getCategories();
+
   const recentPosts = [
     {
       title: 'Whispers of the Shore',
@@ -39,29 +42,13 @@ const MainSection = () => {
   return (
     <>
       <main className='relative mb-6 mt-12'>
-        <PopularCategories />
+        <AllCategories {...{ categories }} />
 
         <div className='pointer-events-none h-0 select-none bg-red opacity-0' id='categories-placeholder'>
           placeholder
         </div>
 
         <div className='mt-[120px]'>
-          {recentPosts.map(post => {
-            return (
-              <>
-                <Separator orientation='horizontal' className='my-5' />
-                <Card key={post.title} title={post.title} date={post.date} content={post.content} />
-              </>
-            );
-          })}
-          {recentPosts.map(post => {
-            return (
-              <>
-                <Separator orientation='horizontal' className='my-5' />
-                <Card key={post.title} title={post.title} date={post.date} content={post.content} />
-              </>
-            );
-          })}
           {recentPosts.map(post => {
             return (
               <>

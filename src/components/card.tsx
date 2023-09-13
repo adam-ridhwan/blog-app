@@ -12,7 +12,7 @@ type CardProps = {
   content: string;
 };
 
-const Card: FC<CardProps> = ({ title, avatarImage, date, content }) => {
+const Card: FC<CardProps> = async ({ title, date, content }) => {
   return (
     <>
       <div className='flex flex-row items-center gap-[20px] md:flex-row md:items-stretch md:gap-[50px]'>

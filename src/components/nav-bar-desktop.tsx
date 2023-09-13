@@ -109,6 +109,12 @@ const NavBarDesktop = () => {
   //   }
   // }, []);
 
+  const handleGoogleSignIn = async () => {
+    const res = await signIn('google');
+
+    console.log(res);
+  };
+
   return (
     <>
       <div ref={navbarRef} className='fixed top-0 z-20 w-full border-b border-b-border bg-background'>
