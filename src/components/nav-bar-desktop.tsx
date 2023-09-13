@@ -102,8 +102,6 @@ const NavBarDesktop = () => {
           </Link>
           <div className='flex flex-1 items-center justify-end gap-3'>
             <div className='flex items-center gap-5'>
-              {status}
-
               {status === 'authenticated' && <WriteOrPublishButton />}
 
               <ThemeToggle />

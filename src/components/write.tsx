@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 import 'react-quill/dist/quill.bubble.css';
+import 'react-quill/dist/quill.snow.css';
 import 'highlight.js/styles/github.css';
 
 const Delta = Quill.import('delta');
@@ -149,11 +150,12 @@ const Write = () => {
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * LOADING AND REDIRECTING
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  if (status === 'loading') return <div className='h-screen pt-[400px]'>loading</div>;
+  if (status === 'loading') return null;
   if (!session) redirect('/');
+
   return (
     <>
-      <div className='fixed left-[50%] z-50 translate-x-[-50%]'>{scrollY}</div>
+      {/*<div className='fixed left-[50%] z-50 translate-x-[-50%]'>{scrollY}</div>*/}
       <div className='flex h-full min-h-screen flex-col items-center bg-secondary pb-[100px]'>
         <div className='relative  w-full max-w-[840px] pt-[94px]'>
           <div className='absolute translate-x-[-32px]' style={{ top: `${position}px` }}>
@@ -173,7 +175,7 @@ const Write = () => {
 
           <ReactQuill
             ref={quillRef}
-            theme='bubble'
+            theme='snow'
             value={postValue}
             onChange={setPostValue}
             placeholder='Write a new post...'
