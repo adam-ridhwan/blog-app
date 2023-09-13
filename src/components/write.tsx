@@ -16,6 +16,8 @@ import 'react-quill/dist/quill.bubble.css';
 import 'react-quill/dist/quill.snow.css';
 import 'highlight.js/styles/github.css';
 
+import { MOBILE, useWindowSize } from '@/util/useWindowSize';
+
 const Delta = Quill.import('delta');
 
 const textAreaSize = {
@@ -38,6 +40,8 @@ const postAtom = atomWithStorage('post', '');
 const Write = () => {
   const { data: session, status } = useSession();
   const [postValue, setPostValue] = useAtom(postAtom);
+  const windowSize = useWindowSize();
+
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true);
   const [position, setPosition] = useState(0);
   const [scrollY, setScrollY] = useState(0);
@@ -57,6 +61,7 @@ const Write = () => {
       setScrollY(window.scrollY);
 
       if (!quillRef.current) return;
+      if (windowSize === MOBILE) return;
 
       const quill = quillRef.current.getEditor();
       const range = quill.getSelection();

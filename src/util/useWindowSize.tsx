@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 
-export const MOBILE = 'tablet';
-export const TABLET = 'desktop';
-export const DESKTOP = 'large desktop';
+export const MOBILE = 'mobile';
+export const TABLET = 'tablet';
+export const DESKTOP = 'desktop';
 
 export type Devices = typeof MOBILE | typeof TABLET | typeof DESKTOP | undefined;
 
