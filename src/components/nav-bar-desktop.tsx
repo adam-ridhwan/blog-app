@@ -18,23 +18,26 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import AuthLinks from '@/components/auth-links';
-import NavBarMobile from '@/components/nav-bar-mobile';
 import SideMenu from '@/components/side-menu';
 import ThemeToggle from '@/components/theme-toggle';
 import WriteOrPublishButton from '@/components/write-or-publish-button';
-import { DropdownMenuArrow } from '@radix-ui/react-dropdown-menu';
 
 const NavBarDesktop = () => {
   const { data: session, status } = useSession();
   const pathname = usePathname();
 
+  useEffect(() => {
+    console.log(session);
+  }, [session]);
+
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
+  const closeAvatarDropdown = () => setIsAvatarDropdownOpen(false);
+  const openAvatarDropdown = () => setIsAvatarDropdownOpen(true);
 
   const navbarRef = useRef<HTMLDivElement | null>(null);
   const navbarPositionRef = useRef(0);
@@ -104,18 +107,17 @@ const NavBarDesktop = () => {
             <div className='flex items-center gap-5'>
               {status === 'authenticated' && <WriteOrPublishButton />}
 
-              <ThemeToggle />
-
               {status === 'authenticated' ? (
                 <DropdownMenu open={isAvatarDropdownOpen} onOpenChange={setIsAvatarDropdownOpen} modal={false}>
                   <DropdownMenuTrigger>
                     <Avatar>
-                      <AvatarImage src='https://github.com/shadcn.png' />
-                      <AvatarFallback>CN</AvatarFallback>
+                      <AvatarImage src={session?.user?.image || undefined} />
+                      <AvatarFallback>A</AvatarFallback>
                     </Avatar>
                   </DropdownMenuTrigger>
+
                   <DropdownMenuContent align='end' className='w-[250px] p-0'>
-                    <div className='py-[16px]'>
+                    <DropdownMenuGroup className='py-[16px]'>
                       <DropdownMenuItem className='cursor-pointer px-[24px] py-[8px] text-sm text-muted-foreground hover:text-primary'>
                         <span>Profile</span>
                       </DropdownMenuItem>
@@ -129,18 +131,30 @@ const NavBarDesktop = () => {
                       <DropdownMenuItem className='cursor-pointer px-[24px] py-[8px] text-sm text-muted-foreground hover:text-primary'>
                         <span>Analytics</span>
                       </DropdownMenuItem>
-                    </div>
+                    </DropdownMenuGroup>
 
                     <DropdownMenuSeparator />
 
-                    <div className='py-[16px]'>
-                      <DropdownMenuItem className='cursor-pointer px-[24px] py-[8px] text-sm text-muted-foreground'>
-                        <button className='flex flex-col' onClick={() => signOut()}>
-                          <span className='hover:text-primary'>Sign out</span>
+                    <DropdownMenuGroup className='group'>
+                      <DropdownMenuItem
+                        onSelect={e => e.preventDefault()}
+                        className='flex flex-row justify-between px-[24px] py-[8px] text-sm text-muted-foreground'
+                      >
+                        <span className='group-hover:text-primary'>Theme</span>
+                        <ThemeToggle />
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuGroup className='group cursor-pointer py-[16px]'>
+                      <DropdownMenuItem className='p-0 text-sm text-muted-foreground'>
+                        <button className='flex flex-col px-[24px] py-[8px]' onClick={() => signOut()}>
+                          <span className='group-hover:text-primary'>Sign out</span>
                           <span>{session?.user?.email}</span>
                         </button>
                       </DropdownMenuItem>
-                    </div>
+                    </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (

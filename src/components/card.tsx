@@ -29,7 +29,7 @@ const Card: FC<CardProps> = ({ title, avatarImage, date, content }) => {
             <span className='font-medium'>John Doe</span>
             <span className='text-muted-foreground'>{date} </span>
           </div>
-          <Link href='' className=''>
+          <Link href='/' className=''>
             <h1 className='mb-1 text-xl'>{title}</h1>
             <p className='multi-line-ellipsis text-muted-foreground'>{content}</p>
           </Link>
