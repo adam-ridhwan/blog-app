@@ -83,7 +83,7 @@ const Write = () => {
       document.removeEventListener('mouseup', handleClick);
       document.removeEventListener('keyup', handleClick);
     };
-  }, [position, postValue, scrollY]);
+  }, [position, postValue, scrollY, windowSize]);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * HANDLES PASTE EVENT

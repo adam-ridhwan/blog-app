@@ -1,3 +1,5 @@
+'use server';
+
 import prisma from '@/util/connect';
 
 export const getPosts = async () => {
