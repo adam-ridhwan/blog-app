@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
@@ -23,6 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Skeleton } from '@/components/ui/skeleton';
 import SideMenu from '@/components/side-menu';
 import ThemeToggle from '@/components/theme-toggle';
 import WriteOrPublishButton from '@/components/write-or-publish-button';
@@ -31,9 +33,20 @@ const NavBarDesktop = () => {
   const { data: session, status } = useSession();
   const pathname = usePathname();
 
-  useEffect(() => {
-    console.log(session);
-  }, [session]);
+  // useEffect(() => {
+  //   const options = {
+  //     year: 'numeric',
+  //     month: 'short',
+  //     day: '2-digit',
+  //     hour: '2-digit',
+  //     minute: '2-digit',
+  //     second: '2-digit',
+  //     hour12: false, // This ensures time is in 24hr format
+  //   };
+  //   const dateStr = session?.expires;
+  //   const dateObj = new Date(dateStr);
+  //   console.log(dateObj.toLocaleString('en-US', options));
+  // }, [status, session]);
 
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
   const closeAvatarDropdown = () => setIsAvatarDropdownOpen(false);
@@ -103,16 +116,52 @@ const NavBarDesktop = () => {
           <Link href='/' className='flex-1 text-3xl font-bold'>
             Pondero
           </Link>
+
           <div className='flex flex-1 items-center justify-end gap-3'>
             <div className='flex items-center gap-5'>
-              {status === 'authenticated' && <WriteOrPublishButton />}
+              {status === 'unauthenticated' && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button>Sign in</Button>
+                  </DialogTrigger>
+                  <DialogContent className='flex h-[400px] justify-center p-[40px] text-center'>
+                    <DialogHeader className='flex items-center'>
+                      <DialogTitle className='text-center text-2xl text-primary'>Welcome back.</DialogTitle>
+                      <DialogDescription className='flex flex-col gap-4 py-[40px] text-primary '>
+                        <Button variant='outline' className='w-[250px]' onClick={() => signIn('google')}>
+                          Sign in with Google
+                        </Button>
+                        <Button variant='outline' className='w-[250px]'>
+                          Sign in with Email
+                        </Button>
+                      </DialogDescription>
+                      <div>
+                        <span className='text-primary'>Don&apos;t have an account? </span>
+                        <span className='cursor-pointer font-semibold text-primary hover:text-primary/80'>
+                          Create one
+                        </span>
+                      </div>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+              )}
 
-              {status === 'authenticated' ? (
+              {status === 'loading' && <Skeleton className='h-[32px] w-[94px]' />}
+              {status === 'loading' && <Skeleton className='h-10 w-10 rounded-full' />}
+
+              {status === 'authenticated' && <WriteOrPublishButton />}
+              {status === 'authenticated' && (
                 <DropdownMenu open={isAvatarDropdownOpen} onOpenChange={setIsAvatarDropdownOpen} modal={false}>
                   <DropdownMenuTrigger>
                     <Avatar>
-                      <AvatarImage src={session?.user?.image || undefined} />
-                      <AvatarFallback>A</AvatarFallback>
+                      <Image
+                        src={session?.user?.image || ''}
+                        alt='avatar logo'
+                        priority
+                        width={500}
+                        height={500}
+                        className='aspect-square h-full w-full'
+                      />
                     </Avatar>
                   </DropdownMenuTrigger>
 
@@ -157,34 +206,6 @@ const NavBarDesktop = () => {
                     </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              ) : (
-                <Dialog>
-                  <DialogTrigger>
-                    <Avatar>
-                      <AvatarImage src='https://github.com/shadcn.png' />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                  </DialogTrigger>
-                  <DialogContent className='flex h-[400px] justify-center p-[40px] text-center'>
-                    <DialogHeader className='flex items-center'>
-                      <DialogTitle className='text-center text-2xl text-primary'>Welcome back.</DialogTitle>
-                      <DialogDescription className='flex flex-col gap-4 py-[40px] text-primary '>
-                        <Button variant='outline' className='w-[250px]' onClick={() => signIn('google')}>
-                          Sign in with Google
-                        </Button>
-                        <Button variant='outline' className='w-[250px]'>
-                          Sign in with Email
-                        </Button>
-                      </DialogDescription>
-                      <div>
-                        <span className='text-primary'>Don&apos;t have an account? </span>
-                        <span className='cursor-pointer font-semibold text-primary hover:text-primary/80'>
-                          Create one
-                        </span>
-                      </div>
-                    </DialogHeader>
-                  </DialogContent>
-                </Dialog>
               )}
             </div>
           </div>
