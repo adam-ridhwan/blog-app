@@ -5,6 +5,7 @@ import { themeAtom } from '@/provider/theme-provider';
 import { useAtom } from 'jotai';
 import { Monitor, Moon, Sun } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const ThemeToggle = () => {
@@ -24,10 +25,15 @@ const ThemeToggle = () => {
     system: 'System',
   };
 
-  const toggleTheme = value => {
-    if (['light', 'dark', 'system'].includes(value)) {
-      setTheme(value);
-    }
+  const themeToggles = {
+    light: 'dark',
+    dark: 'system',
+    system: 'light',
+  };
+
+  const toggleTheme = () => {
+    const newTheme = themeToggles[theme] || 'light';
+    setTheme(newTheme);
   };
 
   useEffect(() => setIsMounted(true), []);
@@ -36,39 +42,15 @@ const ThemeToggle = () => {
 
   return (
     <>
-      <Select onValueChange={toggleTheme}>
-        <SelectTrigger aria-label='Theme' className='w-[80px]'>
-          <SelectValue
-            placeholder={
-              <div className='flex flex-row items-center gap-2'>
-                {themeIcons[theme] || null}
-                <span>{themeText[theme] || null}</span>
-              </div>
-            }
-          />
-        </SelectTrigger>
-
-        <SelectContent align='end'>
-          <SelectItem value='system'>
-            <div className='flex flex-row items-center gap-2'>
-              <Monitor className='h-4 w-4' />
-              <span>System</span>
-            </div>
-          </SelectItem>
-          <SelectItem value='light' onClick={() => setTheme('light')}>
-            <div className='flex flex-row items-center gap-2'>
-              <Sun className='h-4 w-4' />
-              <span>Light</span>
-            </div>
-          </SelectItem>
-          <SelectItem value='dark' onClick={() => setTheme('dark')}>
-            <div className='flex flex-row items-center gap-2'>
-              <Moon className='h-4 w-4' />
-              <span>Dark</span>
-            </div>
-          </SelectItem>
-        </SelectContent>
-      </Select>
+      <Button
+        variant='outline'
+        onClick={toggleTheme}
+        className='flex h-[80px] flex-row gap-2'
+        style={{ width: '130px' }}
+      >
+        {themeIcons[theme] || null}
+        {themeText[theme] || null}
+      </Button>
     </>
   );
 };
