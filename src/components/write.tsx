@@ -180,7 +180,7 @@ const Write = () => {
 
           <ReactQuill
             ref={quillRef}
-            theme='snow'
+            theme='bubble'
             value={postValue}
             onChange={setPostValue}
             placeholder='Write a new post...'
