@@ -5,7 +5,6 @@ import FacebookProvider from 'next-auth/providers/facebook';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 
-import { createAccount } from '@/lib/createAccount';
 import { createUser } from '@/lib/createUser';
 import { getAccount } from '@/lib/getAccount';
 import { getUser } from '@/lib/getUser';
@@ -30,12 +29,11 @@ const handler = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      // console.log('signIn', { user, account, profile });
+      console.log('signIn', { user, account, profile });
 
       const existingUser: User | null = await getUser(user.email || undefined);
 
       if (existingUser) {
-        console.log(existingUser._id);
         const existingAccount = await getAccount(existingUser._id, account?.provider);
 
         if (existingAccount) {
@@ -53,14 +51,14 @@ const handler = NextAuth({
 
       return true;
     },
-    async session({ session, user, token }) {
-      console.log('session', session, user);
-      return session;
-    },
-    async jwt({ token, account, profile }) {
-      console.log('jwt', token, account, profile);
-      return token;
-    },
+    // async session({ session, user, token }) {
+    //   // console.log('session', session, user);
+    //   return session;
+    // },
+    // async jwt({ token, account, profile }) {
+    //   // console.log('jwt', token, account, profile);
+    //   return token;
+    // },
   },
 });
 
