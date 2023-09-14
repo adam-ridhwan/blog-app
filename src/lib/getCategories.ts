@@ -1,12 +1,15 @@
 'use server';
 
-import prisma from '@/util/connect';
+import { Category } from '@/types';
+import { connectToDatabase } from '@/util/connectToDatabase';
 
-export const getCategories = async () => {
+export const getCategories = async (): Promise<Category[]> => {
   try {
-    return await prisma.category.findMany();
+    const { categoryCollection } = await connectToDatabase();
+
+    return await categoryCollection.find({}).toArray();
   } catch (error) {
-    console.error('Error getting channels:', error);
-    throw new Error('Error occurred while fetching channels');
+    console.error('Error getting categories:', error);
+    throw new Error('Error occurred while fetching categories');
   }
 };

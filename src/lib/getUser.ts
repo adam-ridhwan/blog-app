@@ -1,12 +1,17 @@
 'use server';
 
-import prisma from '@/util/connect';
+import { User } from '@/types';
+import { connectToDatabase } from '@/util/connectToDatabase';
 
-export const getUser = async (email: string) => {
+export async function getUser(email: string | undefined): Promise<User | null> {
   try {
-    return await prisma.user.findUnique({ where: { email } });
+    const { userCollection } = await connectToDatabase();
+
+    const user: User = userCollection.findOne({ email });
+
+    return !user ? null : user;
   } catch (error) {
-    console.error('Error getting channels:', error);
-    throw new Error('Error occurred while fetching channels');
+    console.error('Error getting user:', error);
+    throw new Error('Error occurred while fetching user');
   }
-};
+}

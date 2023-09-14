@@ -1,10 +1,13 @@
+import { Fragment } from 'react';
+import { type Category } from '@/types';
+
 import { getCategories } from '@/lib/getCategories';
 import { Separator } from '@/components/ui/separator';
 import AllCategories from '@/components/all-categories';
 import Card from '@/components/card';
 
 const MainSection = async () => {
-  const categories = await getCategories();
+  const categories: Category[] = await getCategories();
 
   const recentPosts = [
     {
@@ -51,10 +54,10 @@ const MainSection = async () => {
         <div className='mt-[120px]'>
           {recentPosts.map(post => {
             return (
-              <>
+              <Fragment key={post.date}>
                 <Separator orientation='horizontal' className='my-5' />
                 <Card key={post.title} title={post.title} date={post.date} content={post.content} />
-              </>
+              </Fragment>
             );
           })}
         </div>

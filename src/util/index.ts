@@ -2,8 +2,6 @@ import { cleanEnv } from 'envalid';
 
 //* ──────────────────────────────────────────────────��
 
-export const env = cleanEnv(process.env, {});
-
 //* ──────────────────────────────────────────────────��//* ──────────────────────────────────────────────────��
 
 export function capitalize(str: string): string {

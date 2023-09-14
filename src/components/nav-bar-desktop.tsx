@@ -137,8 +137,11 @@ const NavBarDesktop = () => {
                         <Button variant='outline' className='w-[250px]' onClick={() => signIn('google')}>
                           Sign in with Google
                         </Button>
-                        <Button variant='outline' className='w-[250px]'>
-                          Sign in with Email
+                        <Button variant='outline' className='w-[250px]' onClick={() => signIn('facebook')}>
+                          Sign in with Facebook
+                        </Button>
+                        <Button variant='outline' className='w-[250px]' onClick={() => signIn('github')}>
+                          Sign in with Github
                         </Button>
                       </DialogDescription>
                       <div>

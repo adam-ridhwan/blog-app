@@ -2,11 +2,9 @@
 
 import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { type Category } from '@/types';
 import { capitalize } from '@/util';
 import { cn } from '@/util/cn';
-import { categories } from '@/util/constants';
-
-import { Category } from '.prisma/client';
 
 type AllCategoriesProps = {
   categories: Category[];
@@ -32,7 +30,7 @@ const AllCategories: FC<AllCategoriesProps> = ({ categories }) => {
         {categories.map(category => {
           return (
             <Link
-              key={category.id}
+              key={category._id}
               href={`/blog?category=${category}`}
               className={cn(
                 `flex h-[40px] items-center justify-center rounded-md border 
