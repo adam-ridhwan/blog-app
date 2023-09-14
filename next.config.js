@@ -4,7 +4,12 @@ const nextConfig = {
     serverActions: true,
   },
   images: {
-    domains: ['lh3.googleusercontent.com', 'avatars.githubusercontent.com', 'scontent-iad3-2.xx.fbcdn.net'],
+    domains: [
+      'lh3.googleusercontent.com',
+      'avatars.githubusercontent.com',
+      'scontent-bos5-1.xx.fbcdn.net',
+      'scontent-iad3-2.xx.fbcdn.net',
+    ],
   },
 };
 
