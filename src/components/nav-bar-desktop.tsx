@@ -53,7 +53,7 @@ const NavBarDesktop = () => {
   const openAvatarDropdown = () => setIsAvatarDropdownOpen(true);
 
   useEffect(() => {
-    console.log(session.user.image);
+    console.log(session?.user?.image);
   }, [session]);
 
   const navbarRef = useRef<HTMLDivElement | null>(null);
@@ -160,7 +160,7 @@ const NavBarDesktop = () => {
               {status === 'authenticated' && (
                 <DropdownMenu open={isAvatarDropdownOpen} onOpenChange={setIsAvatarDropdownOpen} modal={false}>
                   <DropdownMenuTrigger>
-                    <Avatar>
+                    <div className='relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full'>
                       <Image
                         src={session?.user?.image || ''}
                         alt='avatar logo'
@@ -168,7 +168,7 @@ const NavBarDesktop = () => {
                         height={500}
                         className='aspect-square h-full w-full'
                       />
-                    </Avatar>
+                    </div>
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent align='end' className='w-[250px] p-0'>
