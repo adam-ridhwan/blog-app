@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -31,30 +31,16 @@ import WriteOrPublishButton from '@/components/write-or-publish-button';
 
 const NavBarDesktop = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const pathname = usePathname();
 
-  // useEffect(() => {
-  //   const options = {
-  //     year: 'numeric',
-  //     month: 'short',
-  //     day: '2-digit',
-  //     hour: '2-digit',
-  //     minute: '2-digit',
-  //     second: '2-digit',
-  //     hour12: false, // This ensures time is in 24hr format
-  //   };
-  //   const dateStr = session?.expires;
-  //   const dateObj = new Date(dateStr);
-  //   console.log(dateObj.toLocaleString('en-US', options));
-  // }, [status, session]);
+  useEffect(() => {
+    if (window.location.hash === '#_=_') router.replace('/');
+  }, [router]);
 
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
   const closeAvatarDropdown = () => setIsAvatarDropdownOpen(false);
   const openAvatarDropdown = () => setIsAvatarDropdownOpen(true);
-
-  useEffect(() => {
-    console.log(session?.user?.image);
-  }, [session]);
 
   const navbarRef = useRef<HTMLDivElement | null>(null);
   const navbarPositionRef = useRef(0);
