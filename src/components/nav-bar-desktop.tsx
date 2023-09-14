@@ -53,7 +53,7 @@ const NavBarDesktop = () => {
   const openAvatarDropdown = () => setIsAvatarDropdownOpen(true);
 
   useEffect(() => {
-    console.log(session);
+    console.log(session.user.image);
   }, [session]);
 
   const navbarRef = useRef<HTMLDivElement | null>(null);
