@@ -1,9 +1,8 @@
 'use server';
 
+import { createAccount } from '@/actions/createAccount';
 import { Account, User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
-
-import { createAccount } from '@/lib/createAccount';
 
 export async function updateProviders(account: Account, existingUser: User): Promise<User | null> {
   try {

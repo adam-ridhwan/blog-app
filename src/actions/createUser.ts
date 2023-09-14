@@ -1,10 +1,9 @@
 'use server';
 
+import { createAccount } from '@/actions/createAccount';
 import { type Account, type User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { generateRandomString } from '@/util/generateRandomString';
-
-import { createAccount } from '@/lib/createAccount';
 
 export const createUser = async (account: Account, user: User) => {
   try {

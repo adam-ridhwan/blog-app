@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
+import { getCategories } from '@/actions/getCategories';
 import { type Category } from '@/types';
 
-import { getCategories } from '@/lib/getCategories';
 import { Separator } from '@/components/ui/separator';
 import AllCategories from '@/components/all-categories';
 import Card from '@/components/card';

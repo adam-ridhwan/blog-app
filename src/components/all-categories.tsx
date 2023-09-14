@@ -3,7 +3,7 @@
 import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { type Category } from '@/types';
-import { capitalize } from '@/util';
+import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
 
 type AllCategoriesProps = {

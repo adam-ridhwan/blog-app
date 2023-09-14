@@ -1,14 +1,13 @@
+import { createUser } from '@/actions/createUser';
+import { getAccount } from '@/actions/getAccount';
+import { getUser } from '@/actions/getUser';
+import { updateProviders } from '@/actions/updateProviders';
 import { type User } from '@/types';
 import env from '@/util/env';
 import NextAuth from 'next-auth';
 import FacebookProvider from 'next-auth/providers/facebook';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
-
-import { createUser } from '@/lib/createUser';
-import { getAccount } from '@/lib/getAccount';
-import { getUser } from '@/lib/getUser';
-import { updateProviders } from '@/lib/updateProviders';
 
 const { GOOGLE_ID, GOOGLE_SECRET, FACEBOOK_ID, FACEBOOK_SECRET, GITHUB_ID, GITHUB_SECRET } = env;
 

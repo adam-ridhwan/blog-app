@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
 import Link from 'next/link';
-import { capitalize } from '@/util';
+import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
 import { categories } from '@/util/constants';
 
