@@ -34,20 +34,17 @@ const NavBarDesktop = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
-    if (window.location.hash === '#_=_') router.replace('/');
-  }, [router]);
-
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
-  const closeAvatarDropdown = () => setIsAvatarDropdownOpen(false);
-  const openAvatarDropdown = () => setIsAvatarDropdownOpen(true);
 
   const navbarRef = useRef<HTMLDivElement | null>(null);
   const navbarPositionRef = useRef(0);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
-
   const prevBodyScrollY = useRef(0);
   const prevSidebarScrollY = useRef(64);
+
+  useEffect(() => {
+    if (window.location.hash === '#_=_') router.replace('/');
+  }, [router]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,12 +53,16 @@ const NavBarDesktop = () => {
       const currentScrollY = window.scrollY;
       const scrollAmount = currentScrollY - prevBodyScrollY.current;
 
+      console.log({ scrollAmount });
+
       navbarPositionRef.current =
         currentScrollY > prevBodyScrollY.current
           ? Math.max(navbarPositionRef.current - scrollAmount, -navbarRef.current.offsetHeight)
           : Math.min(navbarPositionRef.current - scrollAmount, 0);
 
-      navbarRef.current.style.transform = `translateY(${navbarPositionRef.current}px)`;
+      if (scrollAmount > 0) {
+        navbarRef.current.style.transform = `translateY(${navbarPositionRef.current}px)`;
+      }
       prevBodyScrollY.current = currentScrollY;
     };
 
