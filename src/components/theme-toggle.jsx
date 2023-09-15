@@ -6,7 +6,6 @@ import { useAtom } from 'jotai';
 import { Monitor, Moon, Sun } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const ThemeToggle = () => {
   const [theme, setTheme] = useAtom(themeAtom);

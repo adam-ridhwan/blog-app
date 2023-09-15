@@ -20,22 +20,26 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const addDarkClass = () => {
-    const node = mainContainerRef.current;
+    const mainContainerDiv = mainContainerRef.current;
+    const htmlElement = document.documentElement;
     const body = document.body;
+    htmlElement.classList.add('dark');
     body.classList.add('dark');
-    node?.classList.add('dark');
+    mainContainerDiv?.classList.add('dark');
   };
 
   const removeDarkClass = () => {
-    const node = mainContainerRef.current;
+    const mainContainerDiv = mainContainerRef.current;
+    const htmlElement = document.documentElement;
     const body = document.body;
+    htmlElement.classList.remove('dark');
     body.classList.remove('dark');
-    node?.classList.remove('dark');
+    mainContainerDiv?.classList.remove('dark');
   };
 
   useEffect(() => {
-    const node = mainContainerRef.current;
-    if (!mounted || !darkQuery || !node) return;
+    const mainContainerDiv = mainContainerRef.current;
+    if (!mounted || !darkQuery || !mainContainerDiv) return;
 
     const themeActions = {
       system: () => (darkQuery.matches ? addDarkClass() : removeDarkClass()),
@@ -47,8 +51,8 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }, [theme, mounted, darkQuery]);
 
   useEffect(() => {
-    const node = mainContainerRef.current;
-    if (theme !== 'system' || !darkQuery || !node) return;
+    const mainContainerDiv = mainContainerRef.current;
+    if (theme !== 'system' || !darkQuery || !mainContainerDiv) return;
 
     const handleChange = () => (darkQuery.matches ? addDarkClass() : removeDarkClass());
 
