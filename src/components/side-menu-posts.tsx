@@ -11,21 +11,16 @@ type MenuPostsProps = {
 const SideMenuPosts: FC<MenuPostsProps> = ({ withImage }) => {
   return (
     <>
-      <div className='mt-6 flex flex-col gap-[35px] md:grid md:grid-cols-2 lg:flex lg:flex-col'>
+      <div className='flex flex-col gap-[35px] md:grid md:grid-cols-2 lg:flex lg:flex-col'>
         <Link href='/' className='flex items-center gap-[20px]'>
           {withImage && (
             <div className='relative aspect-square max-w-[70px] flex-[1]'>
-              <Image
-                src='/sand.jpg'
-                alt=''
-                fill
-                className='rounded-full border-2 border-accent-foreground object-cover'
-              />
+              <Image src='/sand.jpg' alt='' fill className='rounded-full object-cover' />
             </div>
           )}
 
           <div className='flex flex-[4] flex-col gap-[5px]'>
-            <Badge variant='outline' className='bg-darkBlue w-max'>
+            <Badge variant='outline' className='w-max bg-darkBlue'>
               Fashion
             </Badge>
             <h3 className='text-muted-foreground'>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</h3>
@@ -39,17 +34,12 @@ const SideMenuPosts: FC<MenuPostsProps> = ({ withImage }) => {
         <Link href='/' className='flex items-center gap-[20px]'>
           {withImage && (
             <div className='relative aspect-square max-w-[70px] flex-[1]'>
-              <Image
-                src='/sand.jpg'
-                alt=''
-                fill
-                className='rounded-full border-2 border-accent-foreground object-cover'
-              />
+              <Image src='/sand.jpg' alt='' fill className='rounded-full object-cover' />
             </div>
           )}
 
           <div className='flex flex-[4] flex-col gap-[5px]'>
-            <Badge variant='outline' className='bg-darkPink w-max'>
+            <Badge variant='outline' className='w-max bg-darkPink'>
               Health
             </Badge>
             <h3 className='text-muted-foreground'>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</h3>
@@ -63,17 +53,12 @@ const SideMenuPosts: FC<MenuPostsProps> = ({ withImage }) => {
         <Link href='/' className='flex items-center gap-[20px]'>
           {withImage && (
             <div className='relative aspect-square max-w-[70px] flex-[1]'>
-              <Image
-                src='/sand.jpg'
-                alt=''
-                fill
-                className='rounded-full border-2 border-accent-foreground object-cover'
-              />
+              <Image src='/sand.jpg' alt='' fill className='rounded-full object-cover' />
             </div>
           )}
 
           <div className='flex flex-[4] flex-col gap-[5px]'>
-            <Badge variant='outline' className='bg-darkGreen w-max'>
+            <Badge variant='outline' className='w-max bg-darkGreen'>
               Coding
             </Badge>
             <h3 className='text-muted-foreground'>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</h3>
@@ -87,17 +72,12 @@ const SideMenuPosts: FC<MenuPostsProps> = ({ withImage }) => {
         <Link href='/' className='flex items-center gap-[20px]'>
           {withImage && (
             <div className='relative aspect-square max-w-[70px] flex-[1]'>
-              <Image
-                src='/sand.jpg'
-                alt=''
-                fill
-                className='rounded-full border-2 border-accent-foreground object-cover'
-              />
+              <Image src='/sand.jpg' alt='' fill className='rounded-full object-cover' />
             </div>
           )}
 
           <div className='flex flex-[4] flex-col gap-[5px]'>
-            <Badge variant='outline' className='bg-darkRed w-max'>
+            <Badge variant='outline' className='w-max bg-darkRed'>
               Business
             </Badge>
             <h3 className='text-muted-foreground'>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</h3>

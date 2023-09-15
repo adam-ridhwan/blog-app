@@ -87,22 +87,11 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // useEffect(() => {
-  //   const preventManualScroll = e => e.preventDefault();
-  //
-  //   const node = sidebarRef.current;
-  //
-  //   if (node) {
-  //     node.addEventListener('wheel', preventManualScroll);
-  //     return () => node.removeEventListener('wheel', preventManualScroll);
-  //   }
-  // }, []);
-
   return (
     <>
       <div ref={navbarRef} className='fixed top-0 z-20 w-full border-b border-b-border bg-background'>
-        <div className='container relative flex h-16 items-center justify-between'>
-          <Link href='/' className='flex-1 text-3xl font-bold'>
+        <div className='container relative flex h-16 items-center justify-between p-5 '>
+          <Link href='/' className='flex-1 text-3xl font-semibold text-primary'>
             Pondero
           </Link>
 

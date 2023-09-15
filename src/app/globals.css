@@ -6,35 +6,28 @@ html {
     overflow-y: scroll; /* Always show vertical scrollbar */
 }
 
+.converter {
+    color: hsl(228, 71%, 99%)
+}
+
 @layer base {
     :root {
         --background: 0 0% 98%;
-        --foreground: 20 14.3% 4.1%;
+        --foreground: 217 23% 16%;
 
-        --card: 0 0% 100%;
-        --card-foreground: 20 14.3% 4.1%;
+        --primary: 221 83% 16%;
+        --muted: 218 25% 39%;
+        --hover: 222 44% 95%;
 
-        --popover: 0 0% 100%;
-        --popover-foreground: 20 14.3% 4.1%;
+        --accentNavy: 223 100% 30%;
+        --accentAzure: 215 100% 50%;
+        --accentSkyBlue: 195 100% 75%;
 
-        --primary: 24 9.8% 10%;
-        --primary-foreground: 60 9.1% 97.8%;
+        --confirmative: 135 35% 30%;
+        --destructive: 0 89% 42%;
 
-        --secondary: 60 4.8% 95.9%;
-        --secondary-foreground: 24 9.8% 10%;
+        --border: 22 22% 90%;
 
-        --muted: 60 4.8% 95.9%;
-        --muted-foreground: 25 5.3% 44.7%;
-
-        --accent: 60 4.8% 90.9%;
-        --accent-foreground: 24 9.8% 10%;
-
-        --destructive: 0 84.2% 60.2%;
-        --destructive-foreground: 60 9.1% 97.8%;
-
-        --border: 20 5.9% 90%;
-        --input: 20 5.9% 90%;
-        --ring: 20 14.3% 4.1%;
         --paragraph: 0 0% 5%;
         --quill-text: #000000D6;
 
@@ -65,33 +58,22 @@ html {
 
 
     .dark {
-        --background: 20 14.3% 6.1%;
-        --foreground: 60 9.1% 97.8%;
+        --background: 200 5% 11%;
+        --foreground: 0 0% 98%;
 
-        --card: 20 14.3% 4.1%;
-        --card-foreground: 60 9.1% 97.8%;
+        --primary: 38 10% 79%;
+        --muted: 35 10% 63%;
+        --hover: 195 5% 15%;
 
-        --popover: 20 14.3% 4.1%;
-        --popover-foreground: 60 9.1% 97.8%;
+        --accentNavy: 223 100% 30%;
+        --accentAzure: 223 100% 30%;
+        --accentSkyBlue: 195 100% 75%;
 
-        --primary: 60 9.1% 97.8%;
-        --primary-foreground: 24 9.8% 10%;
+        --confirmative: 135 35% 30%;
+        --destructive: 0 89% 42%;
 
-        --secondary: 12 6.5% 15.1%;
-        --secondary-foreground: 60 9.1% 97.8%;
+        --border: 336 5% 21%;
 
-        --muted: 12 6.5% 15.1%;
-        --muted-foreground: 24 5.4% 63.9%;
-
-        --accent: 12 6.5% 18.1%;
-        --accent-foreground: 60 9.1% 97.8%;
-
-        --destructive: 0 62.8% 30.6%;
-        --destructive-foreground: 60 9.1% 97.8%;
-
-        --border: 12 6.5% 15.1%;
-        --input: 12 6.5% 15.1%;
-        --ring: 24 5.7% 82.9%;
         --paragraph: 60 9.1% 85.8%;
         --quill-text: #f4f2eed6;
 

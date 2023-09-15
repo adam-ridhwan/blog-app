@@ -3,10 +3,10 @@ import { getCategories } from '@/actions/getCategories';
 import { type Category } from '@/types';
 
 import { Separator } from '@/components/ui/separator';
-import AllCategories from '@/components/all-categories';
-import Card from '@/components/card';
+import Categories from '@/components/categories';
+import PostCard from '@/components/post-card';
 
-const BlogList = async () => {
+const PostList = async () => {
   const categories: Category[] = await getCategories();
 
   const recentPosts = [
@@ -44,19 +44,15 @@ const BlogList = async () => {
 
   return (
     <>
-      <main className='relative mb-6 mt-12'>
-        <AllCategories {...{ categories }} />
+      <main className='relative mb-6 mt-12 md:flex md:items-center'>
+        <Categories {...{ categories }} />
 
-        <div className='pointer-events-none h-0 select-none bg-red opacity-0' id='categories-placeholder'>
-          placeholder
-        </div>
-
-        <div className='mt-[120px]'>
+        <div className='mt-[120px] flex w-full flex-col gap-5 md:items-center'>
           {recentPosts.map(post => {
             return (
-              <Fragment key={post.date}>
-                <Separator orientation='horizontal' className='my-5' />
-                <Card key={post.title} title={post.title} date={post.date} content={post.content} />
+              <Fragment key={post.title}>
+                <PostCard title={post.title} date={post.date} content={post.content} />
+                <Separator className='md:hidden' />
               </Fragment>
             );
           })}
@@ -66,4 +62,4 @@ const BlogList = async () => {
   );
 };
 
-export default BlogList;
+export default PostList;

@@ -8,7 +8,7 @@ type SeparatorDotProps = {
 const SeparatorDot: FC<SeparatorDotProps> = ({ number }) => {
   return (
     <>
-      <Dot size={number || 15} />
+      <Dot size={number || 15} className='w-3' />
     </>
   );
 };

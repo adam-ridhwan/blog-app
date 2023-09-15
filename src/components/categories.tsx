@@ -10,7 +10,7 @@ type AllCategoriesProps = {
   categories: Category[];
 };
 
-const AllCategories: FC<AllCategoriesProps> = ({ categories }) => {
+const Categories: FC<AllCategoriesProps> = ({ categories }) => {
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
@@ -33,8 +33,8 @@ const AllCategories: FC<AllCategoriesProps> = ({ categories }) => {
               key={category._id}
               href={`/blog?category=${category}`}
               className={cn(
-                `flex h-[40px] items-center justify-center rounded-md border 
-                border-input bg-secondary px-5 hover:bg-accent hover:text-accent-foreground`
+                `flex h-[32px] items-center justify-center rounded-full border  
+                border-muted/30 bg-background px-5`
               )}
             >
               <span className='whitespace-nowrap text-lg text-primary'>{capitalize(category.title)}</span>
@@ -46,4 +46,4 @@ const AllCategories: FC<AllCategoriesProps> = ({ categories }) => {
   );
 };
 
-export default AllCategories;
+export default Categories;

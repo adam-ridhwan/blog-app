@@ -14,40 +14,25 @@ module.exports = {
     },
     extend: {
       colors: {
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+
+        primary: 'hsl(var(--primary))',
+        muted: 'hsl(var(--muted))',
+        hover: 'hsl(var(--hover))',
+
+        accentNavy: 'hsl(var(--accentNavy))',
+        accentAzure: 'hsl(var(--accentAzure))',
+        accentSkyBlue: 'hsl(var(--accentSkyBlue))',
+
+        confirmative: 'hsl(var(--confirmative))',
+        destructive: 'hsl(var(--destructive))',
+
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         paragraph: 'hsl(var(--paragraph))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
-        },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
-        },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
-        },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
-        },
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
+
         blue: 'hsl(var(--blue))',
         pink: 'hsl(var(--pink))',
         green: 'hsl(var(--green))',

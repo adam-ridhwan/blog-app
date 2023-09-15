@@ -1,6 +1,7 @@
 'use client';
 
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
+import { atom, useAtom, useSetAtom } from 'jotai';
 import { SessionProvider } from 'next-auth/react';
 
 type AuthProviderProps = {

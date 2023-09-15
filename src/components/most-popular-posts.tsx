@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { cn } from '@/util/cn';
-import { Dot } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import SeparatorDot from '@/components/ui/separator-dot';
@@ -35,22 +34,19 @@ const MostPopularPosts = () => {
 
   return (
     <>
-      <div className='mt-6 flex flex-col gap-[35px] md:grid md:grid-cols-2 lg:flex lg:flex-col'>
+      <div className='flex flex-col gap-3 md:grid md:grid-cols-2 lg:flex lg:flex-col'>
         {mostPopularPosts.map(post => {
           return (
-            <Link key={post.title} href='/' className='flex items-center gap-[20px]'>
-              <div className='flex flex-[4] flex-col gap-[5px]'>
+            <Link key={post.title} href='/' className='flex items-center'>
+              <div className='flex flex-col'>
                 <div className='flex items-center gap-[5px]'>
                   <Badge variant='outline' className={cn('mr-[5px] w-max', `${post.color}`)}>
                     Fashion
                   </Badge>
+
                   <span>{post.author}</span>
-                  <SeparatorDot />
-                  <span>{post.date}</span>
                 </div>
-                <h3 className='font-semibold text-muted-foreground'>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                </h3>
+                <h3 className='font-semibold text-muted-foreground'>Wispers of the Shore</h3>
               </div>
             </Link>
           );
