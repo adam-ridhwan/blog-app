@@ -5,7 +5,7 @@ import { type Account, type User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { generateRandomString } from '@/util/generateRandomString';
 
-export const createUser = async (account: Account, user: User) => {
+export const createUserAndAccount = async (account: Account, user: User) => {
   try {
     const { userCollection } = await connectToDatabase();
 

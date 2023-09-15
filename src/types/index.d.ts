@@ -1,4 +1,3 @@
-// import { ObjectId } from 'bson';
 import { MongoDocument, ObjectId, WithId } from 'mongodb';
 
 type Account = WithId<MongoDocument> & {
