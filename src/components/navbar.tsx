@@ -100,7 +100,7 @@ const Navbar = () => {
               {status === 'unauthenticated' && (
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button>Sign in</Button>
+                    <Button variant='accent'>Sign in</Button>
                   </DialogTrigger>
                   <DialogContent className='flex h-[400px] justify-center p-[40px] text-center'>
                     <DialogHeader className='flex items-center'>
