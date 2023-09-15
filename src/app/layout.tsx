@@ -3,7 +3,6 @@ import './globals.css';
 import { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Head from 'next/head';
 import AuthProvider from '@/provider/auth-provider';
 import JotaiProvider from '@/provider/jotai-provider';
 import ThemeProvider from '@/provider/theme-provider';

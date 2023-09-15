@@ -22,23 +22,21 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const addDarkClass = () => {
     const div = mainContainerRef.current;
     const html = document.documentElement;
-    const head = document.head;
     const body = document.body;
 
     html.classList.add('dark');
+    html.style.setProperty('color-scheme', 'dark');
     body.classList.add('dark');
-    head.classList.add('dark');
     div?.classList.add('dark');
   };
 
   const removeDarkClass = () => {
     const div = mainContainerRef.current;
     const html = document.documentElement;
-    const head = document.head;
     const body = document.body;
 
     html.classList.remove('dark');
-    head.classList.remove('dark');
+    html.style.setProperty('color-scheme', 'light');
     body.classList.remove('dark');
     div?.classList.remove('dark');
   };
