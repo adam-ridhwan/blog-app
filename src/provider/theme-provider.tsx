@@ -20,26 +20,32 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const addDarkClass = () => {
-    const mainContainerDiv = mainContainerRef.current;
-    const htmlElement = document.documentElement;
+    const div = mainContainerRef.current;
+    const html = document.documentElement;
+    const head = document.head;
     const body = document.body;
-    htmlElement.classList.add('dark');
+
+    html.classList.add('dark');
     body.classList.add('dark');
-    mainContainerDiv?.classList.add('dark');
+    head.classList.add('dark');
+    div?.classList.add('dark');
   };
 
   const removeDarkClass = () => {
-    const mainContainerDiv = mainContainerRef.current;
-    const htmlElement = document.documentElement;
+    const div = mainContainerRef.current;
+    const html = document.documentElement;
+    const head = document.head;
     const body = document.body;
-    htmlElement.classList.remove('dark');
+
+    html.classList.remove('dark');
+    head.classList.remove('dark');
     body.classList.remove('dark');
-    mainContainerDiv?.classList.remove('dark');
+    div?.classList.remove('dark');
   };
 
   useEffect(() => {
-    const mainContainerDiv = mainContainerRef.current;
-    if (!mounted || !darkQuery || !mainContainerDiv) return;
+    const div = mainContainerRef.current;
+    if (!mounted || !darkQuery || !div) return;
 
     const themeActions = {
       system: () => (darkQuery.matches ? addDarkClass() : removeDarkClass()),
@@ -51,8 +57,8 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }, [theme, mounted, darkQuery]);
 
   useEffect(() => {
-    const mainContainerDiv = mainContainerRef.current;
-    if (theme !== 'system' || !darkQuery || !mainContainerDiv) return;
+    const div = mainContainerRef.current;
+    if (theme !== 'system' || !darkQuery || !div) return;
 
     const handleChange = () => (darkQuery.matches ? addDarkClass() : removeDarkClass());
 
