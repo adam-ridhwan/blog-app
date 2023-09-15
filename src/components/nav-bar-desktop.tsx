@@ -53,17 +53,15 @@ const NavBarDesktop = () => {
       const currentScrollY = window.scrollY;
       const scrollAmount = currentScrollY - prevBodyScrollY.current;
 
-      console.log({ scrollAmount });
-
       navbarPositionRef.current =
         currentScrollY > prevBodyScrollY.current
           ? Math.max(navbarPositionRef.current - scrollAmount, -navbarRef.current.offsetHeight)
           : Math.min(navbarPositionRef.current - scrollAmount, 0);
 
-      if (scrollAmount > 0) {
+      if (currentScrollY > 0) {
         navbarRef.current.style.transform = `translateY(${navbarPositionRef.current}px)`;
+        prevBodyScrollY.current = currentScrollY;
       }
-      prevBodyScrollY.current = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll);
