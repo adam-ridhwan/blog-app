@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import AllCategories from '@/components/all-categories';
 import Card from '@/components/card';
 
-const MainSection = async () => {
+const BlogList = async () => {
   const categories: Category[] = await getCategories();
 
   const recentPosts = [
@@ -66,4 +66,4 @@ const MainSection = async () => {
   );
 };
 
-export default MainSection;
+export default BlogList;

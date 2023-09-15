@@ -1,10 +1,10 @@
-import MainSection from '@/components/main-section';
+import BlogList from '@/components/blog-list';
 import SideMenuPlaceholder from '@/components/side-menu-placeholder';
 
 export default function Home() {
   return (
     <div className='container flex flex-col lg:flex-row'>
-      <MainSection />
+      <BlogList />
       <SideMenuPlaceholder />
     </div>
   );

@@ -29,7 +29,7 @@ import SideMenu from '@/components/side-menu';
 import ThemeToggle from '@/components/theme-toggle';
 import WriteOrPublishButton from '@/components/write-or-publish-button';
 
-const NavBarDesktop = () => {
+const Navbar = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
@@ -208,4 +208,4 @@ const NavBarDesktop = () => {
   );
 };
 
-export default NavBarDesktop;
+export default Navbar;

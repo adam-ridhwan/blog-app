@@ -7,7 +7,7 @@ import AuthProvider from '@/provider/auth-provider';
 import JotaiProvider from '@/provider/jotai-provider';
 import ThemeProvider from '@/provider/theme-provider';
 
-import NavBarDesktop from '@/components/nav-bar-desktop';
+import Navbar from '@/components/navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <AuthProvider>
           <JotaiProvider>
             <ThemeProvider>
-              <NavBarDesktop />
+              <Navbar />
               {children}
             </ThemeProvider>
           </JotaiProvider>
