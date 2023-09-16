@@ -24,7 +24,7 @@ type UserDetails = {
 
 const TITLE_HEIGHT = 32;
 
-const Post: FC<CardProps> = ({ post: { author, title, content, likes, comments, views, createdAt }, post }) => {
+const Post: FC<CardProps> = ({ post: { author, title, content, likes, comments, views, createdAt } }) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const [isWrapped, setIsWrapped] = useState(false);
   const [user, setUser] = useState<UserDetails>();

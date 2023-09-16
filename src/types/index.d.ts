@@ -1,10 +1,8 @@
 import { MongoDocument, ObjectId, WithId } from 'mongodb';
 
-type WithoutObjectId<T> = Omit<T, '_id'>;
-
 type Account = WithId<MongoDocument> & {
-  _id: ObjectId;
-  userId: ObjectId;
+  _id: ObjectId | string;
+  userId: ObjectId | string;
   type: string;
   provider: string;
   providerAccountId: string;
@@ -17,13 +15,6 @@ type Account = WithId<MongoDocument> & {
 };
 
 type Category = WithId<MongoDocument> & {
-  _id?: ObjectId;
-  slug: string;
-  title: string;
-  posts: [];
-};
-
-type CategoryWithStrings = WithoutObjectId<Category> & {
   _id?: string;
   slug: string;
   title: string;
@@ -31,7 +22,7 @@ type CategoryWithStrings = WithoutObjectId<Category> & {
 };
 
 type Comment = WithId<MongoDocument> & {
-  _id: ObjectId;
+  _id: string;
   createdAt: Date;
   desc: string;
   userEmail: string;
@@ -41,7 +32,7 @@ type Comment = WithId<MongoDocument> & {
 };
 
 type Post = WithId<MongoDocument> & {
-  _id?: ObjectId;
+  _id?: string;
   createdAt: Date;
   postSlug: string;
   title: string;
@@ -49,21 +40,14 @@ type Post = WithId<MongoDocument> & {
   img?: string;
   views: number;
   categorySlug: string;
-  category: ObjectId;
-  author: ObjectId;
-  comments: [ObjectId];
-  likes: number;
-};
-
-type PostWithStrings = WithoutObjectId<Post> & {
-  _id: string;
   category: string;
   author: string;
   comments: string[];
+  likes: number;
 };
 
 type Session = WithId<MongoDocument> & {
-  _id: ObjectId;
+  _id: string;
   sessionToken: string;
   userId: string;
   expires: Date;
@@ -71,7 +55,7 @@ type Session = WithId<MongoDocument> & {
 };
 
 type User = WithId<MongoDocument> & {
-  _id: ObjectId;
+  _id: string;
   name?: string;
   email: string;
   username: string;
@@ -83,16 +67,8 @@ type User = WithId<MongoDocument> & {
   comments: Comment[];
 };
 
-type UserWithStrings = WithoutObjectId<User> & {
-  _id: string;
-  name: string;
-  email: string;
-  username: string;
-  image?: string;
-};
-
 type VerificationToken = {
-  _id: ObjectId;
+  _id: string;
   token: string;
   expires: Date;
 };

@@ -1,22 +1,22 @@
 'use client';
 
 import { FC } from 'react';
-import { Category, CategoryWithStrings, Post, PostWithStrings } from '@/types';
+import { Category, Post } from '@/types';
 import { atom } from 'jotai';
 import { useHydrateAtoms } from 'jotai/utils';
 
 type HydratorProps = {
-  convertedPosts: PostWithStrings[];
-  convertedCategories: CategoryWithStrings[];
+  posts: Post[];
+  categories: Category[];
 };
 
-export const postsAtom = atom<PostWithStrings[]>([]);
-export const categoriesAtom = atom<CategoryWithStrings[]>([]);
+export const postsAtom = atom<Post[]>([]);
+export const categoriesAtom = atom<Category[]>([]);
 
-const Hydrator: FC<HydratorProps> = ({ convertedPosts, convertedCategories }) => {
+const Hydrator: FC<HydratorProps> = ({ posts, categories }) => {
   useHydrateAtoms([
-    [postsAtom, convertedPosts],
-    [categoriesAtom, convertedCategories],
+    [postsAtom, posts],
+    [categoriesAtom, categories],
   ]);
 
   return null;

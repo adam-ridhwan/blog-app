@@ -3,13 +3,10 @@
 import { FC, memo, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { getCategories } from '@/actions/getCategories';
-import { CategoryWithStrings, Post, PostWithStrings, type Category } from '@/types';
 import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
-import { randomId, useTimeout } from '@mantine/hooks';
+import { useTimeout } from '@mantine/hooks';
 import { useAtomValue } from 'jotai';
-import { ObjectId } from 'mongodb';
 
 import { categoriesAtom } from '@/hooks/hydrator';
 import { Skeleton } from '@/components/ui/skeleton';
