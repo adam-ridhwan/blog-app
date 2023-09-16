@@ -29,7 +29,7 @@ const Categories: FC = () => {
 
   return (
     <>
-      <div className='hide-scrollbar mb-10 mt-10 flex w-full flex-row gap-2 overflow-x-auto '>
+      <div className='hide-scrollbar mb-10 mt-10 flex w-full flex-row gap-2 overflow-x-auto'>
         <Link
           href='/'
           className={cn(

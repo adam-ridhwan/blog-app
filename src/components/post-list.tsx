@@ -280,7 +280,7 @@ const PostList = () => {
   );
 
   useEffect(() => {
-    // if (entry?.isIntersecting) fetchNextPage().then(() => {});
+    if (entry?.isIntersecting) fetchNextPage().then(() => {});
   }, [entry, fetchNextPage]);
 
   const _posts = data?.pages.flatMap(page => page);

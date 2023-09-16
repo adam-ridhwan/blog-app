@@ -67,7 +67,7 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
   return (
     <>
       {!mounted ? null : (
-        <div ref={mainContainerRef} className='main-container min-h-screen'>
+        <div ref={mainContainerRef} className='main-container min-h-screen max-w-[100vw]'>
           {children}
         </div>
       )}

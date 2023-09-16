@@ -23,7 +23,7 @@ const CardSkeleton = forwardRef<HTMLDivElement, CardSkeletonProps>(({}, ref) => 
         <div className='flex flex-col gap-1 md:flex-row md:items-end md:gap-7'>
           <div className='flex flex-1 flex-col gap-2'>
             <CardHeader>
-              <Skeleton className='h-[24px] w-[500px] bg-primary/30 md:w-[200px]' />
+              <Skeleton className='w-[80%]] h-[24px] bg-primary/30 md:w-[200px]' />
             </CardHeader>
             <CardContent>
               <Skeleton className='hidden h-[72px] bg-primary/30 md:flex' />
