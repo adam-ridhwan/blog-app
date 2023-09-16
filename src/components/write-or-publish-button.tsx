@@ -20,17 +20,14 @@ const WriteOrPublishButton = () => {
   return (
     <>
       {pathname === '/write-a-post' ? (
-        <Button
-          variant='accent'
-          className='bg-confirmative/90 hover:bg-confirmative flex h-[40px] w-[120px] flex-row gap-2 text-white'
-        >
+        <Button variant='confirmative' className='flex h-[40px] w-[120px] flex-row gap-2'>
           <Rocket className='h-4 w-4' />
           <span className='whitespace-nowrap'>Publish</span>
         </Button>
       ) : (
         <Button
           variant='accent'
-          className='flex h-[40px] w-[120px] flex-row  gap-2'
+          className='flex h-[40px] w-[120px] flex-row gap-2'
           onClick={() => router.push('/write-a-post')}
         >
           <PenSquare className='h-4 w-4' />

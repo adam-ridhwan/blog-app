@@ -16,6 +16,7 @@ html {
         --foreground: 217 23% 16%;
 
         --primary: 221 83% 16%;
+        --secondary: 0 0% 98%;
         --muted: 218 25% 39%;
         --hover: 222 44% 95%;
 
@@ -62,12 +63,13 @@ html {
         --foreground: 0 0% 98%;
 
         --primary: 38 10% 79%;
+        --secondary: 38 10% 79%;
         --muted: 35 10% 63%;
         --hover: 195 5% 15%;
 
-        --accentNavy: 223 100% 30%;
-        --accentAzure: 223 100% 30%;
-        --accentSkyBlue: 195 100% 75%;
+        /*--accentNavy: 223 100% 30%;*/
+        /*--accentAzure: 223 100% 30%;*/
+        /*--accentSkyBlue: 195 100% 75%;*/
 
         --confirmative: 135 35% 30%;
         --destructive: 0 89% 42%;

@@ -128,8 +128,8 @@ const Write = () => {
    * HANDLE ENTER KEY
    * - automatic scroll down when cursor is at the bottom of the viewport
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  const navbarHeight = 64;
-  const threshold = 150;
+  const NAVBAR_HEIGHT = 64;
+  const THRESHOLD = 150;
   useEffect(() => {
     if (typeof document === 'undefined') return;
 
@@ -141,7 +141,7 @@ const Write = () => {
       const range = quill.getSelection();
       const bounds = quill.getBounds(range?.index || 0);
       const height = Math.floor(bounds.height);
-      const bottomOfViewport = window.scrollY + window.innerHeight - navbarHeight - threshold;
+      const bottomOfViewport = window.scrollY + window.innerHeight - NAVBAR_HEIGHT - THRESHOLD;
 
       if (bounds.bottom > bottomOfViewport) {
         const extraScrollThreshold = bounds.bottom - bottomOfViewport + height;
@@ -160,9 +160,8 @@ const Write = () => {
 
   return (
     <>
-      {/*<div className='fixed left-[50%] z-50 translate-x-[-50%]'>{scrollY}</div>*/}
-      <div className='flex h-full min-h-screen flex-col items-center bg-secondary pb-[100px]'>
-        <div className='relative  w-full max-w-[840px] pt-[94px]'>
+      <div className='flex h-full min-h-screen flex-col items-center bg-background pb-[100px]'>
+        <div className='relative w-full max-w-[840px] pt-[94px]'>
           <div className='absolute translate-x-[-32px]' style={{ top: `${position}px` }}>
             {isAddButtonVisible && (
               <Popover>

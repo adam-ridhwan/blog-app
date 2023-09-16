@@ -2,6 +2,7 @@
 
 import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { type Category } from '@/types';
 import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
@@ -11,22 +12,30 @@ type AllCategoriesProps = {
 };
 
 const Categories: FC<AllCategoriesProps> = ({ categories }) => {
-  const [width, setWidth] = useState(0);
+  const pathname = usePathname();
+  // const [width, setWidth] = useState(0);
 
-  useEffect(() => {
-    const placeholder = document.getElementById('categories-placeholder');
-    const handleResize = () => placeholder && setWidth(placeholder.clientWidth);
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  // useEffect(() => {
+  //   const placeholder = document.getElementById('categories-placeholder');
+  //   const handleResize = () => placeholder && setWidth(placeholder.clientWidth);
+  //   handleResize();
+  //   window.addEventListener('resize', handleResize);
+  //   return () => window.removeEventListener('resize', handleResize);
+  // }, []);
 
   return (
     <>
-      <div
-        className='hide-scrollbar absolute top-[40px] mb-10 flex w-0 flex-row gap-2 overflow-x-auto'
-        style={{ width: `${width}px` }}
-      >
+      <div className='hide-scrollbar mb-10 mt-10 flex w-full flex-row gap-2 overflow-x-auto '>
+        <Link
+          href=''
+          className={cn(
+            `flex h-[32px] items-center justify-center whitespace-nowrap rounded-full border
+            border-transparent bg-background px-5`,
+            pathname === '/' && 'bg-accentNavy text-white'
+          )}
+        >
+          For you
+        </Link>
         {categories.map(category => {
           return (
             <Link
