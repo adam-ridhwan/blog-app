@@ -9,6 +9,7 @@ const nextConfig = {
       'avatars.githubusercontent.com',
       'scontent-bos5-1.xx.fbcdn.net',
       'scontent-iad3-2.xx.fbcdn.net',
+      'scontent-iad3-1.xx.fbcdn.net',
     ],
   },
 };
