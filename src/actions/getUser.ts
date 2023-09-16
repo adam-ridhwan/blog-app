@@ -1,15 +1,29 @@
 'use server';
 
-import { User } from '@/types';
+import { User, UserWithStrings } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
+import { ObjectId } from 'mongodb';
 
-export async function getUser(email: string | undefined): Promise<User | null> {
+export async function getUser(
+  email: string | undefined,
+  userId: string | undefined
+): Promise<User | UserWithStrings | null> {
   try {
     const { userCollection } = await connectToDatabase();
 
-    const user: User = userCollection.findOne({ email });
+    if (email) {
+      const user: User = await userCollection.findOne({ email });
 
-    return !user ? null : user;
+      return !user ? null : user;
+    }
+
+    if (userId) {
+      const userIdAsObjectId = new ObjectId(userId);
+
+      const user: User = await userCollection.findOne({ _id: userIdAsObjectId });
+
+      return !user ? null : { userId: user._id.toString(), name: user.name, username: user.username };
+    }
   } catch (error) {
     console.error('Error getting user:', error);
     throw new Error('Error occurred while fetching user');

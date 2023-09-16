@@ -121,7 +121,7 @@ html {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
-    max-height: 2.75em;
+    max-height: 2.8em;
 }
 
 .three-line-ellipsis {

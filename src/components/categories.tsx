@@ -4,26 +4,23 @@ import { FC, memo, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getCategories } from '@/actions/getCategories';
-import { type Category } from '@/types';
+import { CategoryWithStrings, Post, PostWithStrings, type Category } from '@/types';
 import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
 import { randomId, useTimeout } from '@mantine/hooks';
+import { useAtomValue } from 'jotai';
+import { ObjectId } from 'mongodb';
 
+import { categoriesAtom } from '@/hooks/hydrator';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const Categories: FC = () => {
+  const convertedCategories = useAtomValue(categoriesAtom);
   const pathname = usePathname();
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isMounted, setIsMounted] = useState(false);
   const { start } = useTimeout(() => setIsMounted(true), 1000);
 
-  useEffect(() => {
-    (async () => {
-      const fetchedCategories = await getCategories();
-      setCategories(fetchedCategories);
-      start();
-    })();
-  }, [start]);
+  useEffect(() => start(), [start]);
 
   if (!isMounted) return <CategorySkeleton />;
 
@@ -40,7 +37,7 @@ const Categories: FC = () => {
         >
           For you
         </Link>
-        {categories.map(category => {
+        {convertedCategories.map(category => {
           return (
             <Link
               key={category._id}
