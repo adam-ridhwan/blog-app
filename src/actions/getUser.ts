@@ -5,9 +5,13 @@ import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
 
 export async function getUser(
-  email: string | undefined,
-  userId: string | undefined
+  email?: string | undefined,
+  userId?: string | undefined
 ): Promise<User | UserWithStrings | null> {
+  if (!email && !userId) {
+    throw new Error('Either email or userId must be provided');
+  }
+
   try {
     const { userCollection } = await connectToDatabase();
 
