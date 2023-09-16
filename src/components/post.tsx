@@ -1,11 +1,13 @@
-import { FC } from 'react';
+'use client';
+
+import { FC, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { cn } from '@/util/cn';
 import { ChefHatIcon, Heart, MessageCircle } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import SeparatorDot from '@/components/ui/separator-dot';
 
 type CardProps = {
@@ -15,7 +17,19 @@ type CardProps = {
   content: string;
 };
 
-const Post: FC<CardProps> = async ({ title, date, content }) => {
+const TITLE_HEIGHT = 32;
+
+const Post: FC<CardProps> = ({ title, date, content }) => {
+  const titleRef = useRef<HTMLDivElement>(null);
+  const [isWrapped, setIsWrapped] = useState(false);
+
+  useEffect(() => {
+    if (titleRef.current) {
+      const element = titleRef.current;
+      if (element.clientHeight > TITLE_HEIGHT) setIsWrapped(true);
+    }
+  }, [title]);
+
   return (
     <>
       <Card>
@@ -35,12 +49,22 @@ const Post: FC<CardProps> = async ({ title, date, content }) => {
         </div>
 
         <Link href='/' className='flex flex-col gap-1 md:flex-row md:items-end md:gap-7'>
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col'>
             <CardHeader>
-              <CardTitle className='text-primary'>{title}</CardTitle>
+              <CardTitle ref={titleRef} className={cn(`two-line-ellipsis text-primary`)}>
+                {title}
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className='multi-line-ellipsis text-muted'>{content}</p>
+              <p
+                className={cn(
+                  `hidden text-muted`,
+                  { 'two-line-ellipsis': isWrapped },
+                  { 'three-line-ellipsis': !isWrapped }
+                )}
+              >
+                {content}
+              </p>
             </CardContent>
           </div>
 

@@ -1,33 +1,37 @@
 'use client';
 
-import { FC, useEffect, useState } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { getCategories } from '@/actions/getCategories';
 import { type Category } from '@/types';
 import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
+import { randomId, useTimeout } from '@mantine/hooks';
 
-type AllCategoriesProps = {
-  categories: Category[];
-};
+import { Skeleton } from '@/components/ui/skeleton';
 
-const Categories: FC<AllCategoriesProps> = ({ categories }) => {
+const Categories: FC = () => {
   const pathname = usePathname();
-  // const [width, setWidth] = useState(0);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
+  const { start } = useTimeout(() => setIsMounted(true), 1000);
 
-  // useEffect(() => {
-  //   const placeholder = document.getElementById('categories-placeholder');
-  //   const handleResize = () => placeholder && setWidth(placeholder.clientWidth);
-  //   handleResize();
-  //   window.addEventListener('resize', handleResize);
-  //   return () => window.removeEventListener('resize', handleResize);
-  // }, []);
+  useEffect(() => {
+    (async () => {
+      const fetchedCategories = await getCategories();
+      setCategories(fetchedCategories);
+      start();
+    })();
+  }, [start]);
+
+  if (!isMounted) return <CategorySkeleton />;
 
   return (
     <>
       <div className='hide-scrollbar mb-10 mt-10 flex w-full flex-row gap-2 overflow-x-auto '>
         <Link
-          href=''
+          href='/'
           className={cn(
             `flex h-[32px] items-center justify-center whitespace-nowrap rounded-full border
             border-transparent bg-background px-5`,
@@ -56,3 +60,17 @@ const Categories: FC<AllCategoriesProps> = ({ categories }) => {
 };
 
 export default Categories;
+
+const CategorySkeleton = memo(() => {
+  return (
+    <div className='hide-scrollbar mb-10 mt-10 flex w-full flex-row gap-2 overflow-x-auto '>
+      {Array.from({ length: 8 }).map((_, i) => {
+        const randomWidth = Math.floor(Math.random() * (120 - 90 + 1) + 90);
+        return (
+          <Skeleton key={i} className={`h-[32px] rounded-full bg-primary/30`} style={{ width: `${randomWidth}px` }} />
+        );
+      })}
+    </div>
+  );
+});
+CategorySkeleton.displayName = 'CategorySkeleton';

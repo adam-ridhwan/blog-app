@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import AuthProvider from '@/provider/auth-provider';
 import JotaiProvider from '@/provider/jotai-provider';
+import QueryProvider from '@/provider/query-provider';
 import ThemeProvider from '@/provider/theme-provider';
 
 import Navbar from '@/components/navbar';
@@ -34,10 +35,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={`${inter.className} max-h-screen min-h-screen w-full max-w-[100vw]`}>
         <AuthProvider>
           <JotaiProvider>
-            <ThemeProvider>
-              <Navbar />
-              {children}
-            </ThemeProvider>
+            <QueryProvider>
+              <ThemeProvider>
+                <Navbar />
+                {children}
+              </ThemeProvider>
+            </QueryProvider>
           </JotaiProvider>
         </AuthProvider>
       </body>

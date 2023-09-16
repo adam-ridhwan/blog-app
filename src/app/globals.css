@@ -113,17 +113,27 @@ html {
     }
 }
 
+.two-line-ellipsis {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    max-height: 3em;
+}
 
-.multi-line-ellipsis {
-    display: none;
+.three-line-ellipsis {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
     overflow: hidden;
     max-height: 4.5em;
 }
 
+
 @media (min-width: 768px) {
-    .multi-line-ellipsis {
+    .three-line-ellipsis {
+        display: -webkit-box !important;
+    }
+
+    .two-line-ellipsis {
         display: -webkit-box !important;
     }
 }
