@@ -2,7 +2,6 @@ import { createUserAndAccount } from '@/actions/createUserAndAccount';
 import { getAccount } from '@/actions/getAccount';
 import { getUser } from '@/actions/getUser';
 import { updateProviders } from '@/actions/updateProviders';
-import { type User } from '@/types';
 import env from '@/util/env';
 import NextAuth from 'next-auth';
 import FacebookProvider from 'next-auth/providers/facebook';
@@ -27,7 +26,7 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user: nextAuthUser, account: nextAuthAccount, profile: nextAuthProfile }) {
       /**
        * 1) Check if user exists in user collection
        * 2) If user DOES NOT exist, create new user and account
@@ -36,19 +35,19 @@ const handler = NextAuth({
        * */
 
       // 1) Check if user exists in user collection
-      const existingUser: User | null = await getUser(user.email || undefined);
+      const existingUser = await getUser(nextAuthUser.email || undefined);
 
       // 2) If user DOES NOT exist, create new user and account
       if (!existingUser) {
-        await createUserAndAccount(account, user);
+        await createUserAndAccount(nextAuthAccount, nextAuthUser);
         return true;
       }
 
       // 3) If user DOES exits, check if account provider exists in account collection
-      const existingAccount = await getAccount(existingUser._id, account?.provider);
+      const existingAccount = await getAccount(existingUser._id, nextAuthAccount?.provider);
 
       // 4) If account provider DOES NOT, update account by pushing the provider to accounts[] in user collection
-      if (!existingAccount) await updateProviders(account, existingUser);
+      if (!existingAccount) await updateProviders(nextAuthAccount, existingUser);
 
       return true;
     },

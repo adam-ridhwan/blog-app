@@ -4,7 +4,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getUser } from '@/actions/getUser';
-import { type Post } from '@/types';
+import { User, type Post } from '@/types';
 import { cn } from '@/util/cn';
 import { Heart, MessageCircle } from 'lucide-react';
 
@@ -16,18 +16,12 @@ type CardProps = {
   post: Post;
 };
 
-type UserDetails = {
-  userId: string;
-  name: string;
-  username: string;
-};
-
 const TITLE_HEIGHT = 32;
 
 const Post: FC<CardProps> = ({ post: { author, title, content, likes, comments, views, createdAt } }) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const [isWrapped, setIsWrapped] = useState(false);
-  const [user, setUser] = useState<UserDetails>();
+  const [user, setUser] = useState<Partial<User> | null>();
 
   useEffect(() => {
     const titleNode = titleRef.current;

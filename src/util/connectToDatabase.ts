@@ -1,5 +1,7 @@
 import { clientPromise } from '@/mongodb';
+import { Account, Category, Post, User } from '@/types';
 import env from '@/util/env';
+import { OptionalId } from 'mongodb';
 
 const {
   MONGODB_DATABASE,
@@ -15,12 +17,12 @@ export const connectToDatabase = async () => {
   const client = await clientPromise;
   const db = client.db(MONGODB_DATABASE);
 
-  const accountCollection = db.collection(ACCOUNT_COLLECTION);
-  const categoryCollection = db.collection(CATEGORY_COLLECTION);
-  const commentCollection = db.collection(COMMENT_COLLECTION);
-  const postCollection = db.collection(POST_COLLECTION);
+  const accountCollection = db.collection<Account>(ACCOUNT_COLLECTION);
+  const categoryCollection = db.collection<Category>(CATEGORY_COLLECTION);
+  const commentCollection = db.collection<Comment>(COMMENT_COLLECTION);
+  const postCollection = db.collection<Post>(POST_COLLECTION);
   const sessionCollection = db.collection(SESSION_COLLECTION);
-  const userCollection = db.collection(USER_COLLECTION);
+  const userCollection = db.collection<User>(USER_COLLECTION);
 
   return {
     accountCollection,

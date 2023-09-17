@@ -3,8 +3,10 @@
 import { createAccount } from '@/actions/createAccount';
 import { Account, User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
+import { ObjectId } from 'mongodb';
+import { Account as NextAuthAccount } from 'next-auth';
 
-export async function updateProviders(account: Account, existingUser: User): Promise<User | null> {
+export async function updateProviders(account: NextAuthAccount | null, existingUser: User | Partial<User>) {
   try {
     const { userCollection } = await connectToDatabase();
 
@@ -12,20 +14,21 @@ export async function updateProviders(account: Account, existingUser: User): Pro
      * 1) Create new provider account first
      * 2) Update user by pushing the provider to accounts[]
      * */
+    const convertToMyAccountType = (account: NextAuthAccount | null) => ({
+      ...account,
+      userId: new ObjectId(account?.userId),
+    });
 
-    const newAccount = createAccount(account, existingUser._id);
-    const updateAccount = userCollection.updateOne(
-      { email: existingUser.email },
-      {
-        $push: {
-          accounts: account,
-        },
-      }
-    );
+    const convertedAccount = convertToMyAccountType(account) as Account;
 
-    return await Promise.all([newAccount, updateAccount]);
+    if (!account) return new Error('Account is null');
+
+    await Promise.all([
+      createAccount(account, new ObjectId(existingUser._id)),
+      userCollection.updateOne({ email: existingUser.email }, { $push: { accounts: convertedAccount } }),
+    ]);
   } catch (error) {
-    console.error('Error getting user:', error);
-    throw new Error('Error occurred while fetching user');
+    console.error('Error updating providers:', error);
+    throw new Error('Error occurred while updating providers');
   }
 }

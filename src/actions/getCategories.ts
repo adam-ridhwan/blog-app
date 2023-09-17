@@ -1,12 +1,11 @@
 'use server';
 
-import { Category, Post } from '@/types';
+import { Category } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 
 export const getCategories = async (): Promise<Category[]> => {
   try {
     const { categoryCollection } = await connectToDatabase();
-
     const categories: Category[] = await categoryCollection.find({}).toArray();
 
     const convertObjectIdsToStringsInCategories = (categories: Category[]) => {
@@ -16,13 +15,9 @@ export const getCategories = async (): Promise<Category[]> => {
           category._id = category._id.toString();
         }
 
-        // Convert post IDs within the category's post array
-        if (category.post && Array.isArray(category.post)) {
-          category.post = category.post.map((post: Post) => {
-            if (post._id && typeof post._id !== 'string') post._id = post._id.toString();
-
-            return post;
-          });
+        // Convert post ObjectIds within the category's posts array to strings
+        if (category.posts && Array.isArray(category.posts)) {
+          category.posts = category.posts.map(postId => (typeof postId !== 'string' ? postId.toString() : postId));
         }
 
         return category;

@@ -37,8 +37,8 @@ const Categories: FC = () => {
         {convertedCategories.map(category => {
           return (
             <Link
-              key={category._id}
-              href={`/blog?category=${category}`}
+              key={category.title}
+              href={`/blog?category=${category.title}`}
               className={cn(
                 `flex h-[32px] items-center justify-center rounded-full border  
                 border-muted/30 bg-background px-5`

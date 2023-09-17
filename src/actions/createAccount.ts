@@ -1,18 +1,20 @@
 'use server';
 
-import { type Account } from '@/types';
+import { Account } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
-import { ObjectId } from 'mongodb';
+import { InsertOneResult, ObjectId } from 'mongodb';
+import { Account as NextAuthAccount } from 'next-auth';
 
-export const createAccount = async (account: Account, userId: ObjectId): Promise<Account> => {
+export const createAccount = async (
+  account: NextAuthAccount | null,
+  userId: ObjectId
+): Promise<InsertOneResult<Account>> => {
   try {
     const { accountCollection } = await connectToDatabase();
 
-    const newAccount: Account = { ...account, userId: userId };
+    const newAccount = { ...account, userId: userId };
 
-    const createNewAccount: Account = accountCollection.insertOne(newAccount);
-
-    return await Promise.all([createNewAccount]);
+    return await accountCollection.insertOne(newAccount as Account);
   } catch (error) {
     console.error('Error creating user:', error);
     throw new Error('Error occurred while creating user');

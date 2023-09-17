@@ -1,10 +1,11 @@
 import { MongoDocument, ObjectId, WithId } from 'mongodb';
+import { ProviderType } from 'next-auth/providers';
 
-type Account = WithId<MongoDocument> & {
-  _id: ObjectId | string;
+type Account = {
+  _id?: ObjectId | string;
   userId: ObjectId | string;
-  type: string;
-  provider: string;
+  type?: string | undefined;
+  provider: ProviderType | undefined;
   providerAccountId: string;
   refresh_token?: string;
   access_token?: string;
@@ -14,14 +15,14 @@ type Account = WithId<MongoDocument> & {
   id_token?: string;
 };
 
-type Category = WithId<MongoDocument> & {
-  _id?: string;
+type Category = {
+  _id?: ObjectId | string;
   slug: string;
   title: string;
-  posts: [];
+  posts: (ObjectId | string)[];
 };
 
-type Comment = WithId<MongoDocument> & {
+type Comment = {
   _id: string;
   createdAt: Date;
   desc: string;
@@ -31,8 +32,8 @@ type Comment = WithId<MongoDocument> & {
   post: Post;
 };
 
-type Post = WithId<MongoDocument> & {
-  _id?: string;
+type Post = {
+  _id?: ObjectId | string;
   createdAt: Date;
   postSlug: string;
   title: string;
@@ -40,13 +41,13 @@ type Post = WithId<MongoDocument> & {
   img?: string;
   views: number;
   categorySlug: string;
-  category: string;
-  author: string;
-  comments: string[];
+  category: ObjectId | string;
+  author: ObjectId | string;
+  comments: (ObjectId | string)[];
   likes: number;
 };
 
-type Session = WithId<MongoDocument> & {
+type Session = {
   _id: string;
   sessionToken: string;
   userId: string;
@@ -54,10 +55,10 @@ type Session = WithId<MongoDocument> & {
   user: User;
 };
 
-type User = WithId<MongoDocument> & {
-  _id: string;
-  name?: string;
-  email: string;
+type User = {
+  _id?: ObjectId | string;
+  name?: string | null;
+  email: string | null | undefined;
   username: string;
   emailVerified?: Date;
   image?: string;

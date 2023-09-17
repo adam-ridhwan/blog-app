@@ -13,13 +13,13 @@ export const getPosts = async (): Promise<Post[]> => {
     const convertObjectIdsToStrings = (posts: Post[]) => {
       return posts.map(post => {
         // Convert _id, category, and author
-        if (post._id && typeof post._id !== 'string') post._id = post._id.toString();
-        if (post.category && typeof post.category !== 'string') post.category = post.category.toString();
-        if (post.author && typeof post.author !== 'string') post.author = post.author.toString();
+        if (post._id && post._id instanceof ObjectId) post._id = post._id.toString();
+        if (post.category && post.category instanceof ObjectId) post.category = post.category.toString();
+        if (post.author && post.author instanceof ObjectId) post.author = post.author.toString();
 
         // Convert comments array
         if (post.comments && Array.isArray(post.comments)) {
-          post.comments = post.comments.map((commentId: ObjectId) => commentId.toString());
+          post.comments = post.comments.map(commentId => commentId.toString() as string);
         }
 
         return post;

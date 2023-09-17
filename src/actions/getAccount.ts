@@ -4,11 +4,11 @@ import { Account, User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
 
-export async function getAccount(userId: ObjectId, provider: string | undefined): Promise<User | null> {
+export async function getAccount(userId: ObjectId | string | undefined, provider: string | undefined) {
   try {
     const { accountCollection } = await connectToDatabase();
 
-    const existingAccount: Account = accountCollection.findOne({ userId, provider });
+    const existingAccount = accountCollection.findOne({ userId, provider });
 
     return !existingAccount ? null : existingAccount;
   } catch (error) {
