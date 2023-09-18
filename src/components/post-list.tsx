@@ -27,7 +27,6 @@ const PostList: FC<PostListProps> = ({ initialPosts }) => {
 
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [areAllPostsFetched, setAreAllPostsFetched] = useState(false);
-
   const lastPostRef = useRef<HTMLDivElement>(null);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
