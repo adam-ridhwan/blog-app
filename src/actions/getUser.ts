@@ -26,6 +26,7 @@ export async function getUser(
         _id: user._id.toString(),
         name: user.name,
         username: user.username,
+        image: user.image,
       };
     }
   } catch (error) {

@@ -3,21 +3,29 @@
 import { FC, memo, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { getCategories } from '@/actions/getCategories';
+import { Category } from '@/types';
 import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
 import { useTimeout } from '@mantine/hooks';
 import { useAtomValue } from 'jotai';
 
-import { categoriesAtom } from '@/hooks/hydrator';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const Categories: FC = () => {
-  const convertedCategories = useAtomValue(categoriesAtom);
+  const [categories, setCategories] = useState<Category[]>([]);
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
-  const { start } = useTimeout(() => setIsMounted(true), 1000);
+  const { start } = useTimeout(() => setIsMounted(true), 500);
 
-  useEffect(() => start(), [start]);
+  useEffect(() => {
+    (async () => {
+      const fetchedCategories = await getCategories();
+      setCategories(fetchedCategories);
+    })();
+
+    start();
+  }, [start]);
 
   if (!isMounted) return <CategorySkeleton />;
 
@@ -34,7 +42,7 @@ const Categories: FC = () => {
         >
           For you
         </Link>
-        {convertedCategories.map(category => {
+        {categories.map(category => {
           return (
             <Link
               key={category.title}
@@ -61,7 +69,11 @@ const CategorySkeleton = memo(() => {
       {Array.from({ length: 8 }).map((_, i) => {
         const randomWidth = Math.floor(Math.random() * (120 - 90 + 1) + 90);
         return (
-          <Skeleton key={i} className={`h-[32px] rounded-full bg-primary/30`} style={{ width: `${randomWidth}px` }} />
+          <Skeleton
+            key={i}
+            className={`h-[32px] rounded-full bg-primary/30`}
+            style={{ width: `${randomWidth}px` }}
+          />
         );
       })}
     </div>

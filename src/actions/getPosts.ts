@@ -4,10 +4,32 @@ import { Post } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
 
-export const getPosts = async () => {
+interface QueryObject {
+  _id?: {
+    $lt?: ObjectId;
+  };
+}
+
+export const getPosts = async (
+  numberOfPostsToFetch: number = 5,
+  numberOfPostsRendered: number,
+  lastFetchedId?: string
+) => {
   try {
     const { postCollection } = await connectToDatabase();
-    const posts: Post[] = await postCollection.find().toArray();
+    const totalDocuments = await postCollection.countDocuments();
+
+    const queryObj: QueryObject = {};
+
+    if (lastFetchedId) {
+      queryObj['_id'] = { $lt: new ObjectId(lastFetchedId) };
+    }
+
+    const posts: Post[] = await postCollection
+      .find(queryObj)
+      .sort({ _id: -1 })
+      .limit(numberOfPostsToFetch)
+      .toArray();
 
     const convertObjectIdsToStrings = (posts: Post[]) => {
       return [...posts].map(post => {
@@ -18,14 +40,14 @@ export const getPosts = async () => {
 
         // Convert comments array
         if (post.comments && Array.isArray(post.comments)) {
-          post.comments = post.comments.map(commentId => commentId.toString() as string);
+          post.comments = post.comments.map(commentId => commentId.toString());
         }
 
         return post;
       });
     };
 
-    return convertObjectIdsToStrings(posts);
+    if (totalDocuments !== numberOfPostsRendered) return convertObjectIdsToStrings(posts);
   } catch (err) {
     console.error('Error getting posts:', err);
     throw new Error('Error occurred while fetching posts');

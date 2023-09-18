@@ -1,10 +1,8 @@
-import { getCategories } from '@/actions/getCategories';
 import { getPosts } from '@/actions/getPosts';
-import { Category, Post } from '@/types';
+import { Post } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
 
-import Hydrator from '@/hooks/hydrator';
 import PostList from '@/components/post-list';
 import { SideMenuPlaceholder } from '@/components/side-menu';
 
@@ -30,16 +28,16 @@ const generatePost = (index: number): Post => {
 };
 
 export default async function Home() {
-  const [posts, categories]: [Post[], Category[]] = await Promise.all([getPosts(), getCategories()]);
+  const initialPosts = await getPosts(5, 0, undefined);
 
   const { postCollection } = await connectToDatabase();
-  const mockPosts = Array.from({ length: 30 }, (_, index) => generatePost(index + 1));
+  const mockPosts = Array.from({ length: 30 }, (_, index) => generatePost(index + 31));
   // await postCollection.insertMany(mockPosts);
+  // await postCollection.deleteMany({});
 
   return (
     <div className='container flex flex-col p-5 xl:flex-row xl:justify-center'>
-      <Hydrator {...{ posts, categories }} />
-      <PostList />
+      {initialPosts && <PostList {...{ initialPosts }} />}
       <SideMenuPlaceholder />
     </div>
   );
