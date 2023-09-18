@@ -4,14 +4,13 @@ import { Post } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
 
-export const getPosts = async (): Promise<Post[]> => {
+export const getPosts = async () => {
   try {
     const { postCollection } = await connectToDatabase();
-
     const posts: Post[] = await postCollection.find().toArray();
 
     const convertObjectIdsToStrings = (posts: Post[]) => {
-      return posts.map(post => {
+      return [...posts].map(post => {
         // Convert _id, category, and author
         if (post._id && post._id instanceof ObjectId) post._id = post._id.toString();
         if (post.category && post.category instanceof ObjectId) post.category = post.category.toString();

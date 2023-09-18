@@ -77,7 +77,7 @@ const PostList: FC = () => {
           })}
 
           <span className='mt-3 text-muted'>
-            {convertedPosts.length !== _fetchedPosts?.length && isFetchingNextPage
+            {isFetchingNextPage && convertedPosts.length !== _fetchedPosts?.length
               ? 'Loading more posts...'
               : "You're all caught up"}
           </span>

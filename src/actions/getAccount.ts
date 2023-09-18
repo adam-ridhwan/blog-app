@@ -1,6 +1,5 @@
 'use server';
 
-import { Account, User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
 

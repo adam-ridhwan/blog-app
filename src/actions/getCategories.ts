@@ -3,7 +3,7 @@
 import { Category } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 
-export const getCategories = async (): Promise<Category[]> => {
+export const getCategories = async () => {
   try {
     const { categoryCollection } = await connectToDatabase();
     const categories: Category[] = await categoryCollection.find({}).toArray();

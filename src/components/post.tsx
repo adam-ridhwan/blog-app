@@ -1,6 +1,7 @@
 'use client';
 
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState, useTransition } from 'react';
+import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getUser } from '@/actions/getUser';
@@ -11,6 +12,7 @@ import { Heart, MessageCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import SeparatorDot from '@/components/ui/separator-dot';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type CardProps = {
   post: Post;
@@ -22,6 +24,7 @@ const Post: FC<CardProps> = ({ post: { author, title, content, likes, comments, 
   const titleRef = useRef<HTMLDivElement>(null);
   const [isWrapped, setIsWrapped] = useState(false);
   const [user, setUser] = useState<Partial<User> | null>();
+  const [pending, startTransition] = useTransition();
 
   useEffect(() => {
     const titleNode = titleRef.current;
@@ -31,29 +34,42 @@ const Post: FC<CardProps> = ({ post: { author, title, content, likes, comments, 
   }, [title]);
 
   useEffect(() => {
-    (async () => setUser(await getUser('', author)))();
+    (async () => startTransition(async () => setUser(await getUser(undefined, author))))();
   }, [author, setUser]);
 
   return (
     <>
       <Card>
-        <div className='flex flex-row items-center gap-2'>
-          <Avatar className='h-12 w-12'>
-            <AvatarImage src='https://github.com/shadcn.png' />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <div className='flex flex-col'>
-            <span className='font-bold text-primary'>{user?.name}</span>
-            <div className='flex flex-row items-center gap-2'>
-              <span className='text-muted'>{user?.username}</span>
-              <SeparatorDot />
-              <span className='text-muted'>{createdAt.toDateString().split(' ').slice(1, 4).join(' ')}</span>
+        {pending ? (
+          <div className='flex flex-row items-center gap-2'>
+            {/* Avatar */}
+            <Skeleton className='h-12 w-12 rounded-full bg-primary/30' />
+
+            {/* Name, username, date */}
+            <div className='flex flex-col gap-2'>
+              <Skeleton className='h-[16px] w-[100px] bg-primary/30' />
+              <Skeleton className='h-[16px] w-[200px] bg-primary/30' />
             </div>
           </div>
-        </div>
+        ) : (
+          <div className='flex flex-row items-center gap-2'>
+            <Avatar className='h-12 w-12'>
+              <AvatarImage src='https://github.com/shadcn.png' />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <div className='flex flex-col'>
+              <span className='font-bold text-primary'>{user?.name}</span>
+              <div className='flex flex-row items-center gap-2'>
+                <span className='text-muted'>{user?.username}</span>
+                <SeparatorDot />
+                <span className='text-muted'>{createdAt.toDateString().split(' ').slice(1, 4).join(' ')}</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         <Link href='/' className='flex flex-col gap-1 md:flex-row md:items-end md:gap-7'>
-          <div className='flex  flex-col'>
+          <div className='flex flex-col'>
             <CardHeader>
               <CardTitle ref={titleRef} className={cn(`two-line-ellipsis text-primary`)}>
                 {title}
