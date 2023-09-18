@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { getUser } from '@/actions/getUser';
 import { User, type Post } from '@/types';
 import { cn } from '@/util/cn';
+import { formatDate } from '@/util/formatDate';
 import { Heart, MessageCircle } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -60,9 +61,7 @@ const Post: FC<CardProps> = ({ post: { author, title, content, likes, comments, 
             <div className='flex flex-col'>
               <span className='font-bold text-primary'>{user?.name}</span>
               <div className='flex flex-row items-center gap-2'>
-                <span className='text-muted'>{user?.username}</span>
-                <SeparatorDot />
-                <span className='text-muted'>{createdAt.toDateString().split(' ').slice(1, 4).join(' ')}</span>
+                <span className='text-muted'>{formatDate(createdAt)}</span>
               </div>
             </div>
           </div>

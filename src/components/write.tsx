@@ -99,13 +99,13 @@ const Write = () => {
       const quill = quillRef.current.getEditor();
 
       quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
-        return delta.compose(new Delta().retain(delta.length(), { background: null, color: null, align: 'left' }));
+        return delta.compose(
+          new Delta().retain(delta.length(), { background: null, color: null, align: 'left' })
+        );
       });
 
       // IMPORTANT: this prevents the page from scrolling to the top when pasting
-      setTimeout(() => {
-        window.scrollTo(0, scrollY);
-      }, 1);
+      setTimeout(() => window.scrollTo(0, scrollY), 1);
     };
 
     document.addEventListener('paste', handlePaste);

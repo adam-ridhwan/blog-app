@@ -55,7 +55,11 @@ const PostList: FC = () => {
           {_fetchedPosts?.map((post, i) => {
             return (
               <Fragment key={post.title}>
-                <div ref={i === _fetchedPosts.length - 1 ? ref : null} key={post.title} className='flex flex-col gap-5'>
+                <div
+                  ref={i === _fetchedPosts.length - 1 ? ref : null}
+                  key={post.title}
+                  className='flex flex-col gap-5'
+                >
                   <Post {...{ post }} />
                   <Separator className='md:hidden' />
                 </div>
