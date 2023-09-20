@@ -8,17 +8,16 @@ import PostList from '@/components/post-list';
 import SideMenu from '@/components/side-menu';
 
 const generatePost = (index: number): Post => {
-  const title = `Mock Post ${index}`;
+  const title = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua`;
   const postSlug = `mock-post-${index}`;
   const category = new ObjectId('6505ecac822e8ec0e9b8a1be');
-  const author = new ObjectId('6503dc4a3d166bffdaeacc0c');
+  const author = new ObjectId('650b3f0649c072e2777bfcd5');
 
   return {
     createdAt: new Date(),
     postSlug,
     title,
-    content: `This is the content for the ${title}. It aims to provide readers with insights on topic ${index}. 
-    More in-depth content will be shared soon. Stay tuned for updates.`,
+    content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. At elementum eu facilisis sed odio morbi quis. Vitae suscipit tellus mauris a diam maecenas sed enim. Egestas sed tempus urna et pharetra. Phasellus faucibus scelerisque eleifend donec pretium vulputate.`,
     views: Math.floor(Math.random() * 2000),
     categorySlug: 'mock-category',
     category,
@@ -29,6 +28,11 @@ const generatePost = (index: number): Post => {
 };
 
 export default async function Home() {
+  const { postCollection } = await connectToDatabase();
+  const mockPosts = Array.from({ length: 1 }, (_, index) => generatePost(index + 1));
+  // await postCollection.deleteMany({});
+  // await postCollection.insertMany(mockPosts);
+
   const initialPosts = await getPosts(5, 0, undefined);
   if (!initialPosts) throw new Error('Failed to fetch initial posts');
 
@@ -36,16 +40,11 @@ export default async function Home() {
   const initialAuthors = await getUsersById(authorIds);
   if (!initialAuthors) throw new Error('Failed to fetch initial authors');
 
-  const { postCollection } = await connectToDatabase();
-  const mockPosts = Array.from({ length: 30 }, (_, index) => generatePost(index + 31));
-  // await postCollection.insertMany(mockPosts);
-  // await postCollection.deleteMany({});
-
   if (!initialPosts && !initialAuthors) return <div>Please refresh page</div>;
 
   return (
     <div className='container flex flex-col px-5 xl:flex-row xl:justify-center'>
-      {initialPosts && <PostList {...{ initialPosts, initialAuthors }} />}
+      <PostList {...{ initialPosts, initialAuthors }} />
       <SideMenu />
     </div>
   );

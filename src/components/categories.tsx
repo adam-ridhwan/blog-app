@@ -31,7 +31,7 @@ const Categories: FC = () => {
 
   return (
     <>
-      <div className='hide-scrollbar mb-10 mt-10 flex w-full flex-row gap-2 overflow-x-auto'>
+      <div className='hide-scrollbar mb-10 mt-[100px] flex w-full flex-row gap-2 overflow-x-auto'>
         <Link
           href='/'
           className={cn(
@@ -65,7 +65,7 @@ export default Categories;
 
 const CategorySkeleton = memo(() => {
   return (
-    <div className='hide-scrollbar mb-10 mt-10 flex w-full flex-row gap-2 overflow-x-auto '>
+    <div className='hide-scrollbar mb-10 mt-[100px] flex w-full flex-row gap-2 overflow-x-auto '>
       {Array.from({ length: 8 }).map((_, i) => {
         const randomWidth = Math.floor(Math.random() * (120 - 90 + 1) + 90);
         return (

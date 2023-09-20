@@ -16,7 +16,7 @@ import 'react-quill/dist/quill.bubble.css';
 import 'react-quill/dist/quill.snow.css';
 import 'highlight.js/styles/github.css';
 
-import { MOBILE, useWindowSize } from '@/hooks/useWindowSize';
+import { MOBILE, useWindowSize } from '@/hooks/useWindowSize ';
 
 const Delta = Quill.import('delta');
 

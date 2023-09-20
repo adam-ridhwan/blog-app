@@ -34,6 +34,9 @@ const handler = NextAuth({
        * 4) If account provider DOES NOT, push the provider to accounts[] in user collection
        * */
 
+      if (!nextAuthUser) return false;
+      if (!nextAuthAccount) return false;
+
       // 1) Check if user exists in user collection
       const existingUser = await getUserByEmail(nextAuthUser.email || undefined);
 
@@ -44,7 +47,7 @@ const handler = NextAuth({
       }
 
       // 3) If user DOES exits, check if account provider exists in account collection
-      const existingAccount = await getAccount(existingUser._id, nextAuthAccount?.provider);
+      const existingAccount = await getAccount(existingUser._id, nextAuthAccount.provider);
 
       // 4) If account provider DOES NOT, update account by pushing the provider to accounts[] in user collection
       if (!existingAccount) await updateProviders(nextAuthAccount, existingUser);

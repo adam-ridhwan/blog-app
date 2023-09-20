@@ -7,11 +7,9 @@ import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
 import { categories } from '@/util/constants';
 import { useViewportSize } from '@mantine/hooks';
-import { useAtomValue } from 'jotai';
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import MostPopularPosts from '@/components/most-popular-posts';
-import { isNavbarVisibleAtom, navbarRefAtom } from '@/components/navbar';
 import SideMenuPosts from '@/components/side-menu-posts';
 
 type SideMenuProps = {};

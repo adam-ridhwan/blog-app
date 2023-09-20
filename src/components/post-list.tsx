@@ -113,7 +113,7 @@ const PostList: FC<PostListProps> = ({ initialPosts, initialAuthors }) => {
 
   return (
     <>
-      <main className='relative mb-6 mt-12  md:flex md:flex-col md:items-center'>
+      <main className='relative mb-6 md:flex md:flex-col md:items-center'>
         <div className='flex w-full max-w-[728px] flex-col gap-5 md:items-center'>
           <Categories />
 

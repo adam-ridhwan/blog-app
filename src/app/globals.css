@@ -121,23 +121,23 @@ html {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
-    max-height: 2.8em;
+    max-height: 64px;
 }
 
 .three-line-ellipsis {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
     overflow: hidden;
-    max-height: 4.5em;
+    max-height: 72px;
 }
 
 
 @media (min-width: 768px) {
-    .three-line-ellipsis {
+    .two-line-ellipsis {
         display: -webkit-box !important;
     }
 
-    .two-line-ellipsis {
+    .three-line-ellipsis {
         display: -webkit-box !important;
     }
 }

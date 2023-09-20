@@ -3,7 +3,7 @@
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
 
-export async function getAccount(userId: ObjectId | string | undefined, provider: string | undefined) {
+export async function getAccount(userId: ObjectId | string | undefined, provider: string) {
   try {
     const { accountCollection } = await connectToDatabase();
 

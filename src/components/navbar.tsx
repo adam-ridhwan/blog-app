@@ -34,19 +34,14 @@ type NavbarRefType = {
   current: HTMLDivElement | null;
 };
 
-export const isNavbarVisibleAtom = atom(true);
-export const navbarRefAtom = atom<NavbarRefType>(() => ({ current: null }));
-
 const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { data: session, status } = useSession();
 
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
-  const setIsNavbarVisible = useSetAtom(isNavbarVisibleAtom);
-  const [navbarRef] = useAtom(navbarRefAtom);
 
-  // const navbarRef = useRef<HTMLDivElement | null>(null);
+  const navbarRef = useRef<HTMLDivElement | null>(null);
   const navbarPositionRef = useRef(0);
   const prevBodyScrollY = useRef(0);
 
@@ -74,14 +69,6 @@ const Navbar = () => {
           ? Math.max(navbarPositionRef.current - scrollAmount, heightOfNavbar)
           : Math.min(navbarPositionRef.current - scrollAmount, 0);
 
-      if (navbarPositionRef.current === -65) {
-        setIsNavbarVisible(false);
-      }
-
-      if (navbarPositionRef.current === 0) {
-        setIsNavbarVisible(true);
-      }
-
       if (currentScrollY > 0) {
         navbarRef.current.style.transform = `translateY(${navbarPositionRef.current}px)`;
         prevBodyScrollY.current = currentScrollY;
@@ -90,7 +77,7 @@ const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [pathname, setIsNavbarVisible]);
+  }, [pathname]);
 
   return (
     <>

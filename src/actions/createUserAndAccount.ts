@@ -15,8 +15,8 @@ export const createUserAndAccount = async (account: NextAuthAccount | null, user
     if (!user) return new Error('User is null');
 
     const newUser: User = {
-      name: user.name,
-      email: user.email,
+      name: user.name!,
+      email: user.email!,
       username: '@' + user?.email?.split('@')[0] + '_' + generateRandomString(),
       accounts: [account as Account],
       sessions: [],

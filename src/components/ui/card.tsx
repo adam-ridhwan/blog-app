@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { cn } from '@/util/cn';
 
-const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      `flex max-w-[728px] flex-col gap-5 rounded-xl text-primary md:border md:border-border md:bg-background md:p-6 md:shadow-sm`,
-      className
-    )}
-    {...props}
-  />
-));
+const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        `flex max-w-[728px] flex-col gap-4 rounded-xl text-primary 
+        md:border md:border-border md:bg-background md:p-6 md:shadow-sm`,
+        className
+      )}
+      {...props}
+    />
+  )
+);
 Card.displayName = 'Card';
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(

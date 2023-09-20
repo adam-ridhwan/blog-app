@@ -4,8 +4,8 @@ import { ObjectId } from 'mongodb';
 export type Account = {
   _id?: ObjectId | string;
   userId: ObjectId | string;
-  type?: string | undefined;
-  provider: ProviderType | undefined;
+  type?: ProviderType | undefined;
+  provider: string | undefined;
   providerAccountId: string;
   refresh_token?: string;
   access_token?: string;
