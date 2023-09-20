@@ -1,7 +1,6 @@
 import { clientPromise } from '@/mongodb';
-import { Account, Category, Post, User } from '@/types';
+import { type Account, type Category, type Post, type User } from '@/types';
 import env from '@/util/env';
-import { OptionalId } from 'mongodb';
 
 const {
   MONGODB_DATABASE,

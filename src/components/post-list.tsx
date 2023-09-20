@@ -1,22 +1,27 @@
 'use client';
 
-import { FC, Fragment, useEffect, useRef, useState } from 'react';
+import { start } from 'repl';
+import { FC, Fragment, useEffect, useRef, useState, useTransition } from 'react';
 import { getPosts } from '@/actions/getPosts';
+import { AuthorDetails } from '@/actions/getUserById';
+import { getUsersById } from '@/actions/getUsersById';
+import { type Post } from '@/types';
 import { useIntersection } from '@mantine/hooks';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import CardSkeleton from '@/components/ui/card-skeleton';
 import { Separator } from '@/components/ui/separator';
 import Categories from '@/components/categories';
-import Post from '@/components/post';
+import PostItem from '@/components/post-item';
 
 const LIMIT = 5;
 
 type PostListProps = {
   initialPosts: Post[];
+  initialAuthors: AuthorDetails[];
 };
 
-const PostList: FC<PostListProps> = ({ initialPosts }) => {
+const PostList: FC<PostListProps> = ({ initialPosts, initialAuthors }) => {
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * LOGIC
    * 1) Get first 5 posts first and set it to state
@@ -26,6 +31,7 @@ const PostList: FC<PostListProps> = ({ initialPosts }) => {
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
 
   const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [authors, setAuthors] = useState<AuthorDetails[]>(initialAuthors);
   const [areAllPostsFetched, setAreAllPostsFetched] = useState(false);
   const lastPostRef = useRef<HTMLDivElement>(null);
 
@@ -35,16 +41,22 @@ const PostList: FC<PostListProps> = ({ initialPosts }) => {
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const fetchPost = async (pageParam: number) => {
     const lastPostId = posts?.at(-1)?._id;
-
     const fetchedPosts = await getPosts(LIMIT, posts.length, lastPostId as string);
 
+    // If no more posts to fetch, set areAllPostsFetched to true
     if (!fetchedPosts) {
       setAreAllPostsFetched(true);
       return slicePostsByPage(posts, pageParam);
     }
 
     const newPosts = [...posts, ...fetchedPosts];
-    setPosts(newPosts);
+    const authorIds = newPosts.map(post => post.author);
+    const users = await getUsersById(authorIds);
+
+    if (users) {
+      setPosts(newPosts);
+      setAuthors(users);
+    }
 
     return slicePostsByPage(newPosts, pageParam);
   };
@@ -87,8 +99,11 @@ const PostList: FC<PostListProps> = ({ initialPosts }) => {
   });
 
   useEffect(() => {
-    if (!postEntry?.isIntersecting) return;
-    !areAllPostsFetched && fetchNextPage();
+    if (areAllPostsFetched) return;
+
+    console.log();
+
+    if (postEntry?.isIntersecting) fetchNextPage();
   }, [areAllPostsFetched, fetchNextPage, postEntry?.isIntersecting]);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -104,10 +119,11 @@ const PostList: FC<PostListProps> = ({ initialPosts }) => {
 
           {postsToRender?.map((post, i) => {
             const lastPost = i === postsToRender?.length - 1;
+            const author = authors?.find(author => author._id === post.author);
             return (
               <Fragment key={post?.title}>
                 <div ref={lastPost ? postRef : null} className='flex flex-col gap-5'>
-                  <Post {...{ post }} />
+                  <PostItem {...{ post, author }} />
                   <Separator className='md:hidden' />
                 </div>
 
@@ -116,7 +132,7 @@ const PostList: FC<PostListProps> = ({ initialPosts }) => {
                     <>
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Fragment key={i}>
-                          <CardSkeleton key={i} className='animate-none' />
+                          <CardSkeleton key={i} />
                           <Separator className='md:hidden' />
                         </Fragment>
                       ))}

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { atom, useAtom, useSetAtom } from 'jotai';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -29,34 +30,57 @@ import SideMenu from '@/components/side-menu';
 import ThemeToggle from '@/components/theme-toggle';
 import WriteOrPublishButton from '@/components/write-or-publish-button';
 
+type NavbarRefType = {
+  current: HTMLDivElement | null;
+};
+
+export const isNavbarVisibleAtom = atom(true);
+export const navbarRefAtom = atom<NavbarRefType>(() => ({ current: null }));
+
 const Navbar = () => {
-  const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
+  const { data: session, status } = useSession();
 
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
+  const setIsNavbarVisible = useSetAtom(isNavbarVisibleAtom);
+  const [navbarRef] = useAtom(navbarRefAtom);
 
-  const navbarRef = useRef<HTMLDivElement | null>(null);
+  // const navbarRef = useRef<HTMLDivElement | null>(null);
   const navbarPositionRef = useRef(0);
-  const sidebarRef = useRef<HTMLDivElement | null>(null);
   const prevBodyScrollY = useRef(0);
-  const prevSidebarScrollY = useRef(64);
 
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * REMOVE HASH FROM URL
+   * If user is redirected from OAuth facebook, remove the hash
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
     if (window.location.hash === '#_=_') router.replace('/');
   }, [router]);
 
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * NAVBAR SCROLL ANIMATION
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
     const handleScroll = () => {
       if (!navbarRef.current || pathname === '/write-a-post') return;
 
       const currentScrollY = window.scrollY;
       const scrollAmount = currentScrollY - prevBodyScrollY.current;
+      const heightOfNavbar = -navbarRef.current.offsetHeight;
 
       navbarPositionRef.current =
         currentScrollY > prevBodyScrollY.current
-          ? Math.max(navbarPositionRef.current - scrollAmount, -navbarRef.current.offsetHeight)
+          ? Math.max(navbarPositionRef.current - scrollAmount, heightOfNavbar)
           : Math.min(navbarPositionRef.current - scrollAmount, 0);
+
+      if (navbarPositionRef.current === -65) {
+        setIsNavbarVisible(false);
+      }
+
+      if (navbarPositionRef.current === 0) {
+        setIsNavbarVisible(true);
+      }
 
       if (currentScrollY > 0) {
         navbarRef.current.style.transform = `translateY(${navbarPositionRef.current}px)`;
@@ -66,31 +90,12 @@ const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [pathname]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!sidebarRef.current) return;
-
-      const currentScrollY = window.scrollY;
-      const scrollAmount = currentScrollY - prevSidebarScrollY.current;
-
-      if (currentScrollY > 1) setIsAvatarDropdownOpen(false);
-
-      if (currentScrollY < 64) return (sidebarRef.current.scrollTop = 0);
-
-      sidebarRef.current.scrollTop += scrollAmount;
-      prevSidebarScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname, setIsNavbarVisible]);
 
   return (
     <>
       <div ref={navbarRef} className='fixed top-0 z-20 w-full border-b border-b-border bg-background'>
-        <div className=' relative flex h-16 items-center justify-between p-5 '>
+        <div className='relative flex h-16 items-center justify-between p-5 '>
           <Link href='/' className='flex-1 text-3xl font-semibold text-primary'>
             Pondero
           </Link>
@@ -127,12 +132,16 @@ const Navbar = () => {
                 </Dialog>
               )}
 
-              {status === 'loading' && <Skeleton className='h-[32px] w-[94px]' />}
+              {status === 'loading' && <Skeleton className='h-[40px] w-[120px]' />}
               {status === 'loading' && <Skeleton className='h-10 w-10 rounded-full' />}
 
               {status === 'authenticated' && <WriteOrPublishButton />}
               {status === 'authenticated' && (
-                <DropdownMenu open={isAvatarDropdownOpen} onOpenChange={setIsAvatarDropdownOpen} modal={false}>
+                <DropdownMenu
+                  open={isAvatarDropdownOpen}
+                  onOpenChange={setIsAvatarDropdownOpen}
+                  modal={false}
+                >
                   <DropdownMenuTrigger>
                     <div className='relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full'>
                       <Image
@@ -189,8 +198,6 @@ const Navbar = () => {
               )}
             </div>
           </div>
-
-          {pathname === '/' && <SideMenu sidebarRef={sidebarRef} />}
         </div>
       </div>
     </>

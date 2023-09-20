@@ -1,7 +1,7 @@
-import { MongoDocument, ObjectId, WithId } from 'mongodb';
-import { ProviderType } from 'next-auth/providers';
+import { ProviderType } from '@auth/core/providers';
+import { ObjectId } from 'mongodb';
 
-type Account = {
+export type Account = {
   _id?: ObjectId | string;
   userId: ObjectId | string;
   type?: string | undefined;
@@ -15,14 +15,14 @@ type Account = {
   id_token?: string;
 };
 
-type Category = {
+export type Category = {
   _id?: ObjectId | string;
   slug: string;
   title: string;
   posts: (ObjectId | string)[];
 };
 
-type Comment = {
+export type Comment = {
   _id: string;
   createdAt: Date;
   desc: string;
@@ -32,7 +32,7 @@ type Comment = {
   post: Post;
 };
 
-type Post = {
+export type Post = {
   _id?: ObjectId | string;
   createdAt: Date;
   postSlug: string;
@@ -47,7 +47,7 @@ type Post = {
   likes: number;
 };
 
-type Session = {
+export type Session = {
   _id: string;
   sessionToken: string;
   userId: string;
@@ -55,10 +55,10 @@ type Session = {
   user: User;
 };
 
-type User = {
+export type User = {
   _id?: ObjectId | string;
-  name?: string | null;
-  email: string | null | undefined;
+  name?: string;
+  email: string;
   username: string;
   emailVerified?: Date;
   image?: string;
@@ -68,7 +68,7 @@ type User = {
   comments: Comment[];
 };
 
-type VerificationToken = {
+export type VerificationToken = {
   _id: string;
   token: string;
   expires: Date;

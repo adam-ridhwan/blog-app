@@ -1,10 +1,11 @@
 import { getPosts } from '@/actions/getPosts';
+import { getUsersById } from '@/actions/getUsersById';
 import { Post } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
 
 import PostList from '@/components/post-list';
-import { SideMenuPlaceholder } from '@/components/side-menu';
+import SideMenu from '@/components/side-menu';
 
 const generatePost = (index: number): Post => {
   const title = `Mock Post ${index}`;
@@ -29,16 +30,23 @@ const generatePost = (index: number): Post => {
 
 export default async function Home() {
   const initialPosts = await getPosts(5, 0, undefined);
+  if (!initialPosts) throw new Error('Failed to fetch initial posts');
+
+  const authorIds = initialPosts.map(post => post.author);
+  const initialAuthors = await getUsersById(authorIds);
+  if (!initialAuthors) throw new Error('Failed to fetch initial authors');
 
   const { postCollection } = await connectToDatabase();
   const mockPosts = Array.from({ length: 30 }, (_, index) => generatePost(index + 31));
   // await postCollection.insertMany(mockPosts);
   // await postCollection.deleteMany({});
 
+  if (!initialPosts && !initialAuthors) return <div>Please refresh page</div>;
+
   return (
-    <div className='container flex flex-col p-5 xl:flex-row xl:justify-center'>
-      {initialPosts && <PostList {...{ initialPosts }} />}
-      <SideMenuPlaceholder />
+    <div className='container flex flex-col px-5 xl:flex-row xl:justify-center'>
+      {initialPosts && <PostList {...{ initialPosts, initialAuthors }} />}
+      <SideMenu />
     </div>
   );
 }

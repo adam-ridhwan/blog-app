@@ -1,6 +1,6 @@
 import { createUserAndAccount } from '@/actions/createUserAndAccount';
 import { getAccount } from '@/actions/getAccount';
-import { getUser } from '@/actions/getUser';
+import { getUserByEmail } from '@/actions/getUserByEmail';
 import { updateProviders } from '@/actions/updateProviders';
 import env from '@/util/env';
 import NextAuth from 'next-auth';
@@ -35,7 +35,7 @@ const handler = NextAuth({
        * */
 
       // 1) Check if user exists in user collection
-      const existingUser = await getUser(nextAuthUser.email || undefined);
+      const existingUser = await getUserByEmail(nextAuthUser.email || undefined);
 
       // 2) If user DOES NOT exist, create new user and account
       if (!existingUser) {

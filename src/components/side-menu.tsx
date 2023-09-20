@@ -1,41 +1,155 @@
 'use client';
 
-import { RefObject, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
 import { categories } from '@/util/constants';
-import { atom, useAtomValue, useSetAtom } from 'jotai';
+import { useViewportSize } from '@mantine/hooks';
+import { useAtomValue } from 'jotai';
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import SeparatorDot from '@/components/ui/separator-dot';
 import MostPopularPosts from '@/components/most-popular-posts';
+import { isNavbarVisibleAtom, navbarRefAtom } from '@/components/navbar';
 import SideMenuPosts from '@/components/side-menu-posts';
 
-const xAtom = atom(0);
+type SideMenuProps = {};
 
-const SideMenu = ({ sidebarRef }: { sidebarRef: RefObject<HTMLDivElement> }) => {
-  const x = useAtomValue(xAtom);
-  const [isMounted, setIsMounted] = useState(false);
+const THRESHOLD = 100;
+const BOTTOM_PADDING = 20;
+const TOP_OF_VIEWPORT = 0;
 
+const STICKY = 'sticky';
+const RELATIVE = 'relative';
+const UP = 'up';
+const DOWN = 'down';
+
+type Position = typeof STICKY | typeof RELATIVE;
+type ScrollDirection = typeof UP | typeof DOWN;
+
+const SideMenu: FC<SideMenuProps> = ({}) => {
+  const [placeholder, setPlaceholder] = useState({ height: 0, top: 0 });
+  const [position, setPosition] = useState<Position>(STICKY);
+  const topRef = useRef(THRESHOLD);
+  const marginTopRef = useRef(0);
+
+  const sideMenuRef = useRef<HTMLDivElement | null>(null);
+  const placeholderRef = useRef<HTMLDivElement | null>(null);
+
+  const lastScrollPosition = useRef(0);
+  const lastScrollDirection = useRef<ScrollDirection>();
+
+  const { height } = useViewportSize();
+
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * GET THE PLACEHOLDER MEASUREMENTS
+   * Calculates the height and the top of the placeholder
+   * The measurements will be used for actual sidebar
+   * ────────────────
+   * Height is needed in the dependency to recalculate the height of the placeholder when the viewport
+   * when user resizes the viewport
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    if (!sideMenuRef.current || !placeholderRef.current) return;
+    const height = Math.floor(sideMenuRef.current?.getBoundingClientRect().height);
+    const top = Math.floor(placeholderRef.current?.getBoundingClientRect().top);
 
-  if (!isMounted) return null;
+    if (placeholder.height !== 0 && placeholder.top === top) return;
+    setPlaceholder(prev => ({ ...prev, top }));
+
+    if (placeholder.height !== height) return setPlaceholder(prev => ({ ...prev, height }));
+  }, [placeholder, height]);
+
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * SIDEBAR SCROLL BEHAVIOR
+   * 1) When user scrolls down and sideMenuTop is not in view, sidebar should be position relative
+   * 2) When user scrolls down and sideMenuBottom is at the bottom of viewport, sidebar should be position
+   * sticky
+   * 3) When user scrolls up and sideMenuTop is in view, sidebar should be position sticky
+   * 4) When user scrolls up and sideMenuTop is not in view, sidebar should be position fixed
+   *
+   *
+   * THIS WAS F*CKING CRAZY TO IMPLEMENT. A LOT OF MATH WTF
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sideMenuRef.current) return;
+      const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      const sideMenuTop = Math.floor(sideMenuRef.current.getBoundingClientRect().top);
+      const sideMenuBottom = Math.floor(sideMenuRef.current.getBoundingClientRect().bottom);
+
+      const isSidebarBottomInView = sideMenuBottom < viewportHeight;
+      const isSidebarTopInView = sideMenuTop > THRESHOLD - 1;
+
+      const currentScrollY = Math.floor(window.scrollY);
+      const isScrollingDown = currentScrollY > lastScrollPosition.current;
+      const isScrollingUp = currentScrollY < lastScrollPosition.current;
+
+      // SCROLLING DOWN ──────────────────────────────────────────────────────────────────────────────── */
+      if (isScrollingDown) {
+        if (isSidebarBottomInView) {
+          setPosition(STICKY);
+          topRef.current = placeholder.top - BOTTOM_PADDING;
+          marginTopRef.current = 0;
+        }
+
+        if (lastScrollDirection.current !== DOWN && position === STICKY) {
+          setPosition(RELATIVE);
+          if (currentScrollY > TOP_OF_VIEWPORT) {
+            topRef.current = 0;
+            marginTopRef.current = Math.floor(currentScrollY + THRESHOLD);
+          }
+        }
+
+        lastScrollDirection.current = DOWN;
+      }
+
+      // SCROLLING UP ────────────────────────────────────────────────────────────────────────────────── */
+      if (isScrollingUp) {
+        if (isSidebarTopInView) {
+          setPosition(STICKY);
+          topRef.current = THRESHOLD;
+          marginTopRef.current = 0;
+        }
+
+        if (lastScrollDirection.current !== UP && position === STICKY) {
+          setPosition(RELATIVE);
+          topRef.current = 0;
+          marginTopRef.current = Math.floor(
+            currentScrollY - (placeholder.height - viewportHeight) - BOTTOM_PADDING
+          );
+        }
+
+        lastScrollDirection.current = UP;
+      }
+
+      // ────────────────────────────────────────────────────────────────────────────────────────────── */
+      lastScrollPosition.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [placeholder.height, placeholder.top, position]);
 
   return (
     <>
       <div
-        style={{
-          left: `${Math.min(x - 20)}px`,
-        }}
-        className={cn(
-          `fixed top-[65px] z-40 ml-5 hidden h-[100dvh] min-w-[350px] max-w-[350px] bg-background pl-5 xl:flex xl:flex-col`
-        )}
-      >
-        <div ref={sidebarRef} className='hide-scrollbar flex flex-col gap-5 overflow-auto pb-32 pt-10'>
+        ref={placeholderRef}
+        style={{ height: `${placeholder.height}px` }}
+        className={cn(`fixed bottom-0`)}
+      />
+
+      <div className='opacity-1 relative'>
+        <div
+          ref={sideMenuRef}
+          style={{
+            position: `${position}`,
+            top: `${topRef.current}px`,
+            marginTop: `${marginTopRef.current}px`,
+          }}
+          className={cn(`ml-5 hidden min-w-[350px] max-w-[350px] flex-col gap-5 bg-background pl-5 xl:flex`)}
+        >
           <Card>
             <CardHeader>
               <CardTitle className=''>{"What's hot"}</CardTitle>
@@ -48,8 +162,8 @@ const SideMenu = ({ sidebarRef }: { sidebarRef: RefObject<HTMLDivElement> }) => 
               <Link
                 href='/'
                 className={cn(
-                  `flex h-[40px] w-full items-center justify-center rounded-full border border-border bg-background 
-                  text-muted underline-offset-4 hover:underline`
+                  `flex h-[40px] w-full items-center justify-center rounded-full border border-border 
+                  bg-background text-muted underline-offset-4 hover:underline`
                 )}
               >
                 See more
@@ -68,7 +182,8 @@ const SideMenu = ({ sidebarRef }: { sidebarRef: RefObject<HTMLDivElement> }) => 
                     key={category}
                     href={`/blog?category=${category}`}
                     className={cn(
-                      `flex h-[35px] w-max items-center justify-center rounded-full border border-border bg-background px-5`
+                      `flex h-[35px] w-max items-center justify-center rounded-full border border-border 
+                      bg-background px-5`
                     )}
                   >
                     <span className='whitespace-nowrap text-sm text-muted'>{capitalize(category)}</span>
@@ -80,7 +195,8 @@ const SideMenu = ({ sidebarRef }: { sidebarRef: RefObject<HTMLDivElement> }) => 
             <CardFooter>
               <Link
                 href='/'
-                className='flex h-[40px] w-full items-center justify-center rounded-full border border-border bg-transparent text-muted underline-offset-4 hover:underline'
+                className='flex h-[40px] w-full items-center justify-center rounded-full border border-border
+                bg-transparent text-muted underline-offset-4 hover:underline'
               >
                 See more
               </Link>
@@ -98,7 +214,8 @@ const SideMenu = ({ sidebarRef }: { sidebarRef: RefObject<HTMLDivElement> }) => 
             <CardFooter>
               <Link
                 href='/'
-                className='flex h-[40px] w-full items-center justify-center rounded-full border border-border bg-transparent text-muted underline-offset-4 hover:underline'
+                className='flex h-[40px] w-full items-center justify-center rounded-full border border-border
+                bg-transparent text-muted underline-offset-4 hover:underline'
               >
                 See more
               </Link>
@@ -125,7 +242,13 @@ const SideMenu = ({ sidebarRef }: { sidebarRef: RefObject<HTMLDivElement> }) => 
                 </div>
 
                 <div className='flex flex-row items-center gap-2'>
-                  <Image src='/nextauth.png' width={50} height={50} alt='NextAuth Logo' className='h-5 w-5 grayscale' />
+                  <Image
+                    src='/nextauth.png'
+                    width={50}
+                    height={50}
+                    alt='NextAuth Logo'
+                    className='h-5 w-5 grayscale'
+                  />
                   <span>NextAuth.js</span>
                 </div>
 
@@ -237,7 +360,12 @@ const SideMenu = ({ sidebarRef }: { sidebarRef: RefObject<HTMLDivElement> }) => 
                 </div>
 
                 <div className='flex flex-row items-center gap-2'>
-                  <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 54 33' className='h-5 w-5 grayscale'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 54 33'
+                    className='h-5 w-5 grayscale'
+                  >
                     <g clipPath='url(#prefix__clip0)'>
                       <path
                         fill='#38bdf8'
@@ -285,32 +413,3 @@ const SideMenu = ({ sidebarRef }: { sidebarRef: RefObject<HTMLDivElement> }) => 
 };
 
 export default SideMenu;
-
-export function SideMenuPlaceholder() {
-  const setX = useSetAtom(xAtom);
-  const sideMenuPlaceholderRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (!sideMenuPlaceholderRef.current) return;
-    const { x } = sideMenuPlaceholderRef.current?.getBoundingClientRect();
-    setX(x);
-  }, [setX]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (!sideMenuPlaceholderRef.current) return;
-      const { x } = sideMenuPlaceholderRef.current?.getBoundingClientRect();
-      setX(x);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [setX]);
-
-  return (
-    <>
-      <div ref={sideMenuPlaceholderRef} className='ml-5 hidden h-[100dvh] min-w-[350px] xl:flex xl:flex-col '>
-        placeholder
-      </div>
-    </>
-  );
-}
