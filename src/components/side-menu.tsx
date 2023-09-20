@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
-import { categories } from '@/util/constants';
+import { categories, LG, XL } from '@/util/constants';
 import { useViewportSize } from '@mantine/hooks';
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,7 +38,7 @@ const SideMenu: FC<SideMenuProps> = ({}) => {
   const lastScrollPosition = useRef(0);
   const lastScrollDirection = useRef<ScrollDirection>();
 
-  const { height } = useViewportSize();
+  const { height, width } = useViewportSize();
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * GET THE PLACEHOLDER MEASUREMENTS
@@ -49,6 +49,7 @@ const SideMenu: FC<SideMenuProps> = ({}) => {
    * when user resizes the viewport
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
+    if (width < XL) return;
     if (!sideMenuRef.current || !placeholderRef.current) return;
     const height = Math.floor(sideMenuRef.current?.getBoundingClientRect().height);
     const top = Math.floor(placeholderRef.current?.getBoundingClientRect().top);
@@ -57,7 +58,7 @@ const SideMenu: FC<SideMenuProps> = ({}) => {
     setPlaceholder(prev => ({ ...prev, top }));
 
     if (placeholder.height !== height) return setPlaceholder(prev => ({ ...prev, height }));
-  }, [placeholder, height]);
+  }, [placeholder, height, width]);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * SIDEBAR SCROLL BEHAVIOR
@@ -71,6 +72,8 @@ const SideMenu: FC<SideMenuProps> = ({}) => {
    * THIS WAS F*CKING CRAZY TO IMPLEMENT. A LOT OF MATH WTF
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
+    if (width < XL) return;
+
     const handleScroll = () => {
       if (!sideMenuRef.current) return;
       const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -128,7 +131,7 @@ const SideMenu: FC<SideMenuProps> = ({}) => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [placeholder.height, placeholder.top, position]);
+  }, [placeholder.height, placeholder.top, position, width]);
 
   return (
     <>

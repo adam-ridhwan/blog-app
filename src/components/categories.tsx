@@ -8,7 +8,6 @@ import { Category } from '@/types';
 import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
 import { useTimeout } from '@mantine/hooks';
-import { useAtomValue } from 'jotai';
 
 import { Skeleton } from '@/components/ui/skeleton';
 
