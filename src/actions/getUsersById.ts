@@ -1,6 +1,7 @@
 'use server';
 
-import { AuthorDetails, getUserById } from '@/actions/getUserById';
+import { getUserById } from '@/actions/getUserById';
+import { AuthorDetails } from '@/types';
 import { ObjectId } from 'mongodb';
 
 export async function getUsersById(authorIds: (ObjectId | string)[]) {

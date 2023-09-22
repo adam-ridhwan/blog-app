@@ -26,7 +26,7 @@
     "@types/node": "20.5.9",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
-    "@uidotdev/usehooks": "^2.2.0",
+    "@uidotdev/usehooks": "^2.3.1",
     "autoprefixer": "10.4.15",
     "bson": "^6.1.0",
     "class-variance-authority": "^0.7.0",

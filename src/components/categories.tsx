@@ -15,7 +15,7 @@ const Categories: FC = async () => {
         <Link
           href='/'
           className={cn(
-            `flex h-[32px] items-center justify-center whitespace-nowrap rounded-full border border-transparent
+            `flex h-[32px] items-center justify-center whitespace-nowrap rounded-md border border-transparent
             bg-accentNavy px-5`
           )}
         >
@@ -27,7 +27,7 @@ const Categories: FC = async () => {
               key={category.title}
               href={`/blog?category=${category.title}`}
               className={cn(
-                `flex h-[32px] items-center justify-center rounded-full border  
+                `flex h-[32px] items-center justify-center rounded-md border  
                 border-muted/30 bg-background px-5`
               )}
             >

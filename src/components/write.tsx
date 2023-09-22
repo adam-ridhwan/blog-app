@@ -21,9 +21,9 @@ import { MOBILE, useWindowSize } from '@/hooks/useWindowSize';
 const Delta = Quill.import('delta');
 
 const textAreaSize = {
-  h1: { height: 48, padding: 57 },
-  h2: { height: 36, padding: 62 },
-  p: { height: 24, padding: 66 },
+  h1: { height: 49, padding: 57 },
+  h2: { height: 37, padding: 60 },
+  p: { height: 25, padding: 66 },
 };
 
 const modules = {
@@ -52,7 +52,7 @@ const Write = () => {
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * HANDLES MOUSEUP AND KEYUP EVENTS
-   * - Determines where to position the add button
+   * Determines where to position the add button
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -72,9 +72,9 @@ const Write = () => {
 
       leaf.text ? setIsAddButtonVisible(false) : setIsAddButtonVisible(true);
 
-      if (height === textAreaSize.h1.height) return setPosition(bounds.bottom + textAreaSize.h1.padding);
-      if (height === textAreaSize.h2.height) return setPosition(bounds.bottom + textAreaSize.h2.padding);
-      if (height === textAreaSize.p.height) return setPosition(bounds.bottom + textAreaSize.p.padding);
+      if (height < textAreaSize.p.height) return setPosition(bounds.bottom + textAreaSize.p.padding);
+      if (height < textAreaSize.h2.height) return setPosition(bounds.bottom + textAreaSize.h2.padding);
+      if (height < textAreaSize.h1.height) return setPosition(bounds.bottom + textAreaSize.h1.padding);
     };
 
     document.addEventListener('mouseup', handleClick);
@@ -87,8 +87,8 @@ const Write = () => {
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * HANDLES PASTE EVENT
-   * - Removes formatting from pasted text
-   * - Scrolls to the position the user was at before pasting
+   * Removes formatting from pasted text
+   * Scrolls to the position the user was at before pasting
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -114,7 +114,7 @@ const Write = () => {
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * HANDLE SCROLL EVENT
-   * - updates the position of scrollRef
+   * Updates the position of scrollRef
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -126,7 +126,7 @@ const Write = () => {
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * HANDLE ENTER KEY
-   * - automatic scroll down when cursor is at the bottom of the viewport
+   * Automatic scroll down when cursor is at the bottom of the viewport
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const NAVBAR_HEIGHT = 64;
   const THRESHOLD = 150;
@@ -171,7 +171,7 @@ const Write = () => {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className='flex h-[32px] items-center' align='center' side='right'>
-                  <div>yo</div>
+                  <div>Tools</div>
                 </PopoverContent>
               </Popover>
             )}

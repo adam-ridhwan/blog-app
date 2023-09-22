@@ -1,5 +1,6 @@
 import { getPosts } from '@/actions/getPosts';
 import { getUsersById } from '@/actions/getUsersById';
+import HydrateAtoms from '@/provider/hydrate-atoms';
 import { Post, User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { generateRandomString } from '@/util/generateRandomString';
@@ -216,10 +217,12 @@ export default async function Home() {
 
   return (
     <div className='container flex flex-col px-5 xl:flex-row xl:justify-center'>
-      <PostList initialPosts={initialPosts} initialAuthors={uniqueAuthors}>
-        <Categories />
-      </PostList>
-      <SideMenu />
+      <HydrateAtoms posts={initialPosts} authors={uniqueAuthors}>
+        <PostList>
+          <Categories />
+        </PostList>
+        <SideMenu />
+      </HydrateAtoms>
     </div>
   );
 }
