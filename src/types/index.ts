@@ -1,9 +1,11 @@
 import { ProviderType } from '@auth/core/providers';
 import { ObjectId } from 'mongodb';
 
+export type MongoId = string | ObjectId;
+
 export type Account = {
-  _id?: ObjectId | string;
-  userId: ObjectId | string;
+  _id?: MongoId;
+  userId: MongoId;
   type?: ProviderType | undefined;
   provider: string | undefined;
   providerAccountId: string;
@@ -16,10 +18,10 @@ export type Account = {
 };
 
 export type Category = {
-  _id?: ObjectId | string;
+  _id?: MongoId;
   slug: string;
   title: string;
-  posts: (ObjectId | string)[];
+  posts: MongoId[];
 };
 
 export type Comment = {
@@ -33,7 +35,7 @@ export type Comment = {
 };
 
 export type Post = {
-  _id?: ObjectId | string;
+  _id?: MongoId;
   createdAt: Date;
   postSlug: string;
   title: string;
@@ -41,9 +43,9 @@ export type Post = {
   img?: string;
   views: number;
   categorySlug: string;
-  category: ObjectId | string;
-  author: ObjectId | string;
-  comments: (ObjectId | string)[];
+  category: MongoId;
+  author: MongoId;
+  comments: MongoId[];
   likes: number;
 };
 
@@ -56,7 +58,7 @@ export type Session = {
 };
 
 export type User = {
-  _id?: ObjectId | string;
+  _id?: MongoId;
   name?: string;
   email: string;
   username: string;
@@ -66,6 +68,13 @@ export type User = {
   sessions: Session[];
   posts: Post[];
   comments: Comment[];
+  followers: Follower[];
+};
+
+export type Follower = {
+  _id: MongoId;
+  userId: MongoId;
+  followerId: MongoId[];
 };
 
 export type VerificationToken = {

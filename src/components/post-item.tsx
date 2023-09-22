@@ -41,7 +41,7 @@ const PostItem: FC<CardProps> = ({
 
   return (
     <>
-      <Card>
+      <Card className='md:min-h-[266px]'>
         <Link href={`${username}`} className='flex flex-row items-center gap-2'>
           <Avatar className='h-12 w-12'>
             {image ? <Image src={image} alt='' /> : <AvatarFallback>{name?.split('')[0]}</AvatarFallback>}

@@ -14,7 +14,6 @@ export const getPosts = async (
   numberOfPostsToFetch: number = 5,
   lastFetchedId?: string | undefined
 ): Promise<[Post[], number]> => {
-  console.log(lastFetchedId !== undefined && lastFetchedId);
   try {
     const { postCollection } = await connectToDatabase();
     const totalDocuments = await postCollection.countDocuments();

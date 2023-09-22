@@ -12,7 +12,7 @@ type CardSkeletonProps = {
 const CardSkeleton = forwardRef<HTMLDivElement, CardSkeletonProps>(({ className }, ref) => {
   return (
     <>
-      <Card ref={ref} className='w-full md:min-h-[266px]'>
+      <Card ref={ref} className='w-full md:min-h-[265px]'>
         <div className='flex flex-row items-center gap-2'>
           {/* Avatar */}
           <Skeleton className={cn('h-12 w-12 rounded-full bg-primary/30', className)} />

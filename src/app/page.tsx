@@ -8,12 +8,17 @@ import { ObjectId } from 'mongodb';
 import PostList from '@/components/post-list';
 import SideMenu from '@/components/side-menu';
 
-type Blog = {
+type MockPost = {
   title: string;
   content: string;
 };
 
-const blogPosts: Blog[] = [
+type MockUser = {
+  name: string;
+  userId: string;
+};
+
+const blogPosts: MockPost[] = [
   {
     title: 'The Joys of Traveling Solo',
     content:
@@ -116,27 +121,30 @@ const blogPosts: Blog[] = [
   },
 ];
 
-const names: string[] = [
-  'Ava Thompson',
-  'James Anderson',
-  'Sophia White',
-  'Benjamin Martinez',
-  'Mia Lewis',
-  'Ethan Walker',
-  'Emily Rodriguez',
-  'William Perez',
-  'Olivia Torres',
-  'Michael Jenkins',
-  'Emma Evans',
-  'Jacob Sanchez',
-  'Amelia Simmons',
-  'Lucas Rivera',
-  'Chloe Hayes',
-  'Jackson James',
-  'Grace Wright',
-  'Elijah Cox',
-  'Abigail Collins',
-  'Alexander Foster',
+const user: MockUser[] = [
+  { name: 'Ava Thompson', userId: '650cf75d33901fc25b0af3db' },
+  { name: 'James Anderson', userId: '650cf75d33901fc25b0af3dc' },
+  { name: 'Sophia White', userId: '650cf75d33901fc25b0af3dd' },
+  { name: 'Benjamin Martinez', userId: '650cf75d33901fc25b0af3de' },
+  { name: 'Mia Lewis', userId: '650cf75d33901fc25b0af3df' },
+
+  { name: 'Ethan Walker', userId: '650cf75d33901fc25b0af3e0' },
+  { name: 'Emily Rodriguez', userId: '650cf75d33901fc25b0af3e1' },
+  { name: 'William Perez', userId: '650cf75d33901fc25b0af3e2' },
+  { name: 'Olivia Torres', userId: '650cf75d33901fc25b0af3e3' },
+  { name: 'Michael Jenkins', userId: '650cf75d33901fc25b0af3e4' },
+
+  { name: 'Emma Evans', userId: '650cf75d33901fc25b0af3e5' },
+  { name: 'Jacob Sanchez', userId: '650cf75d33901fc25b0af3e6' },
+  { name: 'Amelia Simmons', userId: '650cf75d33901fc25b0af3e7' },
+  { name: 'Lucas Rivera', userId: '650cf75d33901fc25b0af3e8' },
+  { name: 'Chloe Hayes', userId: '650cf75d33901fc25b0af3e9' },
+
+  { name: 'Jackson James', userId: '650cf75d33901fc25b0af3ea' },
+  { name: 'Grace Wright', userId: '650cf75d33901fc25b0af3eb' },
+  { name: 'Elijah Cox', userId: '650cf75d33901fc25b0af3ec' },
+  { name: 'Abigail Collins', userId: '650cf75d33901fc25b0af3ed' },
+  { name: 'Alexander Foster', userId: '650cf75d33901fc25b0af3ee' },
 ];
 
 const generatePost = (index: number): Post => {
@@ -144,7 +152,7 @@ const generatePost = (index: number): Post => {
   const postSlug = `mock-post-${index}`;
   const category = new ObjectId('650ce47033901fc25b0af02f');
   const content = blogPosts[index].content;
-  const author = new ObjectId('650ce4a333901fc25b0af15b');
+  const author = new ObjectId(`${user[index].userId}`);
 
   return {
     createdAt: new Date(),
@@ -162,13 +170,14 @@ const generatePost = (index: number): Post => {
 
 const generateMockUsers = (index: number): User => {
   return {
-    name: names[index],
-    username: '@' + `${names[index].split(' ')[0].toLowerCase()}` + '_' + generateRandomString(),
-    email: `${names[index].split(' ')[0].toLowerCase()}@gmail.com`,
+    name: user[index].name,
+    username: '@' + `${user[index].name.split(' ')[0].toLowerCase()}` + '_' + generateRandomString(),
+    email: `${user[index].name.split(' ')[0].toLowerCase()}@gmail.com`,
     accounts: [],
     comments: [],
     posts: [],
     sessions: [],
+    followers: [],
   };
 };
 
@@ -181,6 +190,9 @@ export default async function Home() {
   const mockUsers = Array.from({ length: 20 }, (_, index) => generateMockUsers(index));
   // await userCollection.deleteMany({});
   // await userCollection.insertMany(mockUsers);
+  //
+  // const users = await userCollection.find().toArray();
+  // console.log(users.flatMap(user => user).map(user => user._id));
 
   const [initialPosts] = await getPosts(5, undefined);
 
@@ -204,7 +216,7 @@ export default async function Home() {
   return (
     <div className='container flex flex-col px-5 xl:flex-row xl:justify-center'>
       <PostList initialPosts={initialPosts} initialAuthors={uniqueAuthors} />
-      <SideMenu />
+      {/*<SideMenu />*/}
     </div>
   );
 }
