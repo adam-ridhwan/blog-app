@@ -11,6 +11,8 @@ interface QueryObject {
   };
 }
 
+const dynamic = 'force-dynamic';
+
 export const getPosts = async (
   numberOfPostsToFetch: number = 5,
   lastFetchedId?: string | undefined
@@ -46,7 +48,6 @@ export const getPosts = async (
         return post;
       });
     };
-    revalidatePath('/');
 
     return [convertObjectIdsToStrings(posts), totalDocuments];
   } catch (err) {
