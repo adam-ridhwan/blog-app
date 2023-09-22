@@ -50,7 +50,7 @@ const PostList: FC<PostListProps> = ({ children }) => {
    * 3) Set the next 5 posts and authors to the state
    * 4) If there are no more posts to fetch, set areAllPostsFetched to true
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  const fetchNextPosts = useCallback(async () => {
+  const fetchNextPosts = async () => {
     // Fetch next 5 posts based on the last post id
     const [fetchedPosts, totalDocuments] = await getPosts(LIMIT, posts?.at(-1)?._id?.toString());
     if (!fetchedPosts || fetchedPosts.length === 0) {
@@ -73,21 +73,18 @@ const PostList: FC<PostListProps> = ({ children }) => {
     // Set the next 5 posts and unique authors to the state
     if (uniqueAuthors.length > 0) setAuthors(uniqueAuthors);
     setPosts(prevPosts => [...prevPosts, ...fetchedPosts]);
-  }, [posts, authors, setAuthors, setPosts, setAreAllPostsFetched]);
+  };
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * FETCH POSTS IF LAST POSTS IS INTERSECTING
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+
   useEffect(() => {
     if (lastPostIntersectionEntry?.isIntersecting && !areAllPostsFetched) {
       (async () => await fetchNextPosts())();
     }
-  }, [fetchNextPosts, lastPostIntersectionEntry, areAllPostsFetched]);
-
-  useEffect(() => {
-    // console.log(posts);
-    console.log(lastPostIntersectionEntry?.isIntersecting);
-  }, [lastPostIntersectionEntry?.isIntersecting, posts]);
+    // eslint-disable-next-line
+  }, [areAllPostsFetched, lastPostIntersectionEntry]);
 
   return (
     <>
@@ -98,7 +95,6 @@ const PostList: FC<PostListProps> = ({ children }) => {
           {posts?.map((post, i) => {
             const lastPost = i === posts?.length - 1;
             const author = authors?.find(author => author._id === post.author);
-            if (lastPost) console.log(author?.name);
             return (
               <Fragment key={post?.title}>
                 <div ref={lastPost ? lastPostIntersectionRef : null} className='flex w-full flex-col gap-5'>
