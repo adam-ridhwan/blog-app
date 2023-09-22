@@ -1,11 +1,10 @@
 /* eslint-disable */
 'use client';
 
-import { FC, Fragment, ReactNode, useCallback, useEffect, useRef } from 'react';
+import { FC, Fragment, ReactNode, useEffect, useRef } from 'react';
 import { getPosts } from '@/actions/getPosts';
 import { getUsersById } from '@/actions/getUsersById';
 import { areAllPostsFetchedAtom, authorsAtom, postAtom } from '@/provider/hydrate-atoms';
-import { Post } from '@/types';
 import { useIntersection } from '@mantine/hooks';
 import { useAtom } from 'jotai';
 

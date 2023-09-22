@@ -61,7 +61,7 @@ const PostItem: FC<CardProps> = ({
          * User has to scroll until last post is out of view and then scroll back in again until last post
          * is in view to trigger the intersection observer.
          */}
-        <a
+        <Link
           href={`${username}/${_id}`}
           className='flex min-h-[112px] flex-col gap-1 md:flex-row md:items-end md:gap-7'
         >
@@ -87,7 +87,7 @@ const PostItem: FC<CardProps> = ({
           <div className='relative aspect-video h-max w-full rounded-2xl md:h-[108px] md:w-[180px]'>
             <Image src='/sand.jpg' alt='' fill className='rounded-2xl object-cover' />
           </div>
-        </a>
+        </Link>
 
         <Link href='/'>
           <CardFooter>
