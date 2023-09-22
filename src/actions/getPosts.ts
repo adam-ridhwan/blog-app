@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { Post } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
@@ -45,6 +46,8 @@ export const getPosts = async (
         return post;
       });
     };
+    revalidatePath('/');
+
     return [convertObjectIdsToStrings(posts), totalDocuments];
   } catch (err) {
     console.error('Error getting posts:', err);
