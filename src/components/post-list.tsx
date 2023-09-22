@@ -85,9 +85,9 @@ const PostList: FC<PostListProps> = ({ children }) => {
   }, [fetchNextPosts, lastPostIntersectionEntry, areAllPostsFetched]);
 
   useEffect(() => {
-    console.log(posts);
-    console.log(lastPostIntersectionRef);
-  }, [posts]);
+    // console.log(posts);
+    console.log(lastPostIntersectionEntry?.isIntersecting);
+  }, [lastPostIntersectionEntry?.isIntersecting, posts]);
 
   return (
     <>
