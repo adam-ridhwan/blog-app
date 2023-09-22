@@ -12,7 +12,7 @@ type CardSkeletonProps = {
 const CardSkeleton = forwardRef<HTMLDivElement, CardSkeletonProps>(({ className }, ref) => {
   return (
     <>
-      <Card ref={ref} className='min-h-[266px] w-full'>
+      <Card ref={ref} className='w-full md:min-h-[266px]'>
         <div className='flex flex-row items-center gap-2'>
           {/* Avatar */}
           <Skeleton className={cn('h-12 w-12 rounded-full bg-primary/30', className)} />
@@ -20,7 +20,7 @@ const CardSkeleton = forwardRef<HTMLDivElement, CardSkeletonProps>(({ className 
           {/* Name, username, date */}
           <div className='flex flex-col gap-2'>
             <Skeleton className={cn('h-[16px] w-[100px] bg-primary/30', className)} />
-            <Skeleton className={cn('h-[16px] w-[200px] bg-primary/30', className)} />
+            <Skeleton className={cn('h-[16px] w-[200px] bg-primary/30', className)} />`
           </div>
         </div>
 
@@ -28,7 +28,7 @@ const CardSkeleton = forwardRef<HTMLDivElement, CardSkeletonProps>(({ className 
         <div className='flex flex-col gap-1 md:flex-row md:items-end md:gap-7'>
           <div className='flex flex-1 flex-col'>
             <CardHeader>
-              <Skeleton className={cn('mb-1 h-[24px] w-[400px] bg-primary/30 md:w-[200px]', className)} />
+              <Skeleton className={cn('mb-1 h-[24px] w-[200px] bg-primary/30 md:w-[200px]', className)} />
             </CardHeader>
             <CardContent>
               <Skeleton className={cn('hidden h-[72px] bg-primary/30 md:flex', className)} />
