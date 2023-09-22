@@ -183,7 +183,6 @@ export default async function Home() {
   // await userCollection.insertMany(mockUsers);
 
   const [initialPosts] = await getPosts(5, undefined);
-  console.log(initialPosts);
 
   if (!initialPosts) throw new Error('Failed to fetch initial posts');
 
