@@ -71,6 +71,8 @@ export type User = {
   followers: Follower[];
 };
 
+export type AuthorDetails = Pick<User, '_id' | 'name' | 'username' | 'image'>;
+
 export type Follower = {
   _id: MongoId;
   userId: MongoId;
