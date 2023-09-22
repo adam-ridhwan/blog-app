@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, Fragment, useEffect, useRef, useState } from 'react';
+import { FC, Fragment, ReactNode, useEffect, useRef, useState } from 'react';
 import { getPosts } from '@/actions/getPosts';
 import { AuthorDetails } from '@/actions/getUserById';
 import { getUsersById } from '@/actions/getUsersById';
@@ -19,12 +19,13 @@ const LIMIT = 5;
 type PostListProps = {
   initialPosts: Post[];
   initialAuthors: AuthorDetails[];
+  children: ReactNode;
 };
 
 const postAtom = atom<Post[]>([]);
 const authorsAtom = atom<AuthorDetails[]>([]);
 
-const PostList: FC<PostListProps> = ({ initialPosts, initialAuthors }) => {
+const PostList: FC<PostListProps> = ({ initialPosts, initialAuthors, children }) => {
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * LOGIC
    * 1) Get first 5 posts from server first
@@ -49,7 +50,6 @@ const PostList: FC<PostListProps> = ({ initialPosts, initialAuthors }) => {
    * Fetches posts infinitely
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const fetchInfinitePosts = async (data: InfiniteData<Post[]> | undefined) => {
-    console.log('fetchInfinitePosts');
     if (areAllPostsFetched) return [];
 
     const postsFromReactQuery = data?.pages.flatMap(page => page);
@@ -80,10 +80,6 @@ const PostList: FC<PostListProps> = ({ initialPosts, initialAuthors }) => {
     return fetchedPosts;
   };
 
-  useEffect(() => {
-    console.log({ posts, authors });
-  }, [authors, posts]);
-
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery<Post[]>({
     queryKey: ['fetchedPosts'],
     queryFn: async ({ pageParam }): Promise<Post[]> => await fetchInfinitePosts(data),
@@ -111,18 +107,11 @@ const PostList: FC<PostListProps> = ({ initialPosts, initialAuthors }) => {
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const postsToRender = data?.pages.flatMap(page => page);
 
-  // console.log({
-  //   length: postsToRender?.length,
-  //   data: postsToRender?.map(post => post).map(po => po._id),
-  //   pageParam: data?.pageParams,
-  //   lastPostId: postsToRender?.at(-1)?._id,
-  // });
-
   return (
     <>
       <main className='relative mb-6 md:flex md:flex-col md:items-center'>
         <div className='flex max-w-[728px] flex-col gap-5 md:items-center'>
-          <Categories />
+          {children}
 
           {postsToRender?.map((post, i) => {
             const lastPost = i === postsToRender?.length - 1;
