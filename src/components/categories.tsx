@@ -16,7 +16,7 @@ const Categories: FC = async () => {
           href='/'
           className={cn(
             `flex h-[32px] items-center justify-center whitespace-nowrap rounded-md border border-transparent
-            bg-accentNavy px-5`
+            bg-accentNavy px-5 text-secondary`
           )}
         >
           For you

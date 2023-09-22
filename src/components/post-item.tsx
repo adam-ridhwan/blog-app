@@ -54,7 +54,14 @@ const PostItem: FC<CardProps> = ({
           </div>
         </Link>
 
-        <Link
+        {/**
+         * TODO: Fix the <Link> for infinite scrolling
+         * When the user clicks on the card and navigate back, infinite scrolling does not trigger.
+         * The intersection observer is recognizing the last post, but does not fetch the next posts.
+         * User has to scroll until last post is out of view and then scroll back in again until last post
+         * is in view to trigger the intersection observer.
+         */}
+        <a
           href={`${username}/${_id}`}
           className='flex min-h-[112px] flex-col gap-1 md:flex-row md:items-end md:gap-7'
         >
@@ -80,7 +87,7 @@ const PostItem: FC<CardProps> = ({
           <div className='relative aspect-video h-max w-full rounded-2xl md:h-[108px] md:w-[180px]'>
             <Image src='/sand.jpg' alt='' fill className='rounded-2xl object-cover' />
           </div>
-        </Link>
+        </a>
 
         <Link href='/'>
           <CardFooter>

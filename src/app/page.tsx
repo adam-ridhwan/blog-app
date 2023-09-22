@@ -124,29 +124,29 @@ const blogPosts: MockPost[] = [
 ];
 
 const user: MockUser[] = [
-  { name: 'Ava Thompson', userId: '650cf75d33901fc25b0af3db' },
-  { name: 'James Anderson', userId: '650cf75d33901fc25b0af3dc' },
-  { name: 'Sophia White', userId: '650cf75d33901fc25b0af3dd' },
-  { name: 'Benjamin Martinez', userId: '650cf75d33901fc25b0af3de' },
-  { name: 'Mia Lewis', userId: '650cf75d33901fc25b0af3df' },
+  { name: 'Ava Thompson', userId: '650e126945e26c7bd150540c' },
+  { name: 'James Anderson', userId: '650e126945e26c7bd150540d' },
+  { name: 'Sophia White', userId: '650e126945e26c7bd150540e' },
+  { name: 'Benjamin Martinez', userId: '650e126945e26c7bd150540f' },
+  { name: 'Mia Lewis', userId: '650e126945e26c7bd1505410' },
 
-  { name: 'Ethan Walker', userId: '650cf75d33901fc25b0af3e0' },
-  { name: 'Emily Rodriguez', userId: '650cf75d33901fc25b0af3e1' },
-  { name: 'William Perez', userId: '650cf75d33901fc25b0af3e2' },
-  { name: 'Olivia Torres', userId: '650cf75d33901fc25b0af3e3' },
-  { name: 'Michael Jenkins', userId: '650cf75d33901fc25b0af3e4' },
+  { name: 'Ethan Walker', userId: '650e126945e26c7bd1505411' },
+  { name: 'Emily Rodriguez', userId: '650e126945e26c7bd1505412' },
+  { name: 'William Perez', userId: '650e126945e26c7bd1505413' },
+  { name: 'Olivia Torres', userId: '650e126945e26c7bd1505414' },
+  { name: 'Michael Jenkins', userId: '650e126945e26c7bd1505415' },
 
-  { name: 'Emma Evans', userId: '650cf75d33901fc25b0af3e5' },
-  { name: 'Jacob Sanchez', userId: '650cf75d33901fc25b0af3e6' },
-  { name: 'Amelia Simmons', userId: '650cf75d33901fc25b0af3e7' },
-  { name: 'Lucas Rivera', userId: '650cf75d33901fc25b0af3e8' },
-  { name: 'Chloe Hayes', userId: '650cf75d33901fc25b0af3e9' },
+  { name: 'Emma Evans', userId: '650e126945e26c7bd1505416' },
+  { name: 'Jacob Sanchez', userId: '650e126945e26c7bd1505417' },
+  { name: 'Amelia Simmons', userId: '650e126945e26c7bd1505418' },
+  { name: 'Lucas Rivera', userId: '650e126945e26c7bd1505419' },
+  { name: 'Chloe Hayes', userId: '650e126945e26c7bd150541a' },
 
-  { name: 'Jackson James', userId: '650cf75d33901fc25b0af3ea' },
-  { name: 'Grace Wright', userId: '650cf75d33901fc25b0af3eb' },
-  { name: 'Elijah Cox', userId: '650cf75d33901fc25b0af3ec' },
-  { name: 'Abigail Collins', userId: '650cf75d33901fc25b0af3ed' },
-  { name: 'Alexander Foster', userId: '650cf75d33901fc25b0af3ee' },
+  { name: 'Jackson James', userId: '650e126945e26c7bd150541b' },
+  { name: 'Grace Wright', userId: '650e126945e26c7bd150541c' },
+  { name: 'Elijah Cox', userId: '650e126945e26c7bd150541d' },
+  { name: 'Abigail Collins', userId: '650e126945e26c7bd150541e' },
+  { name: 'Alexander Foster', userId: '650e126945e26c7bd150541f' },
 ];
 
 const generatePost = (index: number): Post => {
@@ -192,9 +192,9 @@ export default async function Home() {
   const mockUsers = Array.from({ length: 20 }, (_, index) => generateMockUsers(index));
   // await userCollection.deleteMany({});
   // await userCollection.insertMany(mockUsers);
-  //
-  // const users = await userCollection.find().toArray();
-  // console.log(users.flatMap(user => user).map(user => user._id));
+
+  const users = await userCollection.find().toArray();
+  console.log(users.flatMap(user => user).map(user => user._id));
 
   const [initialPosts] = await getPosts(5, undefined);
 
