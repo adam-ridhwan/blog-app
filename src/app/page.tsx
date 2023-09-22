@@ -194,7 +194,6 @@ export default async function Home() {
   // await userCollection.insertMany(mockUsers);
 
   const users = await userCollection.find().toArray();
-  console.log(users.flatMap(user => user).map(user => user._id));
 
   const [initialPosts] = await getPosts(5, undefined);
 

@@ -41,7 +41,6 @@ const PostList: FC<PostListProps> = ({ children }) => {
    * SETTING LAST POST REF TO THE LAST POST
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const { ref: lastPostIntersectionRef, entry: lastPostIntersectionEntry } = useIntersection({
-    rootMargin: '0px',
     root: lastPostRef.current,
     threshold: 1,
   });
@@ -54,7 +53,6 @@ const PostList: FC<PostListProps> = ({ children }) => {
    * 4) If there are no more posts to fetch, set areAllPostsFetched to true
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const fetchNextPosts = async () => {
-    console.log('Fetching next posts');
     // Fetch the next 5 posts
     const [fetchedPosts, totalDocuments] = await getPosts(LIMIT, posts?.at(-1)?._id?.toString());
     if (!fetchedPosts || fetchedPosts.length === 0) {
@@ -77,25 +75,16 @@ const PostList: FC<PostListProps> = ({ children }) => {
     // Set the next 5 posts and unique authors to the state
     if (uniqueAuthors.length > 0) setAuthors(uniqueAuthors);
     setPosts(prevPosts => [...prevPosts, ...fetchedPosts]);
-
-    console.log('End of fetching next posts');
   };
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * FETCH POSTS IF LAST POSTS IS INTERSECTING
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
-    lastPostIntersectionEntry &&
-      console.log(lastPostIntersectionEntry?.target.firstChild?.firstChild?.textContent);
-
     if (lastPostIntersectionEntry?.isIntersecting && !areAllPostsFetched) {
       (async () => await fetchNextPosts())();
     }
   }, [areAllPostsFetched, lastPostIntersectionEntry]);
-
-  useEffect(() => {
-    console.log(posts.length);
-  }, [posts]);
 
   return (
     <>
