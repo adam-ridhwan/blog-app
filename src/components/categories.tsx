@@ -1,32 +1,13 @@
-'use client';
-
-import { FC, memo, useEffect, useState } from 'react';
+import { FC, memo } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { getCategories } from '@/actions/getCategories';
-import { Category } from '@/types';
 import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
-import { useTimeout } from '@mantine/hooks';
 
 import { Skeleton } from '@/components/ui/skeleton';
 
-const Categories: FC = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const pathname = usePathname();
-  const [isMounted, setIsMounted] = useState(false);
-  const { start } = useTimeout(() => setIsMounted(true), 500);
-
-  useEffect(() => {
-    (async () => {
-      const fetchedCategories = await getCategories();
-      setCategories(fetchedCategories);
-    })();
-
-    start();
-  }, [start]);
-
-  if (!isMounted) return <CategorySkeleton />;
+const Categories: FC = async () => {
+  const categories = await getCategories();
 
   return (
     <>
@@ -34,9 +15,8 @@ const Categories: FC = () => {
         <Link
           href='/'
           className={cn(
-            `flex h-[32px] items-center justify-center whitespace-nowrap rounded-full border
-            border-transparent bg-background px-5`,
-            pathname === '/' && 'bg-accentNavy text-white'
+            `flex h-[32px] items-center justify-center whitespace-nowrap rounded-full border border-transparent
+            bg-accentNavy px-5`
           )}
         >
           For you
