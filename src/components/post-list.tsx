@@ -40,11 +40,11 @@ const PostList: FC<PostListProps> = ({ initialPosts, initialAuthors }) => {
   const fetchInfinitePosts = async (data: InfiniteData<Post[]> | undefined) => {
     const fetchedPosts = data?.pages.flatMap(page => page);
 
-    if (!fetchedPosts) throw new Error('Failed to fetch fetchedPosts');
+    if (!fetchedPosts) throw new Error('Failed to fetch posts');
 
     const fetchedAuthors = await getUsersById(fetchedPosts.map(post => post.author));
 
-    if (!fetchedAuthors) throw new Error('Failed to fetch fetchedAuthors');
+    if (!fetchedAuthors) throw new Error('Failed to fetch authors');
 
     const seenAuthors = new Set();
     const uniqueAuthors = [...authors, ...fetchedAuthors].filter(author => {
@@ -57,7 +57,11 @@ const PostList: FC<PostListProps> = ({ initialPosts, initialAuthors }) => {
 
     if (uniqueAuthors.length > 0) setAuthors(uniqueAuthors);
 
-    return await getPosts(LIMIT, fetchedPosts?.at(-1)?._id?.toString());
+    const [posts, totalDocuments] = await getPosts(LIMIT, fetchedPosts?.at(-1)?._id?.toString());
+
+    totalDocuments === fetchedPosts.length && setAreAllPostsFetched(true);
+
+    return posts;
   };
 
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery<Post[]>({
@@ -110,16 +114,17 @@ const PostList: FC<PostListProps> = ({ initialPosts, initialAuthors }) => {
                   <Separator className='md:hidden' />
                 </div>
 
-                {lastPost && (
-                  <>
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <Fragment key={i}>
-                        <CardSkeleton />
-                        <Separator className='md:hidden' />
-                      </Fragment>
-                    ))}
-                  </>
-                )}
+                {areAllPostsFetched ||
+                  (lastPost && (
+                    <>
+                      {Array.from({ length: 4 }).map((_, i) => (
+                        <Fragment key={i}>
+                          <CardSkeleton />
+                          <Separator className='md:hidden' />
+                        </Fragment>
+                      ))}
+                    </>
+                  ))}
               </Fragment>
             );
           })}

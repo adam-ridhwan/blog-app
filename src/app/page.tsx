@@ -34,7 +34,7 @@ export default async function Home() {
   // await postCollection.deleteMany({});
   // await postCollection.insertMany(mockPosts);
 
-  const initialPosts = await getPosts(5, undefined);
+  const [initialPosts] = await getPosts(5, undefined);
 
   if (!initialPosts) throw new Error('Failed to fetch initial posts');
 

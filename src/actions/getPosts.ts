@@ -10,7 +10,10 @@ interface QueryObject {
   };
 }
 
-export const getPosts = async (numberOfPostsToFetch: number = 5, lastFetchedId?: string | undefined) => {
+export const getPosts = async (
+  numberOfPostsToFetch: number = 5,
+  lastFetchedId?: string | undefined
+): Promise<[Post[], number]> => {
   console.log(lastFetchedId !== undefined && lastFetchedId);
   try {
     const { postCollection } = await connectToDatabase();
@@ -43,7 +46,7 @@ export const getPosts = async (numberOfPostsToFetch: number = 5, lastFetchedId?:
         return post;
       });
     };
-    return convertObjectIdsToStrings(posts);
+    return [convertObjectIdsToStrings(posts), totalDocuments];
   } catch (err) {
     console.error('Error getting posts:', err);
     throw new Error('Error occurred while fetching posts');

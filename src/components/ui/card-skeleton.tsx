@@ -20,7 +20,7 @@ const CardSkeleton = forwardRef<HTMLDivElement, CardSkeletonProps>(({ className 
           {/* Name, username, date */}
           <div className='flex flex-col gap-2'>
             <Skeleton className={cn('h-[16px] w-[100px] bg-primary/30', className)} />
-            <Skeleton className={cn('h-[16px] w-[200px] bg-primary/30', className)} />`
+            <Skeleton className={cn('h-[16px] w-[200px] bg-primary/30', className)} />
           </div>
         </div>
 
