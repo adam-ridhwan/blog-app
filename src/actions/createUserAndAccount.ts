@@ -22,6 +22,7 @@ export const createUserAndAccount = async (account: NextAuthAccount | null, user
       sessions: [],
       posts: [],
       comments: [],
+      followers: [],
     };
 
     const createdNewUser: InsertOneResult<User> = await userCollection.insertOne(newUser);
