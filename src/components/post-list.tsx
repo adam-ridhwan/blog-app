@@ -84,6 +84,11 @@ const PostList: FC<PostListProps> = ({ children }) => {
     }
   }, [fetchNextPosts, lastPostIntersectionEntry, areAllPostsFetched]);
 
+  useEffect(() => {
+    console.log(posts);
+    console.log(lastPostIntersectionRef);
+  }, [posts]);
+
   return (
     <>
       <main className='relative mb-6 md:flex md:flex-col md:items-center'>
@@ -93,6 +98,7 @@ const PostList: FC<PostListProps> = ({ children }) => {
           {posts?.map((post, i) => {
             const lastPost = i === posts?.length - 1;
             const author = authors?.find(author => author._id === post.author);
+            if (lastPost) console.log(author?.name);
             return (
               <Fragment key={post?.title}>
                 <div ref={lastPost ? lastPostIntersectionRef : null} className='flex w-full flex-col gap-5'>
