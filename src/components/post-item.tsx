@@ -38,10 +38,18 @@ const PostItem: FC<CardProps> = ({
     if (titleNode.clientHeight > MAX_TITLE_HEIGHT) setTsTitleWrappedInTwoLines(true);
   }, []);
 
+  /**
+   * TODO: Fix the <Link> for infinite scrolling
+   * When the user clicks on the card and navigate back, infinite scrolling does not trigger.
+   * The intersection observer is recognizing the last post, but does not fetch the next posts.
+   * User has to scroll until last post is out of view and then scroll back in again until last post
+   * is in view to trigger the intersection observer.
+   */
+
   return (
     <>
       <Card className='md:min-h-[266px]'>
-        <Link href={`${username}`} className='flex flex-row items-center gap-2'>
+        <a href={`${username}`} className='flex flex-row items-center gap-2'>
           <Avatar className='h-12 w-12'>
             {image ? <Image src={image} alt='' /> : <AvatarFallback>{name?.split('')[0]}</AvatarFallback>}
           </Avatar>
@@ -52,15 +60,8 @@ const PostItem: FC<CardProps> = ({
               <span className='text-muted'>{formatDate(createdAt)}</span>
             </div>
           </div>
-        </Link>
+        </a>
 
-        {/**
-         * TODO: Fix the <Link> for infinite scrolling
-         * When the user clicks on the card and navigate back, infinite scrolling does not trigger.
-         * The intersection observer is recognizing the last post, but does not fetch the next posts.
-         * User has to scroll until last post is out of view and then scroll back in again until last post
-         * is in view to trigger the intersection observer.
-         */}
         <a
           href={`${username}/${_id}`}
           className='flex min-h-[112px] flex-col gap-1 md:flex-row md:items-end md:gap-7'
