@@ -10,10 +10,8 @@ import { cn } from '@/util/cn';
 import { formatDate } from '@/util/formatDate';
 import { Heart, MessageCircle } from 'lucide-react';
 
-import { useIsMounted } from '@/hooks/useIsMounted';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import CardSkeleton from '@/components/ui/card-skeleton';
 import SeparatorDot from '@/components/ui/separator-dot';
 
 type CardProps = {
@@ -24,8 +22,8 @@ type CardProps = {
 const MAX_TITLE_HEIGHT = 32;
 
 const PostItem: FC<CardProps> = ({
-  post: { title, content, likes, comments, views, createdAt },
-  author: { name, image } = {},
+  post: { _id, title, content, likes, comments, views, createdAt },
+  author: { name, image, username } = {},
 }) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const [isTitleWrappedInTwoLines, setTsTitleWrappedInTwoLines] = useState(false);
@@ -44,7 +42,7 @@ const PostItem: FC<CardProps> = ({
   return (
     <>
       <Card>
-        <Link href='/' className='flex flex-row items-center gap-2'>
+        <Link href={`${username}`} className='flex flex-row items-center gap-2'>
           <Avatar className='h-12 w-12'>
             {image ? <Image src={image} alt='' /> : <AvatarFallback>{name?.split('')[0]}</AvatarFallback>}
           </Avatar>
@@ -57,8 +55,11 @@ const PostItem: FC<CardProps> = ({
           </div>
         </Link>
 
-        <Link href='/' className='flex min-h-[112px] flex-col gap-1 md:flex-row md:items-end md:gap-7'>
-          <div className='flex flex-col '>
+        <Link
+          href={`${username}/${_id}`}
+          className='flex min-h-[112px] flex-col gap-1 md:flex-row md:items-end md:gap-7'
+        >
+          <div className='flex flex-1 flex-col'>
             <CardHeader>
               <CardTitle ref={titleRef} className={cn(`two-line-ellipsis max-h-[64px] text-primary`)}>
                 {title}

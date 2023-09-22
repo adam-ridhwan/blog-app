@@ -1,13 +1,12 @@
 'use client';
 
-import { start } from 'repl';
-import { FC, Fragment, useEffect, useRef, useState, useTransition } from 'react';
+import { FC, Fragment, useEffect, useRef, useState } from 'react';
 import { getPosts } from '@/actions/getPosts';
 import { AuthorDetails } from '@/actions/getUserById';
 import { getUsersById } from '@/actions/getUsersById';
 import { type Post } from '@/types';
 import { useIntersection } from '@mantine/hooks';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 
 import CardSkeleton from '@/components/ui/card-skeleton';
 import { Separator } from '@/components/ui/separator';
@@ -24,97 +23,81 @@ type PostListProps = {
 const PostList: FC<PostListProps> = ({ initialPosts, initialAuthors }) => {
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * LOGIC
-   * 1) Get first 5 posts first and set it to state
+   * 1) Get first 5 posts from server first
    * 2) Render the first 5 posts
    * 3) When user scrolls to the bottom of the page, fetch the next 5 posts
    * 4) Render the next 5 posts
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
 
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [authors, setAuthors] = useState<AuthorDetails[]>(initialAuthors);
   const [areAllPostsFetched, setAreAllPostsFetched] = useState(false);
   const lastPostRef = useRef<HTMLDivElement>(null);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
-   * FETCHES POSTS
-   * Fetches posts from the server using server action
-   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  const fetchPost = async (pageParam: number) => {
-    const lastPostId = posts?.at(-1)?._id;
-    const fetchedPosts = await getPosts(LIMIT, posts.length, lastPostId as string);
-
-    // If no more posts to fetch, set areAllPostsFetched to true
-    if (!fetchedPosts) {
-      setAreAllPostsFetched(true);
-      return slicePostsByPage(posts, pageParam);
-    }
-
-    const newPosts = [...posts, ...fetchedPosts];
-    const authorIds = newPosts.map(post => post.author);
-    const users = await getUsersById(authorIds);
-
-    if (users) {
-      setPosts(newPosts);
-      setAuthors(users);
-    }
-
-    return slicePostsByPage(newPosts, pageParam);
-  };
-
-  const slicePostsByPage = (allPosts: Post[], page: number) => {
-    const start = (page - 1) * LIMIT;
-    const end = page * LIMIT;
-    return allPosts.slice(start, end);
-  };
-
-  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * USE INFINITE QUERY
    * Fetches posts infinitely
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
-    ['fetchedPosts'],
-    async ({ pageParam = 1 }) => {
-      if (areAllPostsFetched) return posts.slice((pageParam - 1) * LIMIT, pageParam * LIMIT);
-      return await fetchPost(pageParam);
-    },
-    {
-      getNextPageParam: (_, pages) => {
-        return pages.length + 1;
-      },
-      refetchOnWindowFocus: false,
-      initialData: {
-        pages: [posts.slice(0, LIMIT)],
-        pageParams: [1],
-      },
-    }
-  );
+  const fetchInfinitePosts = async (data: InfiniteData<Post[]> | undefined) => {
+    const fetchedPosts = data?.pages.flatMap(page => page);
 
-  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
-   * USE INTERSECTION
-   * Checks if last post is in view
-   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  const { ref: postRef, entry: postEntry } = useIntersection({
-    root: lastPostRef.current,
-    threshold: 1,
+    if (!fetchedPosts) throw new Error('Failed to fetch fetchedPosts');
+
+    const fetchedAuthors = await getUsersById(fetchedPosts.map(post => post.author));
+
+    if (!fetchedAuthors) throw new Error('Failed to fetch fetchedAuthors');
+
+    const seenAuthors = new Set();
+    const uniqueAuthors = [...authors, ...fetchedAuthors].filter(author => {
+      if (!seenAuthors.has(author._id)) {
+        seenAuthors.add(author._id);
+        return true;
+      }
+      return false;
+    });
+
+    if (uniqueAuthors.length > 0) setAuthors(uniqueAuthors);
+
+    return await getPosts(LIMIT, fetchedPosts?.at(-1)?._id?.toString());
+  };
+
+  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery<Post[]>({
+    queryKey: ['fetchedPosts'],
+    queryFn: async ({ pageParam }): Promise<Post[]> => await fetchInfinitePosts(data),
+    getNextPageParam: (_, pages) => pages.length + 1,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    initialData: {
+      pages: [initialPosts],
+      pageParams: [1],
+    },
   });
 
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * HANDLE INFINITE SCROLL FETCHING
+   * Checks if last post is intersecting with the viewport
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  const { ref, entry } = useIntersection({ root: lastPostRef.current, threshold: 1 });
+
   useEffect(() => {
-    if (areAllPostsFetched) return;
-
-    console.log();
-
-    if (postEntry?.isIntersecting) fetchNextPage();
-  }, [areAllPostsFetched, fetchNextPage, postEntry?.isIntersecting]);
+    if (entry?.isIntersecting) fetchNextPage().then(() => {});
+  }, [entry?.isIntersecting, fetchNextPage]);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * Posts fetched from useInfiniteQuery
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const postsToRender = data?.pages.flatMap(page => page);
 
+  // console.log({
+  // length: postsToRender?.length,
+  // data: postsToRender?.map(post => post).map(po => po._id),
+  // pageParam: data?.pageParams,
+  // lastPostId: postsToRender?.at(-1)?._id,
+  // });
+
   return (
     <>
       <main className='relative mb-6 md:flex md:flex-col md:items-center'>
-        <div className='flex w-full max-w-[728px] flex-col gap-5 md:items-center'>
+        <div className='flex max-w-[728px] flex-col gap-5 md:items-center'>
           <Categories />
 
           {postsToRender?.map((post, i) => {
@@ -122,22 +105,21 @@ const PostList: FC<PostListProps> = ({ initialPosts, initialAuthors }) => {
             const author = authors?.find(author => author._id === post.author);
             return (
               <Fragment key={post?.title}>
-                <div ref={lastPost ? postRef : null} className='flex flex-col gap-5'>
+                <div ref={lastPost ? ref : null} className='flex w-full flex-col gap-5'>
                   <PostItem {...{ post, author }} />
                   <Separator className='md:hidden' />
                 </div>
 
-                {areAllPostsFetched ||
-                  (lastPost && (
-                    <>
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Fragment key={i}>
-                          <CardSkeleton key={i} />
-                          <Separator className='md:hidden' />
-                        </Fragment>
-                      ))}
-                    </>
-                  ))}
+                {lastPost && (
+                  <>
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <Fragment key={i}>
+                        <CardSkeleton />
+                        <Separator className='md:hidden' />
+                      </Fragment>
+                    ))}
+                  </>
+                )}
               </Fragment>
             );
           })}

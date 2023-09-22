@@ -10,11 +10,8 @@ interface QueryObject {
   };
 }
 
-export const getPosts = async (
-  numberOfPostsToFetch: number = 5,
-  numberOfPostsRendered: number,
-  lastFetchedId?: string
-) => {
+export const getPosts = async (numberOfPostsToFetch: number = 5, lastFetchedId?: string | undefined) => {
+  console.log(lastFetchedId !== undefined && lastFetchedId);
   try {
     const { postCollection } = await connectToDatabase();
     const totalDocuments = await postCollection.countDocuments();
@@ -46,8 +43,7 @@ export const getPosts = async (
         return post;
       });
     };
-
-    if (totalDocuments !== numberOfPostsRendered) return convertObjectIdsToStrings(posts);
+    return convertObjectIdsToStrings(posts);
   } catch (err) {
     console.error('Error getting posts:', err);
     throw new Error('Error occurred while fetching posts');

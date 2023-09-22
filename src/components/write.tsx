@@ -38,7 +38,6 @@ const modules = {
 const postAtom = atomWithStorage('post', '');
 
 const Write = () => {
-  console.log('rendered at write');
   const { data: session, status } = useSession();
   const [postValue, setPostValue] = useAtom(postAtom);
   const windowSize = useWindowSize();
