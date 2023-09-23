@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { AuthorDetails, Post } from '@/types';
 import { atom } from 'jotai';
 import { useHydrateAtoms } from 'jotai/utils';

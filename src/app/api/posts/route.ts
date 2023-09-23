@@ -11,9 +11,11 @@ export async function GET(request: Request) {
     return NextResponse.error();
   }
 
-  const [fetchedPosts, totalDocuments] = await getPosts(Number(limit), id);
+  const [fetchedPosts] = await getPosts(Number(limit), id);
 
-  revalidatePath('/api/posts');
+  if (!fetchedPosts) {
+    return NextResponse.json({ 'Bad request': 'No posts found' }, { status: 400 });
+  }
 
-  return NextResponse.json({ posts: fetchedPosts, totalDocuments });
+  return NextResponse.json({ fetchedPosts });
 }

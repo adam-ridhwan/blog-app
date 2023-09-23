@@ -193,18 +193,23 @@ export default async function Home() {
   // await userCollection.deleteMany({});
   // await userCollection.insertMany(mockUsers);
 
-  const users = await userCollection.find().toArray();
+  // const users = await userCollection.find().toArray();
 
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * FETCH INITIAL POSTS AND AUTHORS
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  // Fetch initial posts
   const [initialPosts] = await getPosts(5, undefined);
-
   if (!initialPosts) throw new Error('Failed to fetch initial posts');
 
+  // Fetch initial authors
   const authorIds = initialPosts.map(post => post.author);
   const initialAuthors = await getUsersById(authorIds);
 
   if (!initialAuthors) throw new Error('Failed to fetch initial authors');
   if (!initialPosts && !initialAuthors) throw new Error('Failed to fetch initial posts and authors');
 
+  // Remove duplicate authors
   const seenAuthors = new Set();
   const uniqueAuthors = initialAuthors.filter(author => {
     if (!seenAuthors.has(author._id)) {

@@ -12,6 +12,7 @@ interface QueryObject {
 }
 
 const dynamic = 'force-dynamic';
+const revalidate = 0;
 
 export const getPosts = async (
   numberOfPostsToFetch: number = 5,
