@@ -184,6 +184,7 @@ const generateMockUsers = (index: number): User => {
 };
 
 export default async function Home() {
+  // mocks
   const { postCollection, userCollection } = await connectToDatabase();
   const mockPosts = Array.from({ length: 20 }, (_, index) => generatePost(index));
   // await postCollection.deleteMany({});
