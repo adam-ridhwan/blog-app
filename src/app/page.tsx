@@ -24,7 +24,8 @@ const blogPosts: MockPost[] = [
   {
     title: 'The Joys of Traveling Solo',
     content:
-      'Traveling solo can be a life-changing experience. It offers a chance to reflect and grow as an individual. Moreover, it lets you curate your own itinerary without compromise.',
+      'Traveling solo can be a life-changing experience . It offers a chance to reflect and grow as an' +
+      ' individual. Moreover, it lets you curate your own itinerary without compromise.',
   },
   {
     title: 'The Digital Revolution and Its Impact',
