@@ -3,6 +3,9 @@ import { NextResponse } from 'next/server';
 import { getPosts } from '@/actions/getPosts';
 import { getUsersById } from '@/actions/getUsersById';
 
+/** ────────────────────────────────────────────────────────────────────────────────────────────────────
+ * GET AUTHORS BY ID
+ * ────────────────────────────────────────────────────────────────────────────────────────────────── */
 export async function POST(request: Request) {
   const { authorIds } = await request.json();
 

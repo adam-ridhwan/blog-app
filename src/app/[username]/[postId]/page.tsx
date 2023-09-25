@@ -55,21 +55,33 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
             </div>
           </div>
 
-          <div className='mb-10 flex flex-row'>
-            <Button variant='ghost' className='flex w-max flex-row gap-1'>
-              <Heart className='text-accent-foreground h-5 w-5' />
+          <div className='mb-10 flex flex-row gap-5'>
+            <Button
+              variant='ghost'
+              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:text-muted/100'
+            >
+              <Heart className='h-5 w-5 ' />
               Like
             </Button>
-            <Button variant='ghost' className='flex w-max flex-row gap-1'>
-              <MessageSquare className='text-accent-foreground h-5 w-5' />
+            <Button
+              variant='ghost'
+              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:text-muted/100'
+            >
+              <MessageSquare className='h-5 w-5' />
               Comment
             </Button>
-            <Button variant='ghost' className='flex w-max flex-row gap-1'>
-              <Bookmark className='text-accent-foreground h-5 w-5' />
+            <Button
+              variant='ghost'
+              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:text-muted/100'
+            >
+              <Bookmark className='h-5 w-5' />
               Save
             </Button>
-            <Button variant='ghost' className='flex w-max flex-row gap-1'>
-              <Share className='text-accent-foreground h-5 w-5' />
+            <Button
+              variant='ghost'
+              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:text-muted/100'
+            >
+              <Share className='h-5 w-5' />
               Share
             </Button>
           </div>

@@ -1,0 +1,164 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { wait } from '@/util/wait';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useAtomValue } from 'jotai';
+import { Rocket } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Toast, ToastProvider, ToastTitle } from '@/components/ui/toast';
+import { postAtom } from '@/components/write';
+import { Viewport } from '@radix-ui/react-toast';
+
+const formSchema = z.object({
+  title: z.string().nonempty('Title is required').max(100, {
+    message: 'Title must be less than 100 characters',
+  }),
+  subtitle: z.string().nonempty('Subtitle is required').max(140, {
+    message: 'Subtitle must be less than 140 characters',
+  }),
+});
+
+const PublishDialog = () => {
+  const router = useRouter();
+  const content = useAtomValue(postAtom);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isToastOpen, setIsToastOpen] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: '',
+      subtitle: '',
+    },
+  });
+
+  async function onSubmit() {
+    await handlePublish();
+  }
+
+  const handlePublish = async () => {
+    setIsDialogOpen(false);
+
+    const { signal } = new AbortController();
+
+    const response = await fetch(`/api/posts`, {
+      signal,
+      method: 'POST',
+      body: JSON.stringify({ content }),
+    });
+
+    const { success, error, username, postId } = await response.json();
+
+    if (error) {
+      console.log(error);
+      throw new Error(error);
+    }
+
+    if (success) {
+      setIsToastOpen(true);
+      await wait(2000);
+      router.push(`/${username}/${postId}`);
+    }
+  };
+  return (
+    <>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <Button variant='confirmative' className='flex h-[40px] w-[120px] flex-row gap-2'>
+            <Rocket className='h-4 w-4' />
+            <span className='whitespace-nowrap'>Publish</span>
+          </Button>
+        </DialogTrigger>
+        <DialogContent className='border-none shadow-none'>
+          <DialogHeader>
+            <DialogTitle className='mb-2 text-left'>Post preview</DialogTitle>
+          </DialogHeader>
+
+          <DialogDescription className='mb-2 flex aspect-video w-full items-center justify-center bg-muted/10'>
+            Image preview
+          </DialogDescription>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-3'>
+              <FormField
+                control={form.control}
+                name='title'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='hidden'>Title</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Add a title...'
+                        {...field}
+                        className='rounded-none border-x-0 border-t-0 border-b-primary/10 text-2xl font-bold'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='subtitle'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='hidden'>Subtitle</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Add a subtitle...'
+                        {...field}
+                        className='rounded-none border-x-0 border-t-0 border-b-primary/10 text-xl font-medium'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <DialogDescription className='text-left text-muted'>
+                Note: Changes here will affect how your story appears in public places like Pondero’s
+                homepage.
+              </DialogDescription>
+
+              <div>
+                <DialogDescription className='mt-20 text-2xl text-primary'>
+                  Publishing to <b>Adam Ridhwan</b>
+                </DialogDescription>
+                <DialogDescription className='mb-2 text-lg'>Add a category</DialogDescription>
+              </div>
+
+              <Button type='submit' variant='accent' className='w-max'>
+                Submit
+              </Button>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      <ToastProvider>
+        <Toast open={isToastOpen} onOpenChange={setIsToastOpen}>
+          <ToastTitle>Your post has been published</ToastTitle>
+        </Toast>
+        <Viewport className='fixed bottom-0 right-0 z-[2147483647] m-0 flex w-[390px] max-w-[100vw] list-none flex-col gap-[10px] p-[var(--viewport-padding)] outline-none [--viewport-padding:_25px]' />
+      </ToastProvider>
+    </>
+  );
+};
+
+export default PublishDialog;

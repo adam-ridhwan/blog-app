@@ -125,7 +125,7 @@ const PostList: FC<PostListProps> = ({ children }) => {
             const lastPost = i === posts?.length - 1;
             const author = authors?.find(author => author._id === post.authorId);
             return (
-              <Fragment key={post?.title}>
+              <Fragment key={post?._id?.toString()}>
                 <div ref={lastPost ? ref : null} className='flex w-full flex-col gap-5'>
                   <PostItem {...{ post, author }} />
                   <Separator className='md:hidden' />

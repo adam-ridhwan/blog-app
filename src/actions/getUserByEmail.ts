@@ -1,8 +1,9 @@
 'use server';
 
+import { User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 
-export async function getUserByEmail(email?: string | undefined) {
+export async function getUserByEmail(email?: string | undefined | null) {
   if (!email) throw new Error('Either email or userId must be provided');
 
   try {

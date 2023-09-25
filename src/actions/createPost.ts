@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 import { Session } from 'next-auth';
 import { undefined } from 'zod';
 
-export const createPost = async (content: string, session: Session | null) => {
+export const createPost = async (content: string) => {
   try {
     const { postCollection } = await connectToDatabase();
 
