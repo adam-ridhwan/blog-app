@@ -29,7 +29,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
 
   return (
     <>
-      <div className='container flex min-h-screen flex-col items-center pt-[94px]'>
+      <div className='container flex min-h-screen flex-col items-center py-[100px]'>
         <div className='relative mb-10 aspect-video w-full max-w-[750px]'>
           <Image src='/sand.jpg' alt='sand' fill className='rounded-lg object-cover' />
         </div>
@@ -77,7 +77,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
           <Separator />
 
           <div
-            className='mt-10 flex flex-col gap-5 text-xl leading-8 text-paragraph'
+            className='content-section mt-10 flex flex-col gap-5 text-xl leading-8 text-paragraph'
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </div>

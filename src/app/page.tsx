@@ -158,6 +158,7 @@ const generatePost = (index: number): Post => {
   const authorId = new ObjectId(`${user[index].userId}`);
 
   return {
+    subtitle: '',
     createdAt: new Date(),
     postSlug,
     title,

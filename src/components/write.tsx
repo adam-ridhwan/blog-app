@@ -20,7 +20,7 @@ import { MOBILE, useWindowSize } from '@/hooks/useWindowSize';
 
 const Delta = Quill.import('delta');
 
-const textAreaSize = {
+const HTML = {
   h1: { height: 49, padding: 57 },
   h2: { height: 37, padding: 60 },
   p: { height: 25, padding: 66 },
@@ -35,7 +35,7 @@ const modules = {
   ],
 };
 
-export const postAtom = atomWithStorage('post', 'testing');
+export const postAtom = atomWithStorage('post', '');
 
 const Write = () => {
   const { data: session, status } = useSession();
@@ -48,7 +48,15 @@ const Write = () => {
 
   const quillRef = useRef<ReactQuill | null>(null);
 
-  // useEffect(() => setScrollY(window.scrollY), []);
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * HANDLE FOCUS WHEN COMPONENT MOUNTS
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  useEffect(() => {
+    if (!quillRef.current) return;
+
+    const quill = quillRef.current.getEditor();
+    quill.focus();
+  }, []);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * HANDLES MOUSEUP AND KEYUP EVENTS
@@ -66,15 +74,15 @@ const Write = () => {
       const quill = quillRef.current.getEditor();
       const range = quill.getSelection();
       const bounds = quill.getBounds(range?.index || 0);
-      const height = Math.floor(bounds.height);
+      const nodeHeight = Math.floor(bounds.height);
 
       const [leaf] = quill.getLeaf(range?.index || 0);
 
       leaf.text ? setIsAddButtonVisible(false) : setIsAddButtonVisible(true);
 
-      if (height < textAreaSize.p.height) return setPosition(bounds.bottom + textAreaSize.p.padding);
-      if (height < textAreaSize.h2.height) return setPosition(bounds.bottom + textAreaSize.h2.padding);
-      if (height < textAreaSize.h1.height) return setPosition(bounds.bottom + textAreaSize.h1.padding);
+      if (nodeHeight < HTML.p.height) return setPosition(bounds.bottom + HTML.p.padding);
+      if (nodeHeight < HTML.h2.height) return setPosition(bounds.bottom + HTML.h2.padding);
+      if (nodeHeight < HTML.h1.height) return setPosition(bounds.bottom + HTML.h1.padding);
     };
 
     document.addEventListener('mouseup', handleClick);
@@ -182,7 +190,7 @@ const Write = () => {
             theme='bubble'
             value={content}
             onChange={setContent}
-            placeholder='Write a new post...'
+            placeholder={'Tell your story...'}
             modules={modules}
           />
         </div>

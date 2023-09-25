@@ -39,6 +39,7 @@ export type Post = {
   createdAt: Date;
   postSlug: string;
   title: string;
+  subtitle: string;
   content: string;
   img?: string;
   views: number;

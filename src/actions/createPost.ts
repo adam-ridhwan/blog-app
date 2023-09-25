@@ -18,6 +18,7 @@ export const createPost = async (content: string, session: Session | null) => {
       likes: 0,
       postSlug: '',
       title: '',
+      subtitle: '',
       views: 0,
     };
 
