@@ -1,10 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { revalidatePath } from 'next/cache';
 import { useRouter } from 'next/navigation';
+import { authorsAtom, postsAtom } from '@/provider/hydrate-atoms';
+import { AuthorDetails, Post } from '@/types';
 import { wait } from '@/util/wait';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { Rocket } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -32,9 +35,18 @@ const formSchema = z.object({
   }),
 });
 
+type CreatePostServerResponse = {
+  success: string;
+  error: string;
+  newPost: Post;
+  newAuthor: AuthorDetails;
+};
+
 const PublishDialog = () => {
   const router = useRouter();
   const content = useAtomValue(postAtom);
+  const setPosts = useSetAtom(postsAtom);
+  const setAuthors = useSetAtom(authorsAtom);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
 
@@ -54,21 +66,35 @@ const PublishDialog = () => {
     const response = await fetch(`/api/posts`, {
       signal,
       method: 'POST',
-      body: JSON.stringify({ content, title: values.title, subtitle: values.subtitle }),
+      body: JSON.stringify({
+        content,
+        title: values.title,
+        subtitle: values.subtitle,
+      }),
     });
 
-    const { success, error, username, postId } = await response.json();
+    const { success, error, newPost, newAuthor }: CreatePostServerResponse = await response.json();
 
     if (error) {
       console.log(error);
       throw new Error(error);
     }
 
-    if (success) {
+    if (success && newPost && newAuthor) {
       setIsToastOpen(true);
       await wait(2000);
-      router.push(`/${username}/${postId}`);
+      router.push(`/${newAuthor.username}/${newPost._id}`);
+
+      /**
+       * These setters are needed to add new posts to global state so that users can see the new post when
+       * navigating to the home page
+       * */
+      setPosts(prevPosts => [newPost, ...prevPosts]);
+      setAuthors(prevAuthors => [newAuthor, ...prevAuthors]);
+      return;
     }
+
+    throw new Error('Something went wrong');
   }
 
   return (

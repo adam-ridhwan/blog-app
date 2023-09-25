@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { Post } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
@@ -24,7 +25,14 @@ export const createPost = async ({ title, subtitle, content, authorId }: CreateP
       views: 0,
     };
 
-    return await postCollection.insertOne(newPost);
+    revalidatePath('/');
+
+    const response = await postCollection.insertOne(newPost);
+
+    return {
+      response,
+      newPost,
+    };
   } catch (err) {
     console.error('Error creating post:', err);
     throw new Error('Error occurred while creating post');

@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { getPosts } from '@/actions/getPosts';
 import { getUsersById } from '@/actions/getUsersById';
 import HydrateAtoms from '@/provider/hydrate-atoms';
@@ -222,13 +223,7 @@ export default async function Home() {
     return false;
   });
 
-  const hey = initialPosts.map(post => {
-    const author = initialAuthors?.find(author => author._id === post.authorId);
-    return {
-      username: author ? author.username : 'Unknown',
-      postId: post._id,
-    };
-  });
+  revalidatePath('/');
 
   return (
     <div className='container flex flex-col px-5 xl:flex-row xl:justify-center'>

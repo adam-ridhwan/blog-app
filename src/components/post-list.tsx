@@ -2,7 +2,7 @@
 'use client';
 
 import { FC, Fragment, ReactNode, useCallback, useEffect, useRef } from 'react';
-import { areAllPostsFetchedAtom, authorsAtom, postAtom } from '@/provider/hydrate-atoms';
+import { areAllPostsFetchedAtom, authorsAtom, postsAtom } from '@/provider/hydrate-atoms';
 import { AuthorDetails, Post } from '@/types';
 import { useIntersection } from '@mantine/hooks';
 import { useAtom } from 'jotai';
@@ -30,7 +30,7 @@ const PostList: FC<PostListProps> = ({ children }) => {
    * Was getting a lot of unexpected behaviour and bugs.
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
 
-  const [posts, setPosts] = useAtom(postAtom);
+  const [posts, setPosts] = useAtom(postsAtom);
   const [authors, setAuthors] = useAtom(authorsAtom);
   const [areAllPostsFetched, setAreAllPostsFetched] = useAtom(areAllPostsFetchedAtom);
 
