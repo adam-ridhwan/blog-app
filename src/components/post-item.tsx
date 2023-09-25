@@ -42,12 +42,6 @@ const PostItem: FC<CardProps> = ({
   const doc = parser.parseFromString(content, 'text/html');
   const firstParagraph = doc.querySelector('p');
 
-  // if (firstParagraph) {
-  //   console.log(firstParagraph.innerHTML); // This will get content inside the first <p> tag
-  // } else {
-  //   console.log('No <p> tag found.');
-  // }
-
   return (
     <>
       <Card className='md:min-h-[266px]'>

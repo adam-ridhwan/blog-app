@@ -11,7 +11,7 @@ export async function getUserByUsername(username: string) {
 
     return {
       name: user?.name,
-      username: user?.username,
+      image: user?.image,
     };
   } catch (error) {
     console.error('Error getting user:', error);

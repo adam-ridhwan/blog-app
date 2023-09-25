@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createPost } from '@/actions/createPost';
 import { getPosts } from '@/actions/getPosts';
+import { Post, User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { getServerSession } from 'next-auth';
 
@@ -28,9 +29,11 @@ export async function GET(request: Request) {
 /** ────────────────────────────────────────────────────────────────────────────────────────────────────
  * CREATE POST
  * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+export type CreatePostRequestBody = Pick<Post, 'title' | 'subtitle' | 'content' | 'authorId'>;
+
 export const POST = async (request: Request) => {
   const session = await getServerSession();
-  const { content }: { content: string } = await request.json();
+  const { title, subtitle, content }: CreatePostRequestBody = await request.json();
 
   if (!session) {
     return NextResponse.json({ 'Bad request': 'Not authenticated' }, { status: 401 });
@@ -38,9 +41,9 @@ export const POST = async (request: Request) => {
 
   try {
     const { userCollection } = await connectToDatabase();
-    const response = await createPost(content);
 
-    let fetchedUserName;
+    let fetchedUserName: User['username'] | undefined;
+    let fetchedAuthorId: Post['authorId'] | undefined;
 
     if (session.user && session.user.email) {
       const result = await userCollection.findOne(
@@ -49,10 +52,18 @@ export const POST = async (request: Request) => {
       );
 
       fetchedUserName = result?.username;
+      fetchedAuthorId = result?._id;
       if (!fetchedUserName) {
         return NextResponse.json({ error: 'Error fetching user' }, { status: 400 });
       }
     }
+
+    const response = await createPost(<CreatePostRequestBody>{
+      title,
+      subtitle,
+      content,
+      authorId: fetchedAuthorId,
+    });
 
     if (!response.acknowledged) {
       NextResponse.json({ error: 'Error creating post' }, { status: 400 });

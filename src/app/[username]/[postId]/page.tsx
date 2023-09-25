@@ -1,11 +1,12 @@
 import { FC } from 'react';
+import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getPost } from '@/actions/getPost';
-import { getPosts } from '@/actions/getPosts';
 import { getUserByUsername } from '@/actions/getUserByUsername';
-import { getUsersById } from '@/actions/getUsersById';
+import { formatDate } from '@/util/formatDate';
 import { Bookmark, Heart, MessageSquare, Share } from 'lucide-react';
+import { getServerSession } from 'next-auth';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -22,7 +23,7 @@ type PostPageProps = {
 const PostPage: FC<PostPageProps> = async ({ params }) => {
   const { username, postId } = params;
 
-  const { name: fetchedName } = await getUserByUsername(decodeURIComponent(username));
+  const { name, image } = await getUserByUsername(decodeURIComponent(username));
   const post = await getPost(postId);
 
   if (!post) throw new Error('Failed to fetch post');
@@ -35,24 +36,19 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
         </div>
 
         <div className='w-full md:max-w-[680px]'>
-          <h1 className='text-balance mb-2 text-3xl font-semibold text-primary md:text-4xl'>{post?.title}</h1>
-          <h2 className='text-balance text-l text-muted-foreground mb-5 font-semibold md:text-xl'></h2>
-
           <div className='mb-3 flex flex-row items-center gap-3'>
-            <Avatar className='h-10 w-10'>
-              <AvatarImage src='https://github.com/shadcn.png' />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <div className='flex flex-row items-center gap-1'>
-              <Link
-                href={`/${decodeURIComponent(username)}`}
-                className='font-medium text-primary underline-offset-4 hover:underline'
-              >
-                {fetchedName}
-              </Link>
-              <SeparatorDot />
-              <span className='text-muted-foreground'>Mar 7th 2023</span>
-            </div>
+            <Link href={`${username}`} className='flex flex-row items-center gap-2'>
+              <Avatar className='h-12 w-12'>
+                {image ? <Image src={image} alt='' /> : <AvatarFallback>{name?.split('')[0]}</AvatarFallback>}
+              </Avatar>
+
+              <div className='flex flex-col'>
+                <span className='font-bold text-primary'>{name}</span>
+                <div className='flex flex-row items-center gap-2'>
+                  <span className='text-muted'>{formatDate(post.createdAt)}</span>
+                </div>
+              </div>
+            </Link>
           </div>
 
           <div className='mb-10 flex flex-row gap-5'>
@@ -87,6 +83,11 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
           </div>
 
           <Separator />
+
+          <div className='mt-10'>
+            <h1 className='text-balance title'>{post?.title}</h1>
+            <h2 className='text-balancel subtitle'>{post?.subtitle}</h2>
+          </div>
 
           <div
             className='content-section mt-10 flex flex-col gap-5 text-xl leading-8 text-paragraph'

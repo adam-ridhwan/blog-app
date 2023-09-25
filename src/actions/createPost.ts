@@ -4,21 +4,23 @@ import { ObjectId } from 'mongodb';
 import { Session } from 'next-auth';
 import { undefined } from 'zod';
 
-export const createPost = async (content: string) => {
+import { CreatePostRequestBody } from '@/app/api/posts/route';
+
+export const createPost = async ({ title, subtitle, content, authorId }: CreatePostRequestBody) => {
   try {
     const { postCollection } = await connectToDatabase();
 
     const newPost: Post = {
-      authorId: new ObjectId('650e126945e26c7bd150540c'),
+      authorId,
       categoryId: new ObjectId('650ce47033901fc25b0af02f'),
+      title,
+      subtitle,
+      content,
       categorySlug: '',
       comments: [],
-      content: content,
       createdAt: new Date(),
       likes: 0,
       postSlug: '',
-      title: '',
-      subtitle: '',
       views: 0,
     };
 

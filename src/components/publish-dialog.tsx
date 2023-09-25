@@ -20,9 +20,8 @@ import {
 } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Toast, ToastProvider, ToastTitle } from '@/components/ui/toast';
+import { Toast, ToastProvider, ToastTitle, ToastViewport } from '@/components/ui/toast';
 import { postAtom } from '@/components/write';
-import { Viewport } from '@radix-ui/react-toast';
 
 const formSchema = z.object({
   title: z.string().nonempty('Title is required').max(100, {
@@ -47,11 +46,7 @@ const PublishDialog = () => {
     },
   });
 
-  async function onSubmit() {
-    await handlePublish();
-  }
-
-  const handlePublish = async () => {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsDialogOpen(false);
 
     const { signal } = new AbortController();
@@ -59,7 +54,7 @@ const PublishDialog = () => {
     const response = await fetch(`/api/posts`, {
       signal,
       method: 'POST',
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({ content, title: values.title, subtitle: values.subtitle }),
     });
 
     const { success, error, username, postId } = await response.json();
@@ -74,7 +69,8 @@ const PublishDialog = () => {
       await wait(2000);
       router.push(`/${username}/${postId}`);
     }
-  };
+  }
+
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -155,7 +151,7 @@ const PublishDialog = () => {
         <Toast open={isToastOpen} onOpenChange={setIsToastOpen}>
           <ToastTitle>Your post has been published</ToastTitle>
         </Toast>
-        <Viewport className='fixed bottom-0 right-0 z-[2147483647] m-0 flex w-[390px] max-w-[100vw] list-none flex-col gap-[10px] p-[var(--viewport-padding)] outline-none [--viewport-padding:_25px]' />
+        <ToastViewport />
       </ToastProvider>
     </>
   );
