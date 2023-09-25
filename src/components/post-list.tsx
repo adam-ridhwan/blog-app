@@ -77,7 +77,7 @@ const PostList: FC<PostListProps> = ({ children }) => {
       signal,
       method: 'POST',
       body: JSON.stringify({
-        authorIds: fetchedPosts.map(post => post.author),
+        authorIds: fetchedPosts.map(post => post.authorId),
       }),
     });
 
@@ -123,7 +123,7 @@ const PostList: FC<PostListProps> = ({ children }) => {
 
           {posts?.map((post, i) => {
             const lastPost = i === posts?.length - 1;
-            const author = authors?.find(author => author._id === post.author);
+            const author = authors?.find(author => author._id === post.authorId);
             return (
               <Fragment key={post?.title}>
                 <div ref={lastPost ? ref : null} className='flex w-full flex-col gap-5'>
@@ -134,7 +134,7 @@ const PostList: FC<PostListProps> = ({ children }) => {
                 {areAllPostsFetched ||
                   (lastPost && (
                     <>
-                      {Array.from({ length: 2 }).map((_, i) => (
+                      {Array.from({ length: 1 }).map((_, i) => (
                         <Fragment key={i}>
                           <CardSkeleton />
                           <Separator className='md:hidden' />

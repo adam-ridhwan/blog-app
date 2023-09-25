@@ -153,9 +153,9 @@ const user: MockUser[] = [
 const generatePost = (index: number): Post => {
   const title = blogPosts[index].title;
   const postSlug = `mock-post-${index}`;
-  const category = new ObjectId('650ce47033901fc25b0af02f');
+  const categoryId = new ObjectId('650ce47033901fc25b0af02f');
   const content = blogPosts[index].content;
-  const author = new ObjectId(`${user[index].userId}`);
+  const authorId = new ObjectId(`${user[index].userId}`);
 
   return {
     createdAt: new Date(),
@@ -164,8 +164,8 @@ const generatePost = (index: number): Post => {
     content,
     views: Math.floor(Math.random() * 2000),
     categorySlug: 'mock-category',
-    category,
-    author,
+    categoryId,
+    authorId,
     comments: [],
     likes: Math.floor(Math.random() * 100),
   };
@@ -205,7 +205,7 @@ export default async function Home() {
   if (!initialPosts) throw new Error('Failed to fetch initial posts');
 
   // Fetch initial authors
-  const authorIds = initialPosts.map(post => post.author);
+  const authorIds = initialPosts.map(post => post.authorId);
   const initialAuthors = await getUsersById(authorIds);
 
   if (!initialAuthors) throw new Error('Failed to fetch initial authors');
@@ -219,6 +219,14 @@ export default async function Home() {
       return true;
     }
     return false;
+  });
+
+  const hey = initialPosts.map(post => {
+    const author = initialAuthors?.find(author => author._id === post.authorId);
+    return {
+      username: author ? author.username : 'Unknown',
+      postId: post._id,
+    };
   });
 
   return (

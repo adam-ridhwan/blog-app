@@ -43,8 +43,8 @@ export type Post = {
   img?: string;
   views: number;
   categorySlug: string;
-  category: MongoId;
-  author: MongoId;
+  categoryId: MongoId;
+  authorId: MongoId;
   comments: MongoId[];
   likes: number;
 };

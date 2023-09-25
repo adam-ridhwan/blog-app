@@ -38,6 +38,16 @@ const PostItem: FC<CardProps> = ({
     if (titleNode.clientHeight > MAX_TITLE_HEIGHT) setTsTitleWrappedInTwoLines(true);
   }, []);
 
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(content, 'text/html');
+  const firstParagraph = doc.querySelector('p');
+
+  // if (firstParagraph) {
+  //   console.log(firstParagraph.innerHTML); // This will get content inside the first <p> tag
+  // } else {
+  //   console.log('No <p> tag found.');
+  // }
+
   return (
     <>
       <Card className='md:min-h-[266px]'>
@@ -72,7 +82,7 @@ const PostItem: FC<CardProps> = ({
                   { 'three-line-ellipsis': !isTitleWrappedInTwoLines }
                 )}
               >
-                {content}
+                {firstParagraph?.innerHTML}
               </p>
             </CardContent>
           </div>

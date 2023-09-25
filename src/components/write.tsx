@@ -35,11 +35,11 @@ const modules = {
   ],
 };
 
-const postAtom = atomWithStorage('post', '');
+export const postAtom = atomWithStorage('post', 'testing');
 
 const Write = () => {
   const { data: session, status } = useSession();
-  const [postValue, setPostValue] = useAtom(postAtom);
+  const [content, setContent] = useAtom(postAtom);
   const windowSize = useWindowSize();
 
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true);
@@ -48,7 +48,7 @@ const Write = () => {
 
   const quillRef = useRef<ReactQuill | null>(null);
 
-  useEffect(() => setScrollY(window.scrollY), []);
+  // useEffect(() => setScrollY(window.scrollY), []);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * HANDLES MOUSEUP AND KEYUP EVENTS
@@ -83,7 +83,7 @@ const Write = () => {
       document.removeEventListener('mouseup', handleClick);
       document.removeEventListener('keyup', handleClick);
     };
-  }, [position, postValue, scrollY, windowSize]);
+  }, [position, content, scrollY, windowSize]);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * HANDLES PASTE EVENT
@@ -180,8 +180,8 @@ const Write = () => {
           <ReactQuill
             ref={quillRef}
             theme='bubble'
-            value={postValue}
-            onChange={setPostValue}
+            value={content}
+            onChange={setContent}
             placeholder='Write a new post...'
             modules={modules}
           />

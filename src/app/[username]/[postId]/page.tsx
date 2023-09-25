@@ -2,7 +2,9 @@ import { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getPost } from '@/actions/getPost';
+import { getPosts } from '@/actions/getPosts';
 import { getUserByUsername } from '@/actions/getUserByUsername';
+import { getUsersById } from '@/actions/getUsersById';
 import { Bookmark, Heart, MessageSquare, Share } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -22,6 +24,8 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
 
   const { name: fetchedName } = await getUserByUsername(decodeURIComponent(username));
   const post = await getPost(postId);
+
+  if (!post) throw new Error('Failed to fetch post');
 
   return (
     <>
@@ -72,7 +76,10 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
 
           <Separator />
 
-          <div className='mt-10 flex flex-col gap-5 text-xl leading-8 text-paragraph'> {post?.content}</div>
+          <div
+            className='mt-10 flex flex-col gap-5 text-xl leading-8 text-paragraph'
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
         </div>
       </div>
     </>
