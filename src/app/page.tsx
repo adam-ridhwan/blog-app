@@ -1,4 +1,3 @@
-import { revalidatePath } from 'next/cache';
 import { getPosts } from '@/actions/getPosts';
 import { getUsersById } from '@/actions/getUsersById';
 import HydrateAtoms from '@/provider/hydrate-atoms';
@@ -203,7 +202,7 @@ export default async function Home() {
    * FETCH INITIAL POSTS AND AUTHORS
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   // Fetch initial posts
-  const [initialPosts] = await getPosts(5, undefined);
+  const initialPosts = await getPosts(5, undefined);
   if (!initialPosts) throw new Error('Failed to fetch initial posts');
 
   // Fetch initial authors

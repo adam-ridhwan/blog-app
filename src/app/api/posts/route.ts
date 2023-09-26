@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     return NextResponse.error();
   }
 
-  const [fetchedPosts] = await getPosts(Number(limit), id);
+  const fetchedPosts = await getPosts(Number(limit), id);
 
   if (!fetchedPosts) {
     return NextResponse.json({ 'Bad request': 'No posts found' }, { status: 400 });
@@ -72,13 +72,13 @@ export const POST = async (request: Request) => {
       return NextResponse.json({ error: 'Error creating post' }, { status: 400 });
     }
 
-    const responseBody: CreatePostResponseBody = {
+    const createPostResponseBody: CreatePostResponseBody = {
       success: 'Post successfully created',
       newPost,
       newAuthor,
     };
 
-    return NextResponse.json(responseBody, { status: 200 });
+    return NextResponse.json(createPostResponseBody, { status: 200 });
   } catch (err) {
     console.error('Error creating post:', err);
     throw new Error('Error occurred while creating post');

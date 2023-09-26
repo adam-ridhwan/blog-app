@@ -7,7 +7,7 @@ import { authorsAtom, postsAtom } from '@/provider/hydrate-atoms';
 import { AuthorDetails, Post } from '@/types';
 import { wait } from '@/util/wait';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { Rocket } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -45,7 +45,7 @@ type CreatePostServerResponse = {
 const PublishDialog = () => {
   const router = useRouter();
   const content = useAtomValue(postAtom);
-  const setPosts = useSetAtom(postsAtom);
+  const [posts, setPosts] = useAtom(postsAtom);
   const setAuthors = useSetAtom(authorsAtom);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
@@ -86,7 +86,16 @@ const PublishDialog = () => {
        * These setters are needed to add new posts to global state so that users can see the new post when
        * navigating to the home page
        * */
-      setPosts(prevPosts => [newPost, ...prevPosts]);
+
+      const seenAuthors = new Set();
+      const uniqueAuthors = posts.filter(author => {
+        if (!seenAuthors.has(author._id)) {
+          seenAuthors.add(author._id);
+          return true;
+        }
+        return false;
+      });
+      setPosts(uniqueAuthors);
       setAuthors(prevAuthors => [newAuthor, ...prevAuthors]);
 
       setIsToastOpen(true);

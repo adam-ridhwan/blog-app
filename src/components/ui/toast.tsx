@@ -3,6 +3,7 @@ import { cn } from '@/util/cn';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 
+import { Portal } from '@radix-ui/react-portal';
 import * as ToastPrimitives from '@radix-ui/react-toast';
 
 const ToastProvider = ToastPrimitives.Provider;
@@ -11,14 +12,16 @@ const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitives.Viewport
-    ref={ref}
-    className={cn(
-      `fixed bottom-0 right-0 z-50 m-0 mb-[20px] mr-[20px] flex w-[390px] max-w-[100vw] list-none flex-col gap-[10px]`,
-      className
-    )}
-    {...props}
-  />
+  <Portal>
+    <ToastPrimitives.Viewport
+      ref={ref}
+      className={cn(
+        `fixed bottom-0 right-0 z-50 m-0 mb-[20px] mr-[20px] flex w-[390px] max-w-[100vw] list-none flex-col gap-[10px]`,
+        className
+      )}
+      {...props}
+    />
+  </Portal>
 ));
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 

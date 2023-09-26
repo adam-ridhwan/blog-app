@@ -36,11 +36,6 @@ const PostList: FC<PostListProps> = ({ children }) => {
 
   const lastPostRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    console.log({ posts });
-    console.log({ authors });
-  }, [posts, authors]);
-
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * FETCHING NEXT POSTS AND AUTHORS
    * 1) Fetch next 5 posts from server

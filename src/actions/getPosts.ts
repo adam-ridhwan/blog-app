@@ -14,7 +14,7 @@ interface QueryObject {
 export const getPosts = async (
   numberOfPostsToFetch: number = 5,
   lastFetchedId?: string | undefined
-): Promise<[Post[], number]> => {
+): Promise<Post[]> => {
   try {
     const { postCollection } = await connectToDatabase();
     const totalDocuments = await postCollection.countDocuments();
@@ -31,7 +31,7 @@ export const getPosts = async (
       .limit(numberOfPostsToFetch)
       .toArray();
 
-    return [JSON.parse(JSON.stringify(posts)), totalDocuments];
+    return JSON.parse(JSON.stringify(posts));
   } catch (err) {
     console.error('Error getting posts:', err);
     throw new Error('Error occurred while fetching posts');
