@@ -17,7 +17,7 @@ const EditorPosts: FC<MenuPostsProps> = () => {
           <div className='flex flex-col gap-[20px] md:grid md:grid-cols-2 lg:flex lg:flex-col'>
             <Link href='/' className='flex items-center gap-[20px]'>
               <div className='flex flex-[4] flex-col gap-[5px]'>
-                <span className='text-muted-foreground text-ellipsis text-xl font-semibold text-primary'>
+                <span className='text-muted-foreground text-ellipsis text-lg font-semibold text-primary'>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                 </span>
                 <div className='flex flex-row items-center gap-1 text-muted'>
@@ -30,7 +30,7 @@ const EditorPosts: FC<MenuPostsProps> = () => {
 
             <Link href='/' className='flex items-center gap-[20px]'>
               <div className='flex flex-[4] flex-col gap-[5px]'>
-                <span className='text-muted-foreground text-ellipsis text-xl font-semibold text-primary'>
+                <span className='text-muted-foreground text-ellipsis text-lg font-semibold text-primary'>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                 </span>
                 <div className='flex flex-row items-center gap-1 text-muted'>
@@ -43,7 +43,7 @@ const EditorPosts: FC<MenuPostsProps> = () => {
 
             <Link href='/' className='flex items-center gap-[20px]'>
               <div className='flex flex-[4] flex-col gap-[5px]'>
-                <span className='text-muted-foreground text-ellipsis text-xl font-semibold text-primary'>
+                <span className='text-muted-foreground text-ellipsis text-lg font-semibold text-primary'>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                 </span>
                 <div className='flex flex-row items-center gap-1 text-muted'>
@@ -56,7 +56,7 @@ const EditorPosts: FC<MenuPostsProps> = () => {
 
             <Link href='/' className='flex items-center gap-[20px]'>
               <div className='flex flex-[4] flex-col gap-[5px]'>
-                <span className='text-muted-foreground text-ellipsis text-xl font-semibold text-primary'>
+                <span className='text-muted-foreground text-ellipsis text-lg font-semibold text-primary'>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                 </span>
                 <div className='flex flex-row items-center gap-1 text-muted'>
@@ -69,7 +69,7 @@ const EditorPosts: FC<MenuPostsProps> = () => {
 
             <Link href='/' className='flex items-center gap-[20px]'>
               <div className='flex flex-[4] flex-col gap-[5px]'>
-                <span className='text-muted-foreground text-ellipsis text-xl font-semibold text-primary'>
+                <span className='text-muted-foreground text-ellipsis text-lg font-semibold text-primary'>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                 </span>
                 <div className='flex flex-row items-center gap-1 text-muted'>
