@@ -1,10 +1,10 @@
 import { revalidatePath } from 'next/cache';
-import { Post } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
 import { Session } from 'next-auth';
 import { undefined } from 'zod';
 
+import { Post } from '@/types/types';
 import { CreatePostRequestBody } from '@/app/api/posts/route';
 
 export const createPost = async ({ title, subtitle, content, authorId }: CreatePostRequestBody) => {

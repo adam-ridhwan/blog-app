@@ -4,11 +4,11 @@ import * as React from 'react';
 import { FC, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AuthorDetails, type Post } from '@/types';
 import { cn } from '@/util/cn';
 import { formatDate } from '@/util/formatDate';
 import { Heart, MessageCircle } from 'lucide-react';
 
+import { AuthorDetails, type Post } from '@/types/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import SeparatorDot from '@/components/ui/separator-dot';

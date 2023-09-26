@@ -1,9 +1,10 @@
 'use client';
 
 import { FC, ReactNode, useEffect, useState } from 'react';
-import { AuthorDetails, Post } from '@/types';
 import { atom } from 'jotai';
 import { useHydrateAtoms } from 'jotai/utils';
+
+import { AuthorDetails, Post } from '@/types/types';
 
 type HydrateAtomsProps = {
   posts: Post[];

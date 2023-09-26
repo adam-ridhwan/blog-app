@@ -3,10 +3,10 @@
 
 import { FC, Fragment, ReactNode, useCallback, useEffect, useRef } from 'react';
 import { areAllPostsFetchedAtom, authorsAtom, postsAtom } from '@/providers/hydrate-atoms';
-import { AuthorDetails, Post } from '@/types';
 import { useIntersection } from '@mantine/hooks';
 import { useAtom } from 'jotai';
 
+import { AuthorDetails, Post } from '@/types/types';
 import CardSkeleton from '@/components/ui/card-skeleton';
 import { Separator } from '@/components/ui/separator';
 import PostItem from '@/components/post/post-item';

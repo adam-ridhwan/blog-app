@@ -1,7 +1,8 @@
 'use server';
 
-import { Category } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
+
+import { Category } from '@/types/types';
 
 export const getCategories = async () => {
   try {

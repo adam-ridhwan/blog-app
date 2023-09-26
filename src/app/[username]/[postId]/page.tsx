@@ -39,7 +39,11 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
           <div className='mb-3 flex flex-row items-center gap-3'>
             <Link href={`${username}`} className='flex flex-row items-center gap-2'>
               <Avatar className='h-12 w-12'>
-                {image ? <Image src={image} alt='' /> : <AvatarFallback>{name?.split('')[0]}</AvatarFallback>}
+                {image ? (
+                  <Image src={image} alt='' />
+                ) : (
+                  <AvatarFallback className='text-primary'>{name?.split('')[0]}</AvatarFallback>
+                )}
               </Avatar>
 
               <div className='flex flex-col'>
@@ -54,28 +58,28 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
           <div className='mb-10 flex flex-row gap-5'>
             <Button
               variant='ghost'
-              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:text-muted/100'
+              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
             >
               <Heart className='h-5 w-5 ' />
               Like
             </Button>
             <Button
               variant='ghost'
-              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:text-muted/100'
+              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
             >
               <MessageSquare className='h-5 w-5' />
               Comment
             </Button>
             <Button
               variant='ghost'
-              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:text-muted/100'
+              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
             >
               <Bookmark className='h-5 w-5' />
               Save
             </Button>
             <Button
               variant='ghost'
-              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:text-muted/100'
+              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
             >
               <Share className='h-5 w-5' />
               Share
@@ -85,8 +89,8 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
           <Separator />
 
           <div className='mt-10'>
-            <h1 className='text-balance title'>{post?.title}</h1>
-            <h2 className='text-balancel subtitle'>{post?.subtitle}</h2>
+            <h1 className='text-balance title text-primary'>{post?.title}</h1>
+            <h2 className='text-balancel subtitle text-muted'>{post?.subtitle}</h2>
           </div>
 
           <div

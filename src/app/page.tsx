@@ -1,11 +1,11 @@
 import { getPosts } from '@/actions/getPosts';
 import { getUsersById } from '@/actions/getUsersById';
 import HydrateAtoms from '@/providers/hydrate-atoms';
-import { Post, User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { generateRandomString } from '@/util/generateRandomString';
 import { ObjectId } from 'mongodb';
 
+import { Post, User } from '@/types/types';
 import PostList from '@/components/post/post-list';
 import BuiltWith from '@/components/side-menu/built-with';
 import Draft from '@/components/side-menu/draft';

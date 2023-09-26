@@ -1,4 +1,4 @@
-import './globals.css';
+import '../styles/globals.css';
 
 import { ReactNode } from 'react';
 import type { Metadata } from 'next';
@@ -8,7 +8,6 @@ import { getUsersById } from '@/actions/getUsersById';
 import AuthProvider from '@/providers/auth-provider';
 import HydrateAtoms from '@/providers/hydrate-atoms';
 import JotaiProvider from '@/providers/jotai-provider';
-import QueryProvider from '@/providers/query-provider';
 import ThemeProvider from '@/providers/theme-provider';
 
 import Navbar from '@/components/navbar/navbar';
@@ -36,6 +35,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * FETCH INITIAL POSTS AND AUTHORS
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  // Fetch initial posts
   const initialPosts = await getPosts(5, undefined);
   if (!initialPosts) throw new Error('Failed to fetch initial posts');
 
@@ -61,14 +61,12 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       <body className={`${inter.className} max-h-screen min-h-screen w-full max-w-[100vw]`}>
         <AuthProvider>
           <JotaiProvider>
-            <QueryProvider>
-              <ThemeProvider>
-                <HydrateAtoms posts={initialPosts} authors={uniqueAuthors}>
-                  <Navbar />
-                  {children}
-                </HydrateAtoms>
-              </ThemeProvider>
-            </QueryProvider>
+            <ThemeProvider>
+              <HydrateAtoms posts={initialPosts} authors={uniqueAuthors}>
+                <Navbar />
+                {children}
+              </HydrateAtoms>
+            </ThemeProvider>
           </JotaiProvider>
         </AuthProvider>
       </body>

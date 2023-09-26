@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authorsAtom, postsAtom } from '@/providers/hydrate-atoms';
-import { AuthorDetails, Post } from '@/types';
 import { wait } from '@/util/wait';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -11,6 +10,7 @@ import { Rocket } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { AuthorDetails, Post } from '@/types/types';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,

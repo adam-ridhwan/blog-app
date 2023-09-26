@@ -1,6 +1,7 @@
-import { AuthorDetails } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
+
+import { AuthorDetails } from '@/types/types';
 
 export const getUserById = async (userId: ObjectId | string): Promise<AuthorDetails> => {
   if (!userId) throw new Error('Either email or userId must be provided');

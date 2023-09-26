@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { createPost } from '@/actions/createPost';
 import { getPosts } from '@/actions/getPosts';
-import { AuthorDetails, Post, User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { getServerSession } from 'next-auth';
 import { undefined } from 'zod';
+
+import { AuthorDetails, Post, User } from '@/types/types';
 
 /** ────────────────────────────────────────────────────────────────────────────────────────────────────
  * GET POSTS

@@ -1,9 +1,10 @@
 'use server';
 
-import { type Account } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { InsertOneResult, ObjectId } from 'mongodb';
 import { type Account as NextAuthAccount } from 'next-auth';
+
+import { type Account } from '@/types/types';
 
 export const createAccount = async (
   account: NextAuthAccount | null,

@@ -1,10 +1,11 @@
 'use server';
 
 import { createAccount } from '@/actions/createAccount';
-import { Account, User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { ObjectId } from 'mongodb';
 import { Account as NextAuthAccount } from 'next-auth';
+
+import { Account, User } from '@/types/types';
 
 export async function updateProviders(account: NextAuthAccount | null, existingUser: User | Partial<User>) {
   try {

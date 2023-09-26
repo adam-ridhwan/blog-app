@@ -1,8 +1,9 @@
 'use server';
 
 import { getUserById } from '@/actions/getUserById';
-import { AuthorDetails } from '@/types';
 import { ObjectId } from 'mongodb';
+
+import { AuthorDetails } from '@/types/types';
 
 export async function getUsersById(authorIds: (ObjectId | string)[]) {
   // if (!authorIds || authorIds.length === 0) throw new Error('userId array must be provided');

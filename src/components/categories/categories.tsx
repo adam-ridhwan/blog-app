@@ -1,10 +1,10 @@
 import { FC, memo } from 'react';
 import Link from 'next/link';
 import { getCategories } from '@/actions/getCategories';
-import { Category } from '@/types';
 import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
 
+import { Category } from '@/types/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const Categories: FC = async () => {
@@ -16,8 +16,8 @@ const Categories: FC = async () => {
         <Link
           href='/'
           className={cn(
-            `bg-accent flex h-[32px] items-center justify-center whitespace-nowrap rounded-md border
-            border-transparent px-5 text-secondary`
+            `flex h-[32px] items-center justify-center whitespace-nowrap rounded-md border border-transparent
+            bg-accent px-5 text-secondary`
           )}
         >
           For you
