@@ -1,7 +1,7 @@
-import Write from '@/components/write';
+import WritePage from '@/components/write-page/write-page';
 
 const WriteAPost = () => {
-  return <Write />;
+  return <WritePage />;
 };
 
 export default WriteAPost;

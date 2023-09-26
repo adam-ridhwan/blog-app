@@ -9,7 +9,7 @@ import { useAtom } from 'jotai';
 
 import CardSkeleton from '@/components/ui/card-skeleton';
 import { Separator } from '@/components/ui/separator';
-import PostItem from '@/components/post-item';
+import PostItem from '@/components/post/post-item';
 
 const LIMIT = 5;
 
@@ -117,7 +117,7 @@ const PostList: FC<PostListProps> = ({ children }) => {
 
   return (
     <>
-      <main className='relative mb-6 md:flex md:flex-col md:items-center'>
+      <main className='relative mb-6 mt-[100px] md:flex md:flex-col md:items-center'>
         <div className='flex max-w-[728px] flex-col gap-5 md:items-center'>
           {children}
 

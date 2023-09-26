@@ -1,13 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { themeAtom } from '@/provider/theme-provider';
 import { useAtom } from 'jotai';
 import { Monitor, Moon, Sun } from 'lucide-react';
+import { Button } from 'src/components/ui/button';
+import { themeAtom } from 'src/provider/theme-provider';
 
-import { Button } from '@/components/ui/button';
-
-const ThemeToggle = () => {
+const ThemeButton = () => {
   const [theme, setTheme] = useAtom(themeAtom);
 
   const [isMounted, setIsMounted] = useState(false);
@@ -54,4 +53,4 @@ const ThemeToggle = () => {
   );
 };
 
-export default ThemeToggle;
+export default ThemeButton;

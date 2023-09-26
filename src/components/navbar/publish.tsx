@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { revalidatePath } from 'next/cache';
 import { useRouter } from 'next/navigation';
 import { authorsAtom, postsAtom } from '@/provider/hydrate-atoms';
 import { AuthorDetails, Post } from '@/types';
@@ -24,7 +23,7 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Toast, ToastProvider, ToastTitle, ToastViewport } from '@/components/ui/toast';
-import { postAtom } from '@/components/write';
+import { postAtom } from '@/components/write-page/write-page';
 
 const formSchema = z.object({
   title: z.string().nonempty('Title is required').max(100, {
@@ -42,11 +41,13 @@ type CreatePostServerResponse = {
   newAuthor: AuthorDetails;
 };
 
-const PublishDialog = () => {
+const Publish = () => {
   const router = useRouter();
+
   const content = useAtomValue(postAtom);
   const [posts, setPosts] = useAtom(postsAtom);
   const setAuthors = useSetAtom(authorsAtom);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
 
@@ -58,11 +59,15 @@ const PublishDialog = () => {
     },
   });
 
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * SUBMITTING NEW POST
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsDialogOpen(false);
 
     const { signal } = new AbortController();
 
+    // add new post to database (will also add the author to the database if they don't exist)
     const response = await fetch(`/api/posts`, {
       signal,
       method: 'POST',
@@ -76,17 +81,23 @@ const PublishDialog = () => {
     const { success, error, newPost, newAuthor }: CreatePostServerResponse = await response.json();
 
     if (error) {
+      // No need to add new post to global state if there's an error
       console.log(error);
       throw new Error(error);
     }
 
     if (success && newPost && newAuthor) {
+      setIsToastOpen(true);
+
       /**
-       * OPTIMISTIC UPDATE
+       * OPTIMISTIC UPDATE (kind of)
        * These setters are needed to add new posts to global state so that users can see the new post when
        * navigating to the home page
+       *
+       * If the response returns a success, then add the new post and author to the global state
        * */
 
+      // filter out duplicate authors
       const seenAuthors = new Set();
       const uniqueAuthors = posts.filter(author => {
         if (!seenAuthors.has(author._id)) {
@@ -95,10 +106,11 @@ const PublishDialog = () => {
         }
         return false;
       });
+
+      // update global state
       setPosts(uniqueAuthors);
       setAuthors(prevAuthors => [newAuthor, ...prevAuthors]);
 
-      setIsToastOpen(true);
       await wait(2000);
       router.push(`/${newAuthor.username}/${newPost._id}`);
 
@@ -194,4 +206,4 @@ const PublishDialog = () => {
   );
 };
 
-export default PublishDialog;
+export default Publish;

@@ -3,11 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { atom, useAtom, useSetAtom } from 'jotai';
+import { usePathname, useRouter } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -26,13 +24,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
-import SideMenu from '@/components/side-menu';
-import ThemeToggle from '@/components/theme-toggle';
-import WriteOrPublishButton from '@/components/write-or-publish-button';
-
-type NavbarRefType = {
-  current: HTMLDivElement | null;
-};
+import Publish from '@/components/navbar/publish';
+import ThemeButton from '@/components/navbar/theme-button';
+import Write from '@/components/navbar/write';
 
 const Navbar = () => {
   const router = useRouter();
@@ -58,7 +52,7 @@ const Navbar = () => {
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
     const handleScroll = () => {
-      if (!navbarRef.current || pathname === '/write-a-post') return;
+      if (!navbarRef.current || pathname === '/write-page-a-post') return;
 
       const currentScrollY = window.scrollY;
       const scrollAmount = currentScrollY - prevBodyScrollY.current;
@@ -122,7 +116,8 @@ const Navbar = () => {
               {status === 'loading' && <Skeleton className='h-[40px] w-[120px]' />}
               {status === 'loading' && <Skeleton className='h-10 w-10 rounded-full' />}
 
-              {status === 'authenticated' && <WriteOrPublishButton />}
+              {status === 'authenticated' && pathname === '/' && <Write />}
+              {status === 'authenticated' && pathname === '/write-a-post' && <Publish />}
               {status === 'authenticated' && (
                 <DropdownMenu
                   open={isAvatarDropdownOpen}
@@ -153,9 +148,9 @@ const Navbar = () => {
                         <span></span>
                         <span>Saved</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem className='text-muted-foreground cursor-pointer px-[24px] py-[8px] text-sm hover:text-primary'>
-                        <span>Analytics</span>
-                      </DropdownMenuItem>
+                      {/*<DropdownMenuItem className='text-muted-foreground cursor-pointer px-[24px] py-[8px] text-sm hover:text-primary'>*/}
+                      {/*  <span>Analytics</span>*/}
+                      {/*</DropdownMenuItem>*/}
                     </DropdownMenuGroup>
 
                     <DropdownMenuSeparator />
@@ -166,7 +161,7 @@ const Navbar = () => {
                         className='text-muted-foreground flex flex-row justify-between px-[24px] py-[8px] text-sm'
                       >
                         <span className='group-hover:text-primary'>Theme</span>
-                        <ThemeToggle />
+                        <ThemeButton />
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
 

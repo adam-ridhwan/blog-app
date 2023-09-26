@@ -37,7 +37,7 @@ const modules = {
 
 export const postAtom = atomWithStorage('post', '');
 
-const Write = () => {
+const WritePage = () => {
   const { data: session, status } = useSession();
   const [content, setContent] = useAtom(postAtom);
   const windowSize = useWindowSize();
@@ -199,4 +199,4 @@ const Write = () => {
   );
 };
 
-export default Write;
+export default WritePage;

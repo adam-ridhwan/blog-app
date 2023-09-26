@@ -8,7 +8,7 @@ import JotaiProvider from '@/provider/jotai-provider';
 import QueryProvider from '@/provider/query-provider';
 import ThemeProvider from '@/provider/theme-provider';
 
-import Navbar from '@/components/navbar';
+import Navbar from '@/components/navbar/navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 

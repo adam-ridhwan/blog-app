@@ -6,9 +6,9 @@ import { connectToDatabase } from '@/util/connectToDatabase';
 import { generateRandomString } from '@/util/generateRandomString';
 import { ObjectId } from 'mongodb';
 
-import Categories from '@/components/categories';
-import PostList from '@/components/post-list';
-import SideMenu from '@/components/side-menu';
+import Categories from '@/components/categories/categories';
+import PostList from '@/components/post/post-list';
+import SideMenu from '@/components/side-menu/side-menu';
 
 type MockPost = {
   title: string;
@@ -225,9 +225,7 @@ export default async function Home() {
   return (
     <div className='container flex flex-col px-5 xl:flex-row xl:justify-center'>
       <HydrateAtoms posts={initialPosts} authors={uniqueAuthors}>
-        <PostList>
-          <Categories />
-        </PostList>
+        <PostList>{/*<Categories />*/}</PostList>
         <SideMenu />
       </HydrateAtoms>
     </div>
