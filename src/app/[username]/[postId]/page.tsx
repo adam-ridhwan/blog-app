@@ -1,17 +1,16 @@
-import { FC } from 'react';
 import * as React from 'react';
+import { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getPost } from '@/actions/getPost';
 import { getUserByUsername } from '@/actions/getUserByUsername';
 import { formatDate } from '@/util/formatDate';
+import DOMPurify from 'isomorphic-dompurify';
 import { Bookmark, Heart, MessageSquare, Share } from 'lucide-react';
-import { getServerSession } from 'next-auth';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import SeparatorDot from '@/components/ui/separator-dot';
 
 type PostPageProps = {
   params: {
@@ -95,7 +94,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
 
           <div
             className='content-section mt-10 flex flex-col gap-5 text-xl leading-8 text-paragraph'
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
           />
         </div>
       </div>
