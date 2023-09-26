@@ -2,7 +2,7 @@
 'use client';
 
 import { FC, Fragment, ReactNode, useCallback, useEffect, useRef } from 'react';
-import { areAllPostsFetchedAtom, authorsAtom, postsAtom } from '@/provider/hydrate-atoms';
+import { areAllPostsFetchedAtom, authorsAtom, postsAtom } from '@/providers/hydrate-atoms';
 import { AuthorDetails, Post } from '@/types';
 import { useIntersection } from '@mantine/hooks';
 import { useAtom } from 'jotai';

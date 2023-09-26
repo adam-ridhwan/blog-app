@@ -11,8 +11,8 @@ export async function updateProviders(account: NextAuthAccount | null, existingU
     const { userCollection } = await connectToDatabase();
 
     /**
-     * 1) Create new provider account first
-     * 2) Update user by pushing the provider to accounts[]
+     * 1) Create new providers account first
+     * 2) Update user by pushing the providers to accounts[]
      * */
     const convertToMyAccountType = (account: NextAuthAccount | null) => ({
       ...account,

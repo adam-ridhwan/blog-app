@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { authorsAtom, postsAtom } from '@/provider/hydrate-atoms';
+import { authorsAtom, postsAtom } from '@/providers/hydrate-atoms';
 import { AuthorDetails, Post } from '@/types';
 import { wait } from '@/util/wait';
 import { zodResolver } from '@hookform/resolvers/zod';

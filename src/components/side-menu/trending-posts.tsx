@@ -67,8 +67,8 @@ const TrendingPosts = () => {
           <Link
             href='/'
             className={cn(
-              `flex h-[40px] w-full items-center justify-center rounded-full border border-border 
-                  bg-background text-muted underline-offset-4 hover:underline`
+              `flex h-[40px] w-full items-center justify-center rounded-full border border-border
+              text-muted underline-offset-4 hover:underline`
             )}
           >
             See more

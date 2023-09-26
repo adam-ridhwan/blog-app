@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { themeAtom } from '@/providers/theme-provider';
 import { useAtom } from 'jotai';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { Button } from 'src/components/ui/button';
-import { themeAtom } from 'src/provider/theme-provider';
 
 const ThemeButton = () => {
   const [theme, setTheme] = useAtom(themeAtom);

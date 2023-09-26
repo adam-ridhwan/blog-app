@@ -16,8 +16,8 @@ const Categories: FC = async () => {
         <Link
           href='/'
           className={cn(
-            `flex h-[32px] items-center justify-center whitespace-nowrap rounded-md border border-transparent
-            bg-accentNavy px-5 text-secondary`
+            `bg-accent flex h-[32px] items-center justify-center whitespace-nowrap rounded-md border
+            border-transparent px-5 text-secondary`
           )}
         >
           For you

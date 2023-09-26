@@ -30,8 +30,8 @@ const handler = NextAuth({
       /**
        * 1) Check if user exists in user collection
        * 2) If user DOES NOT exist, create new user and account
-       * 3) If user DOES exits, check if account provider exists in account collection
-       * 4) If account provider DOES NOT, push the provider to accounts[] in user collection
+       * 3) If user DOES exits, check if account providers exists in account collection
+       * 4) If account providers DOES NOT, push the providers to accounts[] in user collection
        * */
 
       if (!nextAuthUser) return false;
@@ -46,10 +46,10 @@ const handler = NextAuth({
         return true;
       }
 
-      // 3) If user DOES exits, check if account provider exists in account collection
+      // 3) If user DOES exits, check if account providers exists in account collection
       const existingAccount = await getAccount(existingUser._id, nextAuthAccount.provider);
 
-      // 4) If account provider DOES NOT, update account by pushing the provider to accounts[] in user collection
+      // 4) If account providers DOES NOT, update account by pushing the providers to accounts[] in user collection
       if (!existingAccount) await updateProviders(nextAuthAccount, existingUser);
 
       return true;

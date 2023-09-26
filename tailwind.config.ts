@@ -3,7 +3,12 @@ import { blue, red } from '@radix-ui/colors';
 
 module.exports = {
   darkMode: ['class'],
-  content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+  ],
   theme: {
     container: {
       center: true,
@@ -22,7 +27,7 @@ module.exports = {
         muted: 'hsl(var(--muted))',
         hover: 'hsl(var(--hover))',
 
-        accentNavy: 'hsl(var(--accentNavy))',
+        accent: 'hsl(var(--accent))',
         accentAzure: 'hsl(var(--accentAzure))',
         accentSkyBlue: 'hsl(var(--accentSkyBlue))',
 

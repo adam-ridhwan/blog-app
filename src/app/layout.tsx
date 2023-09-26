@@ -5,11 +5,11 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { getPosts } from '@/actions/getPosts';
 import { getUsersById } from '@/actions/getUsersById';
-import AuthProvider from '@/provider/auth-provider';
-import HydrateAtoms from '@/provider/hydrate-atoms';
-import JotaiProvider from '@/provider/jotai-provider';
-import QueryProvider from '@/provider/query-provider';
-import ThemeProvider from '@/provider/theme-provider';
+import AuthProvider from '@/providers/auth-provider';
+import HydrateAtoms from '@/providers/hydrate-atoms';
+import JotaiProvider from '@/providers/jotai-provider';
+import QueryProvider from '@/providers/query-provider';
+import ThemeProvider from '@/providers/theme-provider';
 
 import Navbar from '@/components/navbar/navbar';
 

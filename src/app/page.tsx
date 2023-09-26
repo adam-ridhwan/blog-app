@@ -1,6 +1,6 @@
 import { getPosts } from '@/actions/getPosts';
 import { getUsersById } from '@/actions/getUsersById';
-import HydrateAtoms from '@/provider/hydrate-atoms';
+import HydrateAtoms from '@/providers/hydrate-atoms';
 import { Post, User } from '@/types';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { generateRandomString } from '@/util/generateRandomString';

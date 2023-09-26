@@ -67,6 +67,10 @@ const Navbar = () => {
         navbarRef.current.style.transform = `translateY(${navbarPositionRef.current}px)`;
         prevBodyScrollY.current = currentScrollY;
       }
+
+      if (currentScrollY > 1) {
+        setIsAvatarDropdownOpen(false);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);

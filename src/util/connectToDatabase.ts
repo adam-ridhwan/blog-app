@@ -1,4 +1,4 @@
-import { clientPromise } from '@/mongodb';
+import { clientPromise } from '@/mongodb/mongodb';
 import { type Account, type Category, type Post, type User } from '@/types';
 import env from '@/util/env';
 
