@@ -16,7 +16,8 @@ const ToastViewport = React.forwardRef<
     <ToastPrimitives.Viewport
       ref={ref}
       className={cn(
-        `fixed bottom-0 right-0 z-50 m-0 mb-[20px] mr-[20px] flex w-[390px] max-w-[100vw] list-none flex-col gap-[10px]`,
+        `fixed bottom-0 right-0 z-50 m-0 mb-[20px] mr-[20px] flex w-[390px] 
+        max-w-[100vw] list-none flex-col gap-[10px]`,
         className
       )}
       {...props}
@@ -36,7 +37,7 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border bg-background text-foreground',
+        default: 'border bg-confirmative text-primary',
         destructive: 'destructive group border-destructive bg-destructive text-destructive-foreground',
       },
     },
@@ -99,7 +100,7 @@ const ToastTitle = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Title>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitives.Title ref={ref} className={cn('text-sm font-semibold', className)} {...props} />
+  <ToastPrimitives.Title ref={ref} className={cn('text-md font-semibold text-white', className)} {...props} />
 ));
 ToastTitle.displayName = ToastPrimitives.Title.displayName;
 
@@ -107,7 +108,11 @@ const ToastDescription = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Description>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitives.Description ref={ref} className={cn('text-sm opacity-90', className)} {...props} />
+  <ToastPrimitives.Description
+    ref={ref}
+    className={cn('text-md text-primary opacity-90', className)}
+    {...props}
+  />
 ));
 ToastDescription.displayName = ToastPrimitives.Description.displayName;
 
