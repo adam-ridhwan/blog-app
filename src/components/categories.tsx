@@ -1,13 +1,14 @@
 import { FC, memo } from 'react';
 import Link from 'next/link';
 import { getCategories } from '@/actions/getCategories';
+import { Category } from '@/types';
 import { capitalize } from '@/util/capitalize';
 import { cn } from '@/util/cn';
 
 import { Skeleton } from '@/components/ui/skeleton';
 
 const Categories: FC = async () => {
-  const categories = await getCategories();
+  const categories: Category[] = await getCategories();
 
   return (
     <>

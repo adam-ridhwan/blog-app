@@ -28,9 +28,10 @@ export async function GET(request: Request) {
 }
 
 /** ────────────────────────────────────────────────────────────────────────────────────────────────────
- * CREATE POST
+ * CREATE NEW POST
  * ────────────────────────────────────────────────────────────────────────────────────────────────── */
 export type CreatePostRequestBody = Pick<Post, 'title' | 'subtitle' | 'content' | 'authorId'>;
+
 type CreatePostResponseBody = {
   success: string;
   newPost: Post;
@@ -50,19 +51,15 @@ export const POST = async (request: Request) => {
 
     const fetchedUserWithEmail = await userCollection.findOne(
       { email: session.user.email },
-      { projection: { username: 1 } }
+      { projection: { username: 1, name: 1, _id: 1, image: 1 } }
     );
 
     if (!fetchedUserWithEmail) {
       return NextResponse.json({ error: 'Error fetching user' }, { status: 400 });
     }
 
-    const newAuthor: AuthorDetails = {
-      _id: fetchedUserWithEmail._id,
-      name: fetchedUserWithEmail.name,
-      username: fetchedUserWithEmail.username,
-      image: fetchedUserWithEmail.image,
-    };
+    const { _id, name, username, image } = fetchedUserWithEmail;
+    const newAuthor: AuthorDetails = { _id, name, username, image };
 
     const { response, newPost } = await createPost(<CreatePostRequestBody>{
       title,

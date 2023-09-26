@@ -13,6 +13,6 @@ export async function getUsersById(authorIds: (ObjectId | string)[]) {
     return authors;
   } catch (error) {
     console.error('Error fetching users:', error);
-    // Handle error accordingly
+    throw new Error('Error occurred while fetching users');
   }
 }

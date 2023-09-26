@@ -81,16 +81,18 @@ const PublishDialog = () => {
     }
 
     if (success && newPost && newAuthor) {
-      setIsToastOpen(true);
-      await wait(2000);
-      router.push(`/${newAuthor.username}/${newPost._id}`);
-
       /**
+       * OPTIMISTIC UPDATE
        * These setters are needed to add new posts to global state so that users can see the new post when
        * navigating to the home page
        * */
       setPosts(prevPosts => [newPost, ...prevPosts]);
       setAuthors(prevAuthors => [newAuthor, ...prevAuthors]);
+
+      setIsToastOpen(true);
+      await wait(2000);
+      router.push(`/${newAuthor.username}/${newPost._id}`);
+
       return;
     }
 

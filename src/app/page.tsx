@@ -223,8 +223,6 @@ export default async function Home() {
     return false;
   });
 
-  revalidatePath('/');
-
   return (
     <div className='container flex flex-col px-5 xl:flex-row xl:justify-center'>
       <HydrateAtoms posts={initialPosts} authors={uniqueAuthors}>
