@@ -1,10 +1,14 @@
+import * as React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/util/cn';
 
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import SeparatorDot from '@/components/ui/separator-dot';
 
-const MostPopularPosts = () => {
+const TrendingPosts = () => {
   const mostPopularPosts = [
     {
       author: 'John Doe',
@@ -34,26 +38,45 @@ const MostPopularPosts = () => {
 
   return (
     <>
-      <div className='flex flex-col gap-3 md:grid md:grid-cols-2 lg:flex lg:flex-col'>
-        {mostPopularPosts.map(post => {
-          return (
-            <Link key={post.title} href='/' className='flex items-center'>
-              <div className='flex flex-col'>
-                <div className='flex items-center gap-[5px]'>
-                  <Badge variant='outline' className={cn('mr-[5px] w-max', `${post.color}`)}>
-                    Fashion
-                  </Badge>
+      <Card>
+        <CardHeader>
+          <CardTitle className=''>Trending posts</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className='flex flex-col gap-3 md:grid md:grid-cols-2 lg:flex lg:flex-col'>
+            {mostPopularPosts.map(post => {
+              return (
+                <Link key={post.title} href='/' className='flex items-center'>
+                  <div className='flex flex-col'>
+                    <div className='flex flex-row items-center gap-2'>
+                      <Avatar className='h-5 w-5'>
+                        {/*{image ? <Image src={image} alt='' /> : <AvatarFallback>{name?.split('')[0]}</AvatarFallback>}*/}
+                        {<AvatarFallback className='text-[12px]'>{post.author?.split('')[0]}</AvatarFallback>}
+                      </Avatar>
+                      <span>{post.author}</span>
+                    </div>
+                    <h3 className='text-muted-foreground font-semibold'>Whispers of the Shore</h3>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </CardContent>
 
-                  <span>{post.author}</span>
-                </div>
-                <h3 className='font-semibold text-muted-foreground'>Wispers of the Shore</h3>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+        <CardFooter>
+          <Link
+            href='/'
+            className={cn(
+              `flex h-[40px] w-full items-center justify-center rounded-full border border-border 
+                  bg-background text-muted underline-offset-4 hover:underline`
+            )}
+          >
+            See more
+          </Link>
+        </CardFooter>
+      </Card>
     </>
   );
 };
 
-export default MostPopularPosts;
+export default TrendingPosts;

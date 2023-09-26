@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { AuthorDetails, Post } from '@/types';
 import { atom } from 'jotai';
 import { useHydrateAtoms } from 'jotai/utils';
@@ -17,11 +17,15 @@ export const authorsAtom = atom<AuthorDetails[]>([]);
 export const areAllPostsFetchedAtom = atom(false);
 
 const HydrateAtoms: FC<HydrateAtomsProps> = ({ posts, authors, children }) => {
+  useEffect(() => {
+    console.log({ posts, authors });
+  }, [posts, authors]);
   useHydrateAtoms([
     [postsAtom, posts],
     [authorsAtom, authors],
     [areAllPostsFetchedAtom, false],
   ]);
+
   return children;
 };
 

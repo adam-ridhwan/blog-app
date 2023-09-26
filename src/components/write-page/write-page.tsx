@@ -35,11 +35,11 @@ const modules = {
   ],
 };
 
-export const postAtom = atomWithStorage('post', '');
+export const contentAtom = atomWithStorage('post', '');
 
 const WritePage = () => {
   const { data: session, status } = useSession();
-  const [content, setContent] = useAtom(postAtom);
+  const [content, setContent] = useAtom(contentAtom);
   const windowSize = useWindowSize();
 
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true);

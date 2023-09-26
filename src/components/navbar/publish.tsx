@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authorsAtom, postsAtom } from '@/provider/hydrate-atoms';
 import { AuthorDetails, Post } from '@/types';
@@ -23,7 +23,7 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Toast, ToastProvider, ToastTitle, ToastViewport } from '@/components/ui/toast';
-import { postAtom } from '@/components/write-page/write-page';
+import { contentAtom } from '@/components/write-page/write-page';
 
 const formSchema = z.object({
   title: z.string().nonempty('Title is required').max(100, {
@@ -44,9 +44,9 @@ type CreatePostServerResponse = {
 const Publish = () => {
   const router = useRouter();
 
-  const content = useAtomValue(postAtom);
-  const [posts, setPosts] = useAtom(postsAtom);
-  const setAuthors = useSetAtom(authorsAtom);
+  const setPosts = useSetAtom(postsAtom);
+  const [authors, setAuthors] = useAtom(authorsAtom);
+  const content = useAtomValue(contentAtom);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
@@ -99,7 +99,7 @@ const Publish = () => {
 
       // filter out duplicate authors
       const seenAuthors = new Set();
-      const uniqueAuthors = posts.filter(author => {
+      const uniqueAuthors = authors.filter(author => {
         if (!seenAuthors.has(author._id)) {
           seenAuthors.add(author._id);
           return true;
@@ -108,8 +108,8 @@ const Publish = () => {
       });
 
       // update global state
-      setPosts(uniqueAuthors);
-      setAuthors(prevAuthors => [newAuthor, ...prevAuthors]);
+      setAuthors(uniqueAuthors);
+      setPosts(prevPosts => [newPost, ...prevPosts]);
 
       await wait(2000);
       router.push(`/${newAuthor.username}/${newPost._id}`);
@@ -129,7 +129,7 @@ const Publish = () => {
             <span className='whitespace-nowrap'>Publish</span>
           </Button>
         </DialogTrigger>
-        <DialogContent className='border-none shadow-none'>
+        <DialogContent className='border-none shadow-none' onOpenAutoFocus={e => e.preventDefault()}>
           <DialogHeader>
             <DialogTitle className='mb-2 text-left'>Post preview</DialogTitle>
           </DialogHeader>

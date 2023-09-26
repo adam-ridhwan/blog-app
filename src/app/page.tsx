@@ -6,9 +6,13 @@ import { connectToDatabase } from '@/util/connectToDatabase';
 import { generateRandomString } from '@/util/generateRandomString';
 import { ObjectId } from 'mongodb';
 
-import Categories from '@/components/categories/categories';
 import PostList from '@/components/post/post-list';
+import BuiltWith from '@/components/side-menu/built-with';
+import Draft from '@/components/side-menu/draft';
+import EditorPosts from '@/components/side-menu/editor-posts';
 import SideMenu from '@/components/side-menu/side-menu';
+import TrendingPosts from '@/components/side-menu/trending-posts';
+import WhoToFollow from '@/components/side-menu/who-to-follow';
 
 type MockPost = {
   title: string;
@@ -198,36 +202,18 @@ export default async function Home() {
 
   // const users = await userCollection.find().toArray();
 
-  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
-   * FETCH INITIAL POSTS AND AUTHORS
-   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  // Fetch initial posts
-  const initialPosts = await getPosts(5, undefined);
-  if (!initialPosts) throw new Error('Failed to fetch initial posts');
-
-  // Fetch initial authors
-  const authorIds = initialPosts.map(post => post.authorId);
-  const initialAuthors = await getUsersById(authorIds);
-
-  if (!initialAuthors) throw new Error('Failed to fetch initial authors');
-  if (!initialPosts && !initialAuthors) throw new Error('Failed to fetch initial posts and authors');
-
-  // Remove duplicate authors
-  const seenAuthors = new Set();
-  const uniqueAuthors = initialAuthors.filter(author => {
-    if (!seenAuthors.has(author._id)) {
-      seenAuthors.add(author._id);
-      return true;
-    }
-    return false;
-  });
-
   return (
     <div className='container flex flex-col px-5 xl:flex-row xl:justify-center'>
-      <HydrateAtoms posts={initialPosts} authors={uniqueAuthors}>
-        <PostList>{/*<Categories />*/}</PostList>
-        <SideMenu />
-      </HydrateAtoms>
+      <PostList>{/*<Categories />*/}</PostList>
+      <SideMenu>
+        <>
+          <TrendingPosts />
+          <Draft />
+          <WhoToFollow />
+          <EditorPosts />
+          <BuiltWith />
+        </>
+      </SideMenu>
     </div>
   );
 }

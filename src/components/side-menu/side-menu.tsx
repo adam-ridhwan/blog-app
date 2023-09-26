@@ -1,23 +1,19 @@
 'use client';
 
-import { FC, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { capitalize } from '@/util/capitalize';
+import { FC, ReactNode, useEffect, useRef, useState } from 'react';
 import { cn } from '@/util/cn';
-import { categories, LG, XL } from '@/util/constants';
+import { XL } from '@/util/constants';
 import { useViewportSize } from '@mantine/hooks';
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import MostPopularPosts from '@/components/side-menu/most-popular-posts';
-import SideMenuPosts from '@/components/side-menu/side-menu-posts';
+import BuiltWith from '@/components/side-menu/built-with';
+import Draft from '@/components/side-menu/draft';
+import EditorPosts from '@/components/side-menu/editor-posts';
+import TrendingPosts from '@/components/side-menu/trending-posts';
+import WhoToFollow from '@/components/side-menu/who-to-follow';
 
-import MongoDbSvg from '../../../public/icons/MongoDbSvg';
-import NextJsSvg from '../../../public/icons/NextJsSvg';
-import TailwindSvg from '../../../public/icons/TailwindSvg';
-import VercelSvg from '../../../public/icons/VercelSvg';
-
-type SideMenuProps = {};
+type SideMenuProps = {
+  children: ReactNode;
+};
 
 const THRESHOLD = 100;
 const BOTTOM_PADDING = 20;
@@ -31,7 +27,7 @@ const DOWN = 'down';
 type Position = typeof STICKY | typeof RELATIVE;
 type ScrollDirection = typeof UP | typeof DOWN;
 
-const SideMenu: FC<SideMenuProps> = ({}) => {
+const SideMenu: FC<SideMenuProps> = ({ children }) => {
   const [placeholder, setPlaceholder] = useState({ height: 0, top: 0 });
   const [position, setPosition] = useState<Position>(STICKY);
   const topRef = useRef(THRESHOLD);
@@ -136,7 +132,7 @@ const SideMenu: FC<SideMenuProps> = ({}) => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [placeholder.height, placeholder.top, position, width]);
+  }, [placeholder, position, width]);
 
   return (
     <>
@@ -156,104 +152,7 @@ const SideMenu: FC<SideMenuProps> = ({}) => {
           }}
           className={cn(`ml-5 hidden min-w-[350px] max-w-[350px] flex-col gap-5 bg-background pl-5 xl:flex`)}
         >
-          <Card>
-            <CardHeader>
-              <CardTitle className=''>Trending posts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <MostPopularPosts />
-            </CardContent>
-
-            <CardFooter>
-              <Link
-                href='/'
-                className={cn(
-                  `flex h-[40px] w-full items-center justify-center rounded-full border border-border 
-                  bg-background text-muted underline-offset-4 hover:underline`
-                )}
-              >
-                See more
-              </Link>
-            </CardFooter>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Who to follow</CardTitle>
-            </CardHeader>
-            <CardContent className='flex flex-wrap gap-2'></CardContent>
-
-            <CardFooter>
-              <Link
-                href='/'
-                className='flex h-[40px] w-full items-center justify-center rounded-full border border-border
-                bg-transparent text-muted underline-offset-4 hover:underline'
-              >
-                See more
-              </Link>
-            </CardFooter>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Chosen by editor</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <SideMenuPosts withImage={true} />
-            </CardContent>
-
-            <CardFooter>
-              <Link
-                href='/'
-                className='flex h-[40px] w-full items-center justify-center rounded-full border border-border
-                bg-transparent text-muted underline-offset-4 hover:underline'
-              >
-                See more
-              </Link>
-            </CardFooter>
-          </Card>
-
-          <Card className='md:border md:border-accentSkyBlue/10 md:bg-accentAzure/5'>
-            <CardContent>
-              <CardTitle className='mb-1 text-lg'>Built with</CardTitle>
-              <div className='flex flex-col gap-1'>
-                <div className='flex flex-row items-center gap-2'>
-                  <NextJsSvg />
-                  <span>Next.js</span>
-                </div>
-
-                <div className='flex flex-row items-center gap-2'>
-                  <Image
-                    src='/nextauth.png'
-                    width={50}
-                    height={50}
-                    alt='NextAuth Logo'
-                    className='h-5 w-5 grayscale'
-                  />
-                  <span>NextAuth.js</span>
-                </div>
-
-                <div className='flex flex-row items-center gap-2'>
-                  <MongoDbSvg />
-                  <span>MongoDB</span>
-                </div>
-
-                <div className='flex flex-row items-center gap-2'>
-                  <TailwindSvg />
-                  <span>Tailwind</span>
-                </div>
-
-                <div className='flex flex-row items-center gap-2'>
-                  <VercelSvg />
-                  <span>Vercel</span>
-                </div>
-              </div>
-            </CardContent>
-
-            <CardFooter className='gap-1 text-sm'>
-              <Link href='/'>© 2023 Pondero</Link>
-            </CardFooter>
-          </Card>
+          {children}
         </div>
       </div>
     </>
