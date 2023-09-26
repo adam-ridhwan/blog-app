@@ -21,7 +21,7 @@ html {
         --muted: 218 25% 39%;
         --hover: 222 44% 95%;
 
-        --accent: 223 100% 30%;
+        --accent: 223 100% 35%;
         --accentAzure: 215 100% 50%;
         --accentSkyBlue: 195 100% 75%;
 
@@ -71,7 +71,7 @@ html {
         --muted: 35 10% 63%;
         --hover: 195 5% 15%;
 
-        --accent: 174, 100%, 35%;
+        --accent: 215 100% 50%;
         --accentAzure: 215 100% 50%;
         --accentSkyBlue: 195 100% 75%;
 
