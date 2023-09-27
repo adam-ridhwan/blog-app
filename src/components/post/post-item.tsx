@@ -38,9 +38,28 @@ const PostItem: FC<CardProps> = ({
     if (titleNode.clientHeight > MAX_TITLE_HEIGHT) setTsTitleWrappedInTwoLines(true);
   }, []);
 
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * PARSE HTML
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const parser = new DOMParser();
   const doc = parser.parseFromString(content, 'text/html');
-  const firstParagraph = doc.querySelector('p');
+  const paragraphs = doc.querySelectorAll('p');
+
+  let firstNonEmptyParagraph = null;
+  for (let p of paragraphs) {
+    if (p.innerHTML.trim() !== '<br>') {
+      firstNonEmptyParagraph = p;
+      break;
+    }
+  }
+
+  // if (firstNonEmptyParagraph) {
+  //   // Do something with the firstNonEmptyParagraph
+  //   console.log(firstNonEmptyParagraph.textContent);
+  // } else {
+  //   // Handle the case where there is no non-empty paragraph.
+  //   console.log('No valid paragraph found!');
+  // }
 
   return (
     <>
@@ -76,7 +95,7 @@ const PostItem: FC<CardProps> = ({
                   { 'three-line-ellipsis': !isTitleWrappedInTwoLines }
                 )}
               >
-                {firstParagraph?.innerHTML}
+                {firstNonEmptyParagraph?.innerHTML}
               </p>
             </CardContent>
           </div>

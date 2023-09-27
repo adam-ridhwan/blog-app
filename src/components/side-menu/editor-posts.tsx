@@ -16,7 +16,7 @@ const EditorPosts: FC<MenuPostsProps> = () => {
         <CardContent>
           <div className='flex flex-col gap-[20px] md:grid md:grid-cols-2 lg:flex lg:flex-col'>
             <Link href='/' className='flex items-center gap-[20px]'>
-              <div className='flex flex-[4] flex-col gap-[5px]'>
+              <div className='flex flex-[4] flex-col'>
                 <span className='text-muted-foreground text-ellipsis text-lg font-semibold text-primary'>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                 </span>
@@ -29,7 +29,7 @@ const EditorPosts: FC<MenuPostsProps> = () => {
             </Link>
 
             <Link href='/' className='flex items-center gap-[20px]'>
-              <div className='flex flex-[4] flex-col gap-[5px]'>
+              <div className='flex flex-[4] flex-col'>
                 <span className='text-muted-foreground text-ellipsis text-lg font-semibold text-primary'>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                 </span>
@@ -42,7 +42,7 @@ const EditorPosts: FC<MenuPostsProps> = () => {
             </Link>
 
             <Link href='/' className='flex items-center gap-[20px]'>
-              <div className='flex flex-[4] flex-col gap-[5px]'>
+              <div className='flex flex-[4] flex-col'>
                 <span className='text-muted-foreground text-ellipsis text-lg font-semibold text-primary'>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                 </span>
@@ -55,7 +55,7 @@ const EditorPosts: FC<MenuPostsProps> = () => {
             </Link>
 
             <Link href='/' className='flex items-center gap-[20px]'>
-              <div className='flex flex-[4] flex-col gap-[5px]'>
+              <div className='flex flex-[4] flex-col'>
                 <span className='text-muted-foreground text-ellipsis text-lg font-semibold text-primary'>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                 </span>
@@ -68,7 +68,7 @@ const EditorPosts: FC<MenuPostsProps> = () => {
             </Link>
 
             <Link href='/' className='flex items-center gap-[20px]'>
-              <div className='flex flex-[4] flex-col gap-[5px]'>
+              <div className='flex flex-[4] flex-col'>
                 <span className='text-muted-foreground text-ellipsis text-lg font-semibold text-primary'>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                 </span>

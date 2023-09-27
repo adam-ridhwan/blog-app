@@ -142,13 +142,13 @@ const Navbar = () => {
 
                   <DropdownMenuContent align='end' className='w-[250px] p-0'>
                     <DropdownMenuGroup className='py-[16px]'>
-                      <DropdownMenuItem className='text-muted-foreground cursor-pointer px-[24px] py-[8px] text-sm hover:text-primary'>
+                      <DropdownMenuItem className='cursor-pointer px-[24px] py-[8px] text-sm text-muted hover:text-primary'>
                         <span>Profile</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem className='text-muted-foreground cursor-pointer px-[24px] py-[8px] text-sm hover:text-primary'>
+                      <DropdownMenuItem className='cursor-pointer px-[24px] py-[8px] text-sm text-muted hover:text-primary'>
                         <span>Posts</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem className='text-muted-foreground cursor-pointer px-[24px] py-[8px] text-sm hover:text-primary'>
+                      <DropdownMenuItem className='cursor-pointer px-[24px] py-[8px] text-sm text-muted hover:text-primary'>
                         <span></span>
                         <span>Saved</span>
                       </DropdownMenuItem>
@@ -162,7 +162,7 @@ const Navbar = () => {
                     <DropdownMenuGroup className='group'>
                       <DropdownMenuItem
                         onSelect={e => e.preventDefault()}
-                        className='text-muted-foreground flex flex-row justify-between px-[24px] py-[8px] text-sm'
+                        className='flex flex-row justify-between px-[24px] py-[8px] text-sm text-muted'
                       >
                         <span className='group-hover:text-primary'>Theme</span>
                         <ThemeButton />
@@ -172,7 +172,7 @@ const Navbar = () => {
                     <DropdownMenuSeparator />
 
                     <DropdownMenuGroup className='group cursor-pointer py-[16px]'>
-                      <DropdownMenuItem className='text-muted-foreground p-0 text-sm'>
+                      <DropdownMenuItem className='p-0 text-sm text-muted'>
                         <button className='flex flex-col px-[24px] py-[8px]' onClick={() => signOut()}>
                           <span className='group-hover:text-primary'>Sign out</span>
                           <span>{session?.user?.email}</span>

@@ -89,7 +89,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
 
           <div className='mt-10'>
             <h1 className='text-balance title text-primary'>{post?.title}</h1>
-            <h2 className='text-balancel subtitle text-muted'>{post?.subtitle}</h2>
+            <h2 className='text-balance subtitle text-muted'>{post?.subtitle}</h2>
           </div>
 
           <div
