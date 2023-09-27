@@ -8,7 +8,7 @@ import { AuthorDetails, Post } from '@/types/types';
 
 type ReturnObject = {
   author: AuthorDetails;
-  post: { mainPost: Post; next3Posts: Post[] };
+  post: { mainPost: Post; next4Posts: Post[] };
 };
 
 export async function getPostInformation(username: string, postId: string): Promise<ReturnObject> {
@@ -21,20 +21,20 @@ export async function getPostInformation(username: string, postId: string): Prom
     const fetchedAuthor = await userCollection.findOne({ username });
 
     const mainPost = getPost(postId);
-    const next3Posts = postCollection
+    const next4Posts = postCollection
       .find({
         _id: { $ne: new ObjectId(postId) },
         authorId: new ObjectId(fetchedAuthor?._id),
       })
       .sort({ _id: -1 })
-      .limit(3)
+      .limit(4)
       .toArray();
 
-    const [fetchedMainPost, fetchedNext3Posts] = await Promise.all([mainPost, next3Posts]);
+    const [fetchedMainPost, fetchedNext4Posts] = await Promise.all([mainPost, next4Posts]);
 
     if (!fetchedAuthor) throw new Error('User not found');
     if (!fetchedMainPost) throw new Error('Post not found');
-    if (!fetchedNext3Posts) throw new Error('Next 3 posts not found');
+    if (!fetchedNext4Posts) throw new Error('Next 3 posts not found');
 
     return {
       author: {
@@ -45,7 +45,7 @@ export async function getPostInformation(username: string, postId: string): Prom
       },
       post: {
         mainPost: JSON.parse(JSON.stringify(fetchedMainPost)),
-        next3Posts: JSON.parse(JSON.stringify(fetchedNext3Posts)),
+        next4Posts: JSON.parse(JSON.stringify(fetchedNext4Posts)),
       },
     };
   } catch (error) {

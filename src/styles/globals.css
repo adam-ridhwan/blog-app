@@ -124,12 +124,23 @@ html {
     max-height: 64px;
 }
 
+
+@media (min-width: 768px) {
+    .two-line-ellipsis {
+        display: -webkit-box;
+        max-height: 64px;
+
+    }
+}
+
+
 .three-line-ellipsis {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
     overflow: hidden;
     max-height: 72px;
 }
+
 
 .title, .content-section > h1 {
     font-size: 32px;
