@@ -9,7 +9,7 @@ import { useAtom } from 'jotai';
 import { AuthorDetails, Post } from '@/types/types';
 import CardSkeleton from '@/components/ui/card-skeleton';
 import { Separator } from '@/components/ui/separator';
-import PostItem from '@/components/post/post-item';
+import PostItem from '@/components/main-section/post-item';
 
 const LIMIT = 5;
 
@@ -48,7 +48,7 @@ const PostList: FC<PostListProps> = ({ children }) => {
    * lot of bugs.
    *
    * ISSUE: When using server actions directly, there were problems when navigating to a different page
-   * and then coming back to the same page. When last post was in view, the server action stalled and the
+   * and then coming back to the same page. When last main-section was in view, the server action stalled and the
    * next posts were not fetched.
    *
    * SOLUTION: Used fetch route handler instead. The route handler calls the server action.

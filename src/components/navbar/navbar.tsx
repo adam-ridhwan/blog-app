@@ -52,7 +52,7 @@ const Navbar = () => {
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
     const handleScroll = () => {
-      if (!navbarRef.current || pathname === '/write-page-a-post') return;
+      if (!navbarRef.current || pathname === '/write-page-a-main-section') return;
 
       const currentScrollY = window.scrollY;
       const scrollAmount = currentScrollY - prevBodyScrollY.current;
@@ -121,7 +121,7 @@ const Navbar = () => {
               {status === 'loading' && <Skeleton className='h-10 w-10 rounded-full' />}
 
               {status === 'authenticated' && pathname === '/' && <Write />}
-              {status === 'authenticated' && pathname === '/write-a-post' && <Publish />}
+              {status === 'authenticated' && pathname === '/write-a-main-section' && <Publish />}
               {status === 'authenticated' && (
                 <DropdownMenu
                   open={isAvatarDropdownOpen}

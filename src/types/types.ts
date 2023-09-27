@@ -67,12 +67,14 @@ export type User = {
   image?: string;
   accounts: Account[];
   sessions: Session[];
-  posts: Post[];
-  comments: Comment[];
-  followers: Follower[];
+  posts: MongoId[];
+  comments: MongoId[];
+  followers: MongoId[];
 };
 
-export type AuthorDetails = Pick<User, '_id' | 'name' | 'username' | 'image'>;
+export type AuthorDetails = Pick<User, '_id' | 'name' | 'username' | 'image'> & {
+  followerCount?: number;
+};
 
 export type Follower = {
   _id: MongoId;

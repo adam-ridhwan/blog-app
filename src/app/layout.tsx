@@ -9,6 +9,8 @@ import AuthProvider from '@/providers/auth-provider';
 import HydrateAtoms from '@/providers/hydrate-atoms';
 import JotaiProvider from '@/providers/jotai-provider';
 import ThemeProvider from '@/providers/theme-provider';
+import { connectToDatabase } from '@/util/connectToDatabase';
+import generateMockUsersAndPosts from '@/util/generateMockUserAndPosts';
 
 import Navbar from '@/components/navbar/navbar';
 
@@ -32,6 +34,11 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  const { userCollection, postCollection } = await connectToDatabase();
+
+  // await userCollection.deleteMany({});
+  // await postCollection.deleteMany({});
+  // await generateMockUsersAndPosts();
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * FETCH INITIAL POSTS AND AUTHORS
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */

@@ -34,7 +34,7 @@ export const createPost = async ({ title, subtitle, content, authorId }: CreateP
       newPost,
     };
   } catch (err) {
-    console.error('Error creating post:', err);
-    throw new Error('Error occurred while creating post');
+    console.error('Error creating main-section:', err);
+    throw new Error('Error occurred while creating main-section');
   }
 };
