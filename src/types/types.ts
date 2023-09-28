@@ -47,7 +47,7 @@ export type Post = {
   categoryId: MongoId;
   authorId: MongoId;
   comments: MongoId[];
-  likes: number;
+  likes: MongoId[];
 };
 
 export type Session = {

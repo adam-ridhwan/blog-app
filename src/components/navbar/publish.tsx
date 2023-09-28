@@ -81,7 +81,7 @@ const Publish = () => {
     const { success, error, newPost, newAuthor }: CreatePostServerResponse = await response.json();
 
     if (error) {
-      // No need to add new main-section to global state if there's an error
+      // No need to add new post to global state if there's an error
       console.log(error);
       throw new Error(error);
     }
@@ -99,7 +99,7 @@ const Publish = () => {
 
       // filter out duplicate authors
       const seenAuthors = new Set();
-      const uniqueAuthors = authors.filter(author => {
+      const uniqueAuthors = [...authors, newAuthor].filter(author => {
         if (!seenAuthors.has(author._id)) {
           seenAuthors.add(author._id);
           return true;
@@ -108,7 +108,7 @@ const Publish = () => {
       });
 
       // update global state
-      setAuthors(prevAuthors => [newAuthor, ...prevAuthors]);
+      setAuthors(uniqueAuthors);
       setPosts(prevPosts => [newPost, ...prevPosts]);
 
       await wait(2000);

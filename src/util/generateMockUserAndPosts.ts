@@ -237,7 +237,7 @@ export const generateMockUsersAndPosts = async () => {
         views: Math.floor(Math.random() * 2000),
         categorySlug: 'mock-category',
         comments: [],
-        likes: Math.floor(Math.random() * 100),
+        likes: [],
       });
 
       await userCollection.updateOne(

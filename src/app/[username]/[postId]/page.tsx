@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getPostInformation } from '@/actions/getPostInformation';
 import { formatDate } from '@/util/formatDate';
 import DOMPurify from 'isomorphic-dompurify';
+import { getServerSession } from 'next-auth';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
@@ -20,6 +21,7 @@ type PostPageProps = {
 
 const PostPage: FC<PostPageProps> = async ({ params }) => {
   const { username, postId } = params;
+  const session = await getServerSession();
 
   const { author, post } = await getPostInformation(decodeURIComponent(username), postId);
   const { name, image, followerCount } = author;
@@ -56,7 +58,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
             </Link>
           </div>
 
-          <ActionButtons />
+          <ActionButtons {...{ mainPost, session }} />
 
           <Separator className='m-1' />
 
@@ -72,7 +74,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
         </div>
 
         <div className='mt-20'>
-          <ActionButtons />
+          <ActionButtons {...{ mainPost, session }} />
         </div>
       </div>
 

@@ -113,7 +113,7 @@ const PostItem: FC<CardProps> = ({
           <CardFooter>
             <div className='mr-3 flex flex-row items-center gap-1'>
               <Heart className='h-5 w-5' />
-              <span>{likes}</span>
+              <span>{likes.length}</span>
             </div>
             <div className='mr-3 flex flex-row items-center gap-1'>
               <MessageCircle className='h-5 w-5' />

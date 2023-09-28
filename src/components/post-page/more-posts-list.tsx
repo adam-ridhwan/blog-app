@@ -2,14 +2,10 @@ import * as React from 'react';
 import { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { cn } from '@/util/cn';
-import { formatDate } from '@/util/formatDate';
-import { Heart, MessageCircle } from 'lucide-react';
 
 import { AuthorDetails, Post } from '@/types/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import MorePostsItem from '@/components/post-page/more-posts-item';
 
@@ -54,8 +50,6 @@ const MorePostsList: FC<MorePostsProps> = ({
               </div>
             ))}
           </div>
-
-          <Separator className='m-1' />
         </div>
       </div>
     </>

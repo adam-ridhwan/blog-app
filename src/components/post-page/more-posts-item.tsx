@@ -58,7 +58,7 @@ const MorePostsItem: FC<MorePostsProps> = ({
           </CardContent>
         </div>
 
-        <CardFooter className=''>
+        <CardFooter>
           <Button
             variant='text'
             className='none mr-3 flex h-max flex-row items-center gap-1 p-0 hover:bg-none'
