@@ -64,7 +64,7 @@ const MorePostsItem: FC<MorePostsProps> = ({
             className='none mr-3 flex h-max flex-row items-center gap-1 p-0 hover:bg-none'
           >
             <Heart className='h-6 w-6' />
-            <span className='text-lg'>{likes}</span>
+            <span className='text-lg'>{likes.length}</span>
           </Button>
 
           <Button

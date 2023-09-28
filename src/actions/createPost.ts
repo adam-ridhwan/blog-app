@@ -20,7 +20,7 @@ export const createPost = async ({ title, subtitle, content, authorId }: CreateP
       categorySlug: '',
       comments: [],
       createdAt: new Date(),
-      likes: 0,
+      likes: [],
       postSlug: '',
       views: 0,
     };

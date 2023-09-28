@@ -12,7 +12,7 @@ import { ActionButtonRequestBody } from '@/app/api/post/route';
 
 type ActionButtonsProps = {
   mainPost: Post;
-  session: Session;
+  session: Session | null;
 };
 
 const ActionButtons: FC<ActionButtonsProps> = ({ mainPost, session }) => {
