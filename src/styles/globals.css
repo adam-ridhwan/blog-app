@@ -118,6 +118,7 @@ html {
 }
 
 .two-line-ellipsis {
+    display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
@@ -127,7 +128,6 @@ html {
 
 @media (min-width: 768px) {
     .two-line-ellipsis {
-        display: -webkit-box;
         max-height: 64px;
 
     }

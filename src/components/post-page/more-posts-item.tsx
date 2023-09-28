@@ -12,6 +12,7 @@ import { Post } from '@/types/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 
 type MorePostsProps = {
   name: string | undefined;
@@ -37,6 +38,7 @@ const MorePostsItem: FC<MorePostsProps> = ({
       break;
     }
   }
+
   return (
     <>
       <Card className='flex justify-between md:h-[380px] md:min-h-[350px] md:border-none md:p-0 md:shadow-none'>
@@ -86,6 +88,8 @@ const MorePostsItem: FC<MorePostsProps> = ({
           </Button>
         </CardFooter>
       </Card>
+
+      <Separator className='mt-8' />
     </>
   );
 };
