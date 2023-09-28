@@ -134,7 +134,7 @@ const PostList: FC<PostListProps> = ({ children }) => {
                 {areAllPostsFetched ||
                   (lastPost && (
                     <>
-                      {Array.from({ length: 1 }).map((_, i) => (
+                      {Array.from({ length: 3 }).map((_, i) => (
                         <Fragment key={i}>
                           <CardSkeleton />
                           <Separator className='md:hidden' />
