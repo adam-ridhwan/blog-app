@@ -1,10 +1,9 @@
-'use client';
-
 import * as React from 'react';
 import { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/util/cn';
+import { MD } from '@/util/constants';
 import { formatDate } from '@/util/formatDate';
 import { Heart, MessageCircle } from 'lucide-react';
 
@@ -13,6 +12,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import MorePostsSubtitle from '@/components/post-page/more-posts-subtitle';
 
 type MorePostsProps = {
   name: string | undefined;
@@ -27,18 +27,6 @@ const MorePostsItem: FC<MorePostsProps> = ({
   image,
   post: { _id, title, subtitle, content, createdAt, likes, comments },
 }) => {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(content, 'text/html');
-  const paragraphs = doc.querySelectorAll('p');
-
-  let firstNonEmptyParagraph = null;
-  for (let p of paragraphs) {
-    if (p.innerHTML.trim() !== '<br>') {
-      firstNonEmptyParagraph = p;
-      break;
-    }
-  }
-
   return (
     <>
       <Card className='flex justify-between md:h-[380px] md:min-h-[350px] md:border-none md:p-0 md:shadow-none'>
@@ -66,7 +54,7 @@ const MorePostsItem: FC<MorePostsProps> = ({
             <CardTitle className={cn(`two-line-ellipsis text-primary`)}>{title}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className={cn(`two-line-ellipsis text-muted`)}>{firstNonEmptyParagraph?.innerHTML}</p>
+            <MorePostsSubtitle content={content} subtitle={subtitle} />
           </CardContent>
         </div>
 
@@ -89,7 +77,7 @@ const MorePostsItem: FC<MorePostsProps> = ({
         </CardFooter>
       </Card>
 
-      <Separator className='mt-8' />
+      <Separator className='mt-8 md:hidden' />
     </>
   );
 };

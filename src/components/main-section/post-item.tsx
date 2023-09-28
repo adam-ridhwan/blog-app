@@ -5,7 +5,9 @@ import { FC, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/util/cn';
+import { MD } from '@/util/constants';
 import { formatDate } from '@/util/formatDate';
+import { useViewportSize } from '@mantine/hooks';
 import { Heart, MessageCircle } from 'lucide-react';
 
 import { AuthorDetails, type Post } from '@/types/types';
@@ -26,6 +28,7 @@ const PostItem: FC<CardProps> = ({
 }) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const [isTitleWrappedInTwoLines, setTsTitleWrappedInTwoLines] = useState(false);
+  const { width } = useViewportSize();
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * WRAP TITLE
@@ -91,8 +94,9 @@ const PostItem: FC<CardProps> = ({
               <p
                 className={cn(
                   `hidden text-muted`,
-                  { 'two-line-ellipsis': isTitleWrappedInTwoLines },
-                  { 'three-line-ellipsis': !isTitleWrappedInTwoLines }
+                  { 'two-line-ellipsis hidden': isTitleWrappedInTwoLines },
+                  { 'three-line-ellipsis': !isTitleWrappedInTwoLines },
+                  { 'enable-ellipsis': width > MD }
                 )}
               >
                 {firstNonEmptyParagraph?.innerHTML}

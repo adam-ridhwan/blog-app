@@ -118,19 +118,14 @@ html {
 }
 
 .two-line-ellipsis {
-    display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
     max-height: 64px;
 }
 
-
-@media (min-width: 768px) {
-    .two-line-ellipsis {
-        max-height: 64px;
-
-    }
+.enable-ellipsis {
+    display: -webkit-box;
 }
 
 
