@@ -67,7 +67,7 @@ const Publish = () => {
 
     const { signal } = new AbortController();
 
-    // add new main-section to database (will also add the author to the database if they don't exist)
+    // add new post to database (will also add the author to the database if they don't exist)
     const response = await fetch(`/api/posts`, {
       signal,
       method: 'POST',
@@ -91,8 +91,8 @@ const Publish = () => {
 
       /**
        * OPTIMISTIC UPDATE (kind of)
-       * These setters are needed to add new posts to global state so that users can see the new main-section when
-       * navigating to the home page
+       * These setters are needed to add new posts to global state so that users can see the new main-section
+       * when navigating to the home page
        *
        * If the response returns a success, then add the new main-section and author to the global state
        * */
@@ -108,7 +108,7 @@ const Publish = () => {
       });
 
       // update global state
-      setAuthors(uniqueAuthors);
+      setAuthors(prevAuthors => [newAuthor, ...prevAuthors]);
       setPosts(prevPosts => [newPost, ...prevPosts]);
 
       await wait(2000);

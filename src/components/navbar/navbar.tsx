@@ -121,7 +121,7 @@ const Navbar = () => {
               {status === 'loading' && <Skeleton className='h-10 w-10 rounded-full' />}
 
               {status === 'authenticated' && pathname === '/' && <Write />}
-              {status === 'authenticated' && pathname === '/write-a-main-section' && <Publish />}
+              {status === 'authenticated' && pathname === '/write-a-post' && <Publish />}
               {status === 'authenticated' && (
                 <DropdownMenu
                   open={isAvatarDropdownOpen}

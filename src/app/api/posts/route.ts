@@ -70,7 +70,7 @@ export const POST = async (request: Request) => {
     });
 
     if (!response.acknowledged) {
-      return NextResponse.json({ error: 'Error creating main-section' }, { status: 400 });
+      return NextResponse.json({ error: 'Error creating post' }, { status: 400 });
     }
 
     const createPostResponseBody: CreatePostResponseBody = {
@@ -81,7 +81,7 @@ export const POST = async (request: Request) => {
 
     return NextResponse.json(createPostResponseBody, { status: 200 });
   } catch (err) {
-    console.error('Error creating main-section:', err);
-    throw new Error('Error occurred while creating main-section');
+    console.error('Error creating post:', err);
+    throw new Error('Error occurred while creating post');
   }
 };
