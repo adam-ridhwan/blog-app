@@ -35,7 +35,7 @@ const modules = {
   ],
 };
 
-export const contentAtom = atomWithStorage('post', '');
+export const contentAtom = atomWithStorage('content', '');
 
 const WritePage = () => {
   const { data: session, status } = useSession();

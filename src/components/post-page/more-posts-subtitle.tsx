@@ -6,8 +6,6 @@ import { MD } from '@/util/constants';
 import { useViewportSize } from '@mantine/hooks';
 
 const MorePostsSubtitle = ({ content, subtitle }: { content: string; subtitle: string }) => {
-  const { height, width } = useViewportSize();
-
   const parser = new DOMParser();
   const doc = parser.parseFromString(content, 'text/html');
   const paragraphs = doc.querySelectorAll('p');
@@ -22,7 +20,7 @@ const MorePostsSubtitle = ({ content, subtitle }: { content: string; subtitle: s
 
   return (
     <>
-      <p className={cn(`two-line-ellipsis text-muted`, { 'enable-ellipsis': width < MD })}>
+      <p className={cn(`two-line-ellipsis enable-ellipsis text-muted`)}>
         {firstNonEmptyParagraph?.innerHTML}
       </p>
     </>

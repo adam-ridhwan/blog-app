@@ -10,7 +10,7 @@ const Write = () => {
       <Button
         variant='accent'
         className='flex h-[40px] w-[120px] flex-row gap-2'
-        onClick={() => router.push('/write-a-main-section')}
+        onClick={() => router.push('/write-a-post')}
       >
         <PenSquare className='h-4 w-4' />
         <span className='whitespace-nowrap'>Write</span>
