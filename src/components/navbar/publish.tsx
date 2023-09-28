@@ -197,8 +197,8 @@ const Publish = () => {
       </Dialog>
 
       <ToastProvider>
-        <Toast open={isToastOpen} onOpenChange={setIsToastOpen}>
-          <ToastTitle>Your post has been published</ToastTitle>
+        <Toast open={isToastOpen} onOpenChange={setIsToastOpen} className='border-2 border-confirmative'>
+          <ToastTitle className='text-confirmative'>Your post has been published</ToastTitle>
         </Toast>
         <ToastViewport />
       </ToastProvider>
