@@ -10,6 +10,10 @@ import { getServerSession } from 'next-auth';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import ActionButtons from '@/components/post-page/action-buttons';
+import CommentButton from '@/components/post-page/action-buttons/comment-button';
+import LikeButton from '@/components/post-page/action-buttons/like-button';
+import SaveButton from '@/components/post-page/action-buttons/save-button';
+import ShareButton from '@/components/post-page/action-buttons/share-button';
 import MorePostsList from '@/components/post-page/more-posts-list';
 
 type PostPageProps = {
@@ -58,7 +62,12 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
             </Link>
           </div>
 
-          <ActionButtons {...{ mainPost, session }} />
+          <div className='mb-5 flex flex-row gap-5'>
+            <LikeButton {...{ mainPost }} />
+            <CommentButton />
+            <SaveButton />
+            <ShareButton />
+          </div>
 
           <Separator className='m-1' />
 

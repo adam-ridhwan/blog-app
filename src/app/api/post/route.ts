@@ -15,14 +15,15 @@ export type ActionButtonRequestBody = {
   actionId: Action;
   postId: MongoId | undefined;
   email: string | undefined;
+  likeCount: number | undefined;
 };
 export type ActionButtonResponseBody = {};
 
 export async function POST(request: Request) {
-  const { actionId, postId, email } = await request.json();
+  const { actionId, postId, email, likeCount } = await request.json();
 
   if (!postId) {
-    return NextResponse.error();
+    return NextResponse.json({ 'Bad request': 'No posts id found' }, { status: 400 });
   }
 
   const { postCollection } = await connectToDatabase();
@@ -34,16 +35,54 @@ export async function POST(request: Request) {
   //TODO: Allow users to like posts multiple times: limit 10 likes per user
   //TODO: Allow users to unlike posts: remove all likes of posts by user
   if (actionId === LIKE) {
+    if (!likeCount) {
+      return NextResponse.json({ 'Bad request': 'No like count' }, { status: 400 });
+    }
+
+    // Get the current number of likes by this user on the post
+    const existingLikesCount =
+      (
+        await postCollection
+          .aggregate([
+            { $match: { _id: new ObjectId(postId) } },
+            {
+              $project: {
+                likesCount: {
+                  $size: {
+                    $filter: {
+                      input: '$likes',
+                      as: 'like',
+                      cond: { $eq: ['$$like', new ObjectId(fetchedUser?._id)] },
+                    },
+                  },
+                },
+              },
+            },
+          ])
+          .next()
+      )?.likesCount || 0;
+
+    console.log({ existingLikesCount });
+
+    // Calculate how many likes the user is allowed to add
+    const allowedLikes = 30 - existingLikesCount;
+    const finalLikeCount = Math.min(likeCount, allowedLikes);
+
+    if (finalLikeCount <= 0) {
+      return NextResponse.json({ 'Limit exceeded': 'You can like up to 30 times per post' }, { status: 200 });
+    }
+
+    const likesToAdd = Array(likeCount).fill(new ObjectId(fetchedUser?._id));
+
     const response = await postCollection.updateOne(
       { _id: new ObjectId(postId) },
-      { $push: { likes: new ObjectId(fetchedUser?._id) } }
+      { $push: { likes: { $each: likesToAdd } } }
     );
-    console.log(response);
   }
 
   if (!fetchedPost) {
     return NextResponse.json({ 'Bad request': 'No posts found' }, { status: 400 });
   }
 
-  return NextResponse.json({ success: 'Liked post' }, { status: 200 });
+  return NextResponse.json({ success: 'Liked post', likeCount }, { status: 200 });
 }
