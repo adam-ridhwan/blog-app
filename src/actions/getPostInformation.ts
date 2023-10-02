@@ -6,10 +6,12 @@ import { ObjectId } from 'mongodb';
 
 import { AuthorDetails, Post } from '@/types/types';
 
-type ReturnObject = {
-  author: AuthorDetails;
-  post: { mainPost: Post; next4Posts: Post[] };
-};
+type ReturnObject =
+  | {
+      author: AuthorDetails;
+      post: { mainPost: Post; next4Posts: Post[] };
+    }
+  | undefined;
 
 export async function getPostInformation(username: string, postId: string): Promise<ReturnObject> {
   if (!username) throw new Error('Either username must be provided');
@@ -50,6 +52,6 @@ export async function getPostInformation(username: string, postId: string): Prom
     };
   } catch (error) {
     console.error('Error getting author:', error);
-    throw new Error('Error occurred while fetching author');
+    // throw new Error('Error occurred while fetching author');
   }
 }

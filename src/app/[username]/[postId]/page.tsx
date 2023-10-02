@@ -2,6 +2,7 @@ import * as React from 'react';
 import { FC, Fragment } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { getPostInformation } from '@/actions/getPostInformation';
 import { getUserByEmail } from '@/actions/getUserByEmail';
 import { formatDate } from '@/util/formatDate';
@@ -27,13 +28,13 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
   const { username, postId } = params;
   const session = await getServerSession();
 
-  const { author, post } = await getPostInformation(decodeURIComponent(username), postId);
+  const postInformation = await getPostInformation(decodeURIComponent(username), postId);
+
+  if (!postInformation) notFound();
+
+  const { author, post } = postInformation;
   const { name, image, followerCount } = author;
   const { mainPost, next4Posts } = post;
-
-  if (!author || !post) {
-    return <div>Something went wrong</div>;
-  }
 
   let currentSignedInUser = null;
   if (session && session?.user?.email) {

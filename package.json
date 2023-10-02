@@ -63,6 +63,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "@types/dompurify": "^3.0.3"
+    "@types/dompurify": "^3.0.3",
+    "postcss-nesting": "^12.0.1"
   }
 }

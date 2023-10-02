@@ -7,7 +7,7 @@ export const getPost = async (postId: string) => {
 
     return await postCollection.findOne({ _id: new ObjectId(postId) });
   } catch (err) {
-    console.error('Error getting main-section:', err);
-    throw new Error('Error occurred while fetching main-section');
+    console.error('Error getting post:', err);
+    throw new Error('Error occurred while fetching post');
   }
 };
