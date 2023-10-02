@@ -63,16 +63,16 @@ const MorePostsItem: FC<MorePostsProps> = ({
             variant='text'
             className='none mr-3 flex h-max flex-row items-center gap-1 p-0 hover:bg-none'
           >
-            <Heart className='h-6 w-6' />
-            <span className='text-lg'>{likes.length}</span>
+            <Heart className='h-5 w-5' />
+            <span className='text-md'>{likes.length}</span>
           </Button>
 
           <Button
             variant='text'
             className='none mr-3 flex h-max flex-row items-center gap-1 p-0 hover:bg-none'
           >
-            <MessageCircle className='h-6 w-6' />
-            <span className='text-lg'>{comments?.length}</span>
+            <MessageCircle className='h-5 w-5' />
+            <span className='text-md'>{comments?.length}</span>
           </Button>
         </CardFooter>
       </Card>

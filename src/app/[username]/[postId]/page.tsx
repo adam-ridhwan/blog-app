@@ -9,10 +9,9 @@ import DOMPurify from 'isomorphic-dompurify';
 import { getServerSession } from 'next-auth';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
-import ActionButtons from '@/components/post-page/action-buttons';
 import CommentButton from '@/components/post-page/action-buttons/comment-button';
 import LikeButton from '@/components/post-page/action-buttons/like-button';
+import MoreOptionsButtons from '@/components/post-page/action-buttons/more-options-button';
 import SaveButton from '@/components/post-page/action-buttons/save-button';
 import ShareButton from '@/components/post-page/action-buttons/share-button';
 import MorePostsList from '@/components/post-page/more-posts-list';
@@ -41,12 +40,12 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
   return (
     <>
       <div className='container flex flex-col items-center pb-[30px] pt-[100px]'>
-        <div className='relative mb-10 aspect-video w-full max-w-[750px]'>
-          <Image src='/sand.jpg' alt='sand' fill className='rounded-lg object-cover' />
-        </div>
-
-        <div className='w-full md:max-w-[680px]'>
-          <div className='mb-3 flex flex-row items-center gap-3'>
+        <div className='mb-3 w-full md:max-w-[680px]'>
+          <div className=''>
+            <h1 className='text-balance title leading-9 text-primary'>{mainPost?.title}</h1>
+            <h2 className='text-balance subtitle text-muted'>{mainPost?.subtitle}</h2>
+          </div>
+          <div className='mb-1 flex flex-row items-center gap-3'>
             <Link href={`${username}`} className='flex flex-row items-center gap-2'>
               <Avatar className='h-12 w-12'>
                 {image ? (
@@ -70,23 +69,17 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
             <CommentButton />
             <SaveButton />
             <ShareButton />
+            <MoreOptionsButtons />
           </div>
 
-          <Separator className='m-1' />
-
-          <div className='mt-5'>
-            <h1 className='text-balance title leading-9 text-primary'>{mainPost?.title}</h1>
-            <h2 className='text-balance subtitle text-muted'>{mainPost?.subtitle}</h2>
+          <div className='relative mb-5 aspect-video w-full max-w-[750px]'>
+            <Image src='/sand.jpg' alt='sand' fill className='rounded-lg object-cover' />
           </div>
 
           <div
-            className='content-section mt-10 flex flex-col gap-5 text-xl leading-8 text-paragraph'
+            className='content-section flex flex-col gap-5 text-xl leading-8 text-paragraph'
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(mainPost.content) }}
           />
-        </div>
-
-        <div className='mt-20'>
-          <ActionButtons {...{ mainPost, session }} />
         </div>
       </div>
 

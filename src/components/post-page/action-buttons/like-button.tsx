@@ -12,6 +12,9 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ActionButtonRequestBody } from '@/app/api/post/route';
 
+import HeartFilled from '../../../../public/icons/heart-filled';
+import HeartHollow from '../../../../public/icons/heart-hollow';
+
 type LikeButtonProps = {
   mainPost: Post;
   currentSignedInUserId: string;
@@ -169,8 +172,8 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
               onClick={handleLikeClick}
               className='relative flex w-max flex-row gap-1 p-0 text-muted/80 transition-colors hover:bg-transparent hover:text-primary'
             >
-              <Heart className='h-5 w-5' />
-              {totalLikeCount}
+              {userLikeCount > 0 ? <HeartFilled className='h-5 w-5' /> : <HeartHollow className='h-5 w-5' />}
+              <span className='hidden sm:flex'>{totalLikeCount}</span>
               <div
                 ref={toastRef}
                 className={cn(

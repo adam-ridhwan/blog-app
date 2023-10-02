@@ -56,6 +56,12 @@ html {
         --hljs-string: #113264;
         --hljs-name: #0b68cb;
         --hljs-attr: #cb1d63;
+
+        .filled_svg_icon {
+            fill: hsl(218 25% 39%);
+            stroke: hsl(218 25% 39%);
+            stroke-width: 2;
+        }
     }
 
     .converter {
@@ -104,6 +110,12 @@ html {
         --hljs-string: #c2e6ff;
         --hljs-name: #6bc1ff;
         --hljs-attr: #ff85ab;
+
+        .filled_svg_icon {
+            fill: hsl(35 10% 63%);
+            stroke: hsl(35 10% 63%);
+            stroke-width: 2;
+        }
     }
 }
 
@@ -139,12 +151,15 @@ html {
 
 .title, .content-section > h1 {
     font-size: 32px;
+    line-height: 38px;
     font-weight: 700;
+    margin-bottom: -10px;
 }
 
 
 .subtitle, .content-section > h2 {
-    margin-top: 10px;
+    margin-top: 20px;
+    margin-bottom: 30px;
     font-size: 18px;
     font-weight: 400
 }
