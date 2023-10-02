@@ -19,7 +19,7 @@ const ActionButtons: FC<ActionButtonsProps> = ({ mainPost }) => {
   return (
     <>
       <div className='mb-5 flex flex-row gap-5'>
-        <LikeButton {...{ mainPost }} />
+        {/*<LikeButton {...{ mainPost }} />*/}
 
         <Button
           variant='ghost'
@@ -32,7 +32,6 @@ const ActionButtons: FC<ActionButtonsProps> = ({ mainPost }) => {
           variant='ghost'
           className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
         >
-          <Bookmark className='h-5 w-5' />
           Save
         </Button>
         <Button

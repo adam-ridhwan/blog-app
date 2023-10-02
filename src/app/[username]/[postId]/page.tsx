@@ -3,6 +3,7 @@ import { FC, Fragment } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getPostInformation } from '@/actions/getPostInformation';
+import { getUserByEmail } from '@/actions/getUserByEmail';
 import { formatDate } from '@/util/formatDate';
 import DOMPurify from 'isomorphic-dompurify';
 import { getServerSession } from 'next-auth';
@@ -35,6 +36,8 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
     return <div>Something went wrong</div>;
   }
 
+  const currentSignedInUser = await getUserByEmail(session?.user?.email);
+
   return (
     <>
       <div className='container flex flex-col items-center pb-[30px] pt-[100px]'>
@@ -63,7 +66,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
           </div>
 
           <div className='mb-5 flex flex-row gap-5'>
-            <LikeButton {...{ mainPost }} />
+            <LikeButton currentSignedInUserId={currentSignedInUser._id} mainPost={mainPost} />
             <CommentButton />
             <SaveButton />
             <ShareButton />

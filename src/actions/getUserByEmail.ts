@@ -5,11 +5,13 @@ import { connectToDatabase } from '@/util/connectToDatabase';
 import { User } from '@/types/types';
 
 export async function getUserByEmail(email?: string | undefined | null) {
-  if (!email) throw new Error('Either email or userId must be provided');
+  if (!email) throw new Error('Either email must be provided');
 
   try {
     const { userCollection } = await connectToDatabase();
-    return await userCollection.findOne({ email });
+    const user = await userCollection.findOne({ email });
+
+    return JSON.parse(JSON.stringify(user))
   } catch (error) {
     console.error('Error getting user:', error);
     throw new Error('Error occurred while fetching user');

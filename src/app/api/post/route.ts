@@ -2,8 +2,8 @@
 
 import { NextResponse } from 'next/server';
 import { getPost } from '@/actions/getPost';
-import { getPosts } from '@/actions/getPosts';
 import { getUserByEmail } from '@/actions/getUserByEmail';
+import { getUserById } from '@/actions/getUserById';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { COMMENT, LIKE, SAVE, SHARE } from '@/util/constants';
 import { ObjectId } from 'mongodb';
@@ -14,30 +14,25 @@ export type Action = typeof LIKE | typeof COMMENT | typeof SAVE | typeof SHARE;
 export type ActionButtonRequestBody = {
   actionId: Action;
   postId: MongoId | undefined;
-  email: string | undefined;
-  likeCount: number | undefined;
+  userId: string | undefined;
+  totalLikeCount?: number | undefined;
 };
 export type ActionButtonResponseBody = {};
 
 export async function POST(request: Request) {
-  const { actionId, postId, email, likeCount } = await request.json();
+  const { actionId, postId, userId, totalLikeCount } = await request.json();
 
-  if (!postId) {
-    return NextResponse.json({ 'Bad request': 'No posts id found' }, { status: 400 });
-  }
+  console.log({ totalLikeCount });
+
+  if (!postId) return NextResponse.json({ 'Bad request': 'No posts id found' }, { status: 400 });
 
   const { postCollection } = await connectToDatabase();
-  const pendingPost = getPost(postId);
-  const pendingUser = getUserByEmail(email);
+  const fetchedPost = await getPost(postId);
 
-  const [fetchedPost, fetchedUser] = await Promise.all([pendingPost, pendingUser]);
-
-  //TODO: Allow users to like posts multiple times: limit 10 likes per user
+  //TODO: Allow users to like posts multiple times: limit 30 likes per user
   //TODO: Allow users to unlike posts: remove all likes of posts by user
   if (actionId === LIKE) {
-    if (!likeCount) {
-      return NextResponse.json({ 'Bad request': 'No like count' }, { status: 400 });
-    }
+    if (!totalLikeCount) return NextResponse.json({ 'Bad request': 'No like count' }, { status: 400 });
 
     // Get the current number of likes by this user on the post
     const existingLikesCount =
@@ -52,7 +47,7 @@ export async function POST(request: Request) {
                     $filter: {
                       input: '$likes',
                       as: 'like',
-                      cond: { $eq: ['$$like', new ObjectId(fetchedUser?._id)] },
+                      cond: { $eq: ['$$like', new ObjectId(userId)] },
                     },
                   },
                 },
@@ -66,23 +61,23 @@ export async function POST(request: Request) {
 
     // Calculate how many likes the user is allowed to add
     const allowedLikes = 30 - existingLikesCount;
-    const finalLikeCount = Math.min(likeCount, allowedLikes);
+    const finalLikeCount = Math.min(totalLikeCount, allowedLikes);
 
     if (finalLikeCount <= 0) {
       return NextResponse.json({ 'Limit exceeded': 'You can like up to 30 times per post' }, { status: 200 });
     }
 
-    const likesToAdd = Array(likeCount).fill(new ObjectId(fetchedUser?._id));
+    const likesToAdd = Array(totalLikeCount).fill(new ObjectId(userId));
 
-    const response = await postCollection.updateOne(
+    const likesToAddResponse = await postCollection.updateOne(
       { _id: new ObjectId(postId) },
       { $push: { likes: { $each: likesToAdd } } }
     );
+
+    return NextResponse.json({ success: 'Liked post' }, { status: 200 });
   }
 
-  if (!fetchedPost) {
-    return NextResponse.json({ 'Bad request': 'No posts found' }, { status: 400 });
-  }
+  if (!fetchedPost) return NextResponse.json({ 'Bad request': 'No posts found' }, { status: 400 });
 
-  return NextResponse.json({ success: 'Liked post', likeCount }, { status: 200 });
+  return NextResponse.json({ success: 'Liked post' }, { status: 200 });
 }
