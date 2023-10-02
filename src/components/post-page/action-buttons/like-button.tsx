@@ -50,7 +50,6 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
 
   // Mount and unmount
   useEffect(() => {
-    // TODO: remove transition animation on mount
     if (toastRef.current) {
       toastRef.current.style.transform = 'translateY(-20px)';
       toastRef.current.style.opacity = '0';
@@ -176,7 +175,10 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
             <Button
               variant='ghost'
               onClick={handleLikeClick}
-              className='relative flex w-max flex-row gap-1 p-0 text-muted/80 transition-colors hover:bg-transparent hover:text-primary'
+              className={cn(
+                `relative flex w-max flex-row gap-1 p-0 text-muted/80 transition-colors 
+                hover:bg-transparent hover:text-primary`
+              )}
             >
               {userLikeCount > 0 ? <HeartFilled className='h-5 w-5' /> : <HeartHollow className='h-5 w-5' />}
               <span className='hidden sm:flex'>{totalLikeCount}</span>
@@ -193,7 +195,11 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
               </div>
             </Button>
           </TooltipTrigger>
-          <TooltipContent className=' flex items-center justify-center rounded-md bg-foreground font-medium text-secondary'>
+          <TooltipContent
+            className={cn(
+              `flex items-center justify-center rounded-md bg-foreground font-medium text-secondary`
+            )}
+          >
             <p>Like</p>
           </TooltipContent>
         </Tooltip>

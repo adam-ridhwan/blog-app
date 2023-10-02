@@ -269,3 +269,11 @@ html {
 .hljs-attr {
     color: var(--hljs-attr) !important;
 }
+
+
+.editable:empty:before {
+    content: attr(data-placeholder);
+    color: hsl(var(--muted)); /* Placeholder text color */
+    opacity: 75%;
+    pointer-events: none; /* Ensures the pseudo-content isn't clickable */
+}
