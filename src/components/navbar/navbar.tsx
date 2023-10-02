@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { atom, useAtom } from 'jotai';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
 import { Button } from '@/components/ui/button';
@@ -28,12 +29,15 @@ import Publish from '@/components/navbar/publish';
 import ThemeButton from '@/components/navbar/theme-button';
 import Write from '@/components/navbar/write';
 
+export const isSignInDialogOpenAtom = atom(false);
+
 const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { data: session, status } = useSession();
 
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
+  const [isSignInDialogOpen, setIsSignInDialogOpen] = useAtom(isSignInDialogOpenAtom);
 
   const navbarRef = useRef<HTMLDivElement | null>(null);
   const navbarPositionRef = useRef(0);
@@ -88,7 +92,7 @@ const Navbar = () => {
           <div className='flex flex-1 items-center justify-end gap-3'>
             <div className='flex items-center gap-5'>
               {status === 'unauthenticated' && (
-                <Dialog>
+                <Dialog open={isSignInDialogOpen} onOpenChange={setIsSignInDialogOpen}>
                   <DialogTrigger asChild>
                     <Button variant='accent'>Sign in</Button>
                   </DialogTrigger>

@@ -4,12 +4,14 @@ import * as React from 'react';
 import { FC, useEffect, useRef, useState } from 'react';
 import { cn } from '@/util/cn';
 import { LIKE } from '@/util/constants';
+import { useSetAtom } from 'jotai';
 import { Heart } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
 import { Post } from '@/types/types';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
 import { ActionButtonRequestBody } from '@/app/api/post/route';
 
 import HeartFilled from '../../../../public/icons/heart-filled';
@@ -25,6 +27,8 @@ const TRANSITION_DELAY = 300;
 
 const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) => {
   const { data: session } = useSession();
+
+  const setIsSignInDialogOpen = useSetAtom(isSignInDialogOpenAtom);
 
   const [totalLikeCount, setTotalLikeCount] = useState(mainPost?.likes?.length);
   const [userLikeCount, setUserLikeCount] = useState(
@@ -66,6 +70,8 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
    * network requests (not good for the server)
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const handleLikeClick = async () => {
+    if (!session || !session?.user?.email) return setIsSignInDialogOpen(true);
+
     if (toggleToastTimeoutRef.current) clearTimeout(toggleToastTimeoutRef.current);
     setIsPopoverOpen(false);
     setIsToastOpen(true);

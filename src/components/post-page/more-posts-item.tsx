@@ -50,7 +50,7 @@ const MorePostsItem: FC<MorePostsProps> = ({
         </Link>
 
         <div className='flex h-[105px] flex-col'>
-          <CardHeader className=''>
+          <CardHeader>
             <CardTitle className={cn(`two-line-ellipsis text-primary`)}>{title}</CardTitle>
           </CardHeader>
           <CardContent>
