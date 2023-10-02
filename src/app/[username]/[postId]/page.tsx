@@ -35,7 +35,10 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
     return <div>Something went wrong</div>;
   }
 
-  const currentSignedInUser = await getUserByEmail(session?.user?.email);
+  let currentSignedInUser = null;
+  if (session && session?.user?.email) {
+    currentSignedInUser = await getUserByEmail(session.user.email);
+  }
 
   return (
     <>
@@ -65,7 +68,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
           </div>
 
           <div className='mb-5 flex flex-row gap-5'>
-            <LikeButton currentSignedInUserId={currentSignedInUser._id} mainPost={mainPost} />
+            <LikeButton currentSignedInUserId={currentSignedInUser?._id} mainPost={mainPost} />
             <CommentButton />
             <SaveButton />
             <ShareButton />
