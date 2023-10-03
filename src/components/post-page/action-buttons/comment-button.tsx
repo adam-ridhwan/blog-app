@@ -132,6 +132,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
               className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
             >
               <MessageSquare className='h-5 w-5' />
+              {/* TODO: add comment count */}
               <span className='hidden sm:flex'>Comment</span>
             </Button>
           </TooltipTrigger>
@@ -140,7 +141,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
               `flex items-center justify-center rounded-md bg-foreground font-medium text-primary`
             )}
           >
-            <p>Like</p>
+            <p>Comment</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
