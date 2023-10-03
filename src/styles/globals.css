@@ -245,29 +245,9 @@ html {
     white-space: pre !important;
 }
 
-.hljs-tag {
-    color: var(--hljs-tag) !important;
-}
-
-.hljs-keyword {
-    color: var(--hljs-keyword) !important;
-}
-
-.hljs-title {
-    color: var(--hljs-title) !important;
-}
-
-.hljs-string {
-    color: var(--hljs-string) !important;
-}
-
-
-.hljs-name {
-    color: var(--hljs-name) !important;
-}
-
-.hljs-attr {
-    color: var(--hljs-attr) !important;
+.editable {
+    flex-grow: 1;
+    box-sizing: border-box;
 }
 
 
@@ -276,4 +256,18 @@ html {
     color: hsl(var(--muted)); /* Placeholder text color */
     opacity: 75%;
     pointer-events: none; /* Ensures the pseudo-content isn't clickable */
+}
+
+.comment-input > .ql-container > .ql-editor > p:first-child {
+    margin-top: 0 !important;
+}
+
+.comment-input > .ql-container > .ql-editor > p {
+    font-size: 16px !important;
+}
+
+.comment-input > .ql-container > .ql-editor.ql-blank::before {
+
+    margin-top: 0 !important;
+    font-size: 18px !important;
 }
