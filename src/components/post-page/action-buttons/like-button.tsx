@@ -186,8 +186,8 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
                 ref={toastRef}
                 className={cn(
                   `pointer-events-none absolute top-[-40px] z-50 flex h-10 w-10 select-none items-center 
-                  justify-center rounded-full border bg-foreground px-3 py-1.5 text-sm 
-                  font-medium text-secondary shadow-md`
+                  justify-center rounded-full border bg-foreground px-3 py-1.5 text-sm font-medium
+                  text-primary shadow-md`
                 )}
               >
                 <span>+</span>
@@ -197,7 +197,7 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
           </TooltipTrigger>
           <TooltipContent
             className={cn(
-              `flex items-center justify-center rounded-md bg-foreground font-medium text-secondary`
+              `flex items-center justify-center rounded-md bg-foreground font-medium text-primary`
             )}
           >
             <p>Like</p>
