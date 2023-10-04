@@ -10,7 +10,13 @@ import { useSession } from 'next-auth/react';
 
 import { Post } from '@/types/types';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
 import { ActionButtonRequestBody } from '@/app/api/post/route';
 
@@ -35,7 +41,8 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
     mainPost.likes.filter(id => id === currentSignedInUserId).length
   );
 
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [isHeartPopoverOpen, setIsHeartPopoverOpen] = useState(false);
+  const [isLikeCountPopoverOpen, setIsLikeCountPopoverOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
   // const [shouldPulse, setShouldPulse] = useState(false);
 
@@ -72,7 +79,7 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
     if (!session || !session?.user?.email) return setIsSignInDialogOpen(true);
 
     if (toggleToastTimeoutRef.current) clearTimeout(toggleToastTimeoutRef.current);
-    setIsPopoverOpen(false);
+    setIsHeartPopoverOpen(false);
     setIsToastOpen(true);
 
     if (userLikeCount < 30) {
@@ -169,41 +176,54 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
 
   return (
     <>
-      <TooltipProvider delayDuration={700}>
-        <Tooltip open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-          <TooltipTrigger asChild>
-            <Button
-              variant='ghost'
-              onClick={handleLikeClick}
+      <div className='flex flex-row items-center gap-1'>
+        <TooltipProvider delayDuration={700}>
+          <Tooltip open={isHeartPopoverOpen} onOpenChange={setIsHeartPopoverOpen}>
+            <TooltipTrigger asChild>
+              <Button variant='ghost' onClick={handleLikeClick} className='relative p-0'>
+                {userLikeCount > 0 ? <HeartFilled /> : <HeartHollow />}
+                <div
+                  ref={toastRef}
+                  className={cn(
+                    `pointer-events-none absolute top-[-40px] z-50 flex h-10 w-10 select-none items-center 
+                    justify-center rounded-full border bg-primary px-3 py-1.5 text-sm font-medium
+                    text-secondary shadow-md`
+                  )}
+                >
+                  <span>+</span>
+                  <span>{userLikeCount}</span>
+                </div>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent
               className={cn(
-                `relative flex w-max flex-row gap-1 p-0 text-muted/80 transition-colors 
-                hover:bg-transparent hover:text-primary`
+                `flex items-center justify-center rounded-md bg-primary font-medium text-secondary`
               )}
             >
-              {userLikeCount > 0 ? <HeartFilled className='h-5 w-5' /> : <HeartHollow className='h-5 w-5' />}
-              <span className='hidden sm:flex'>{totalLikeCount}</span>
-              <div
-                ref={toastRef}
-                className={cn(
-                  `pointer-events-none absolute top-[-40px] z-50 flex h-10 w-10 select-none items-center 
-                  justify-center rounded-full border bg-foreground px-3 py-1.5 text-sm font-medium
-                  text-primary shadow-md`
-                )}
-              >
-                <span>+</span>
-                <span>{userLikeCount}</span>
-              </div>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent
-            className={cn(
-              `flex items-center justify-center rounded-md bg-foreground font-medium text-primary`
-            )}
-          >
-            <p>Like</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+              <p>Like</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider delayDuration={700}>
+          <Tooltip open={isLikeCountPopoverOpen} onOpenChange={setIsLikeCountPopoverOpen}>
+            <TooltipTrigger asChild>
+              <Button variant='ghost' className='relative p-0'>
+                <span className='hidden text-muted/80 transition-colors duration-100 hover:text-primary sm:flex'>
+                  {totalLikeCount}
+                </span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent
+              className={cn(
+                `flex items-center justify-center rounded-md bg-primary font-medium text-secondary`
+              )}
+            >
+              <p>View likes</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
     </>
   );
 };

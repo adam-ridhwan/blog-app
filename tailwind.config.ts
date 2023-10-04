@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-import { blue, red } from '@radix-ui/colors';
 
 module.exports = {
   darkMode: ['class'],

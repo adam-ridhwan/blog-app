@@ -17,7 +17,7 @@ const buttonVariants = cva(
         confirmative: 'bg-confirmative text-white hover:bg-confirmative/90',
         outline: 'border border-border bg-background text-muted hover:bg-hover',
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: '',
+        ghost: 'bg-transparent text-muted hover:bg-hover',
         link: 'text-primary underline-offset-4 hover:underline',
         accent: 'bg-accent text-white hover:opacity-90',
       },
