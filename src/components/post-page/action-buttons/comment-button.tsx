@@ -102,6 +102,8 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser, 
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const handlePostComment = async () => {
     const cleanComment = sanitizeHtml(comment);
+    if (!quillRef.current) return;
+    const quill = quillRef.current.getEditor();
 
     // TODO: post comment to database
     if (!mainPost._id || !currentSignedInUser._id) return;
@@ -110,6 +112,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser, 
 
     if (createCommentResponse) {
       setNumberOfComments(prev => prev + 1);
+      quill.blur();
       setComment(EMPTY_COMMENT);
       collapseInput();
     }
