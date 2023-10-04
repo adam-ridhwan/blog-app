@@ -25,13 +25,12 @@ export type Category = {
 };
 
 export type Comment = {
-  _id: string;
+  _id?: MongoId;
   createdAt: Date;
-  desc: string;
-  userEmail: string;
-  user: User;
-  postSlug: string;
-  post: Post;
+  response: string;
+  userId: MongoId;
+  postId: MongoId;
+  likes: MongoId[];
 };
 
 export type Post = {
@@ -49,6 +48,8 @@ export type Post = {
   comments: MongoId[];
   likes: MongoId[];
 };
+
+export type CommentWithUserInfo = Comment & Pick<User, 'name' | 'username' | 'image' | 'posts' | 'followers'>;
 
 export type Session = {
   _id: string;

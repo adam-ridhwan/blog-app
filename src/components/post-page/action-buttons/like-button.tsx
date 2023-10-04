@@ -10,18 +10,9 @@ import { useSession } from 'next-auth/react';
 
 import { Post } from '@/types/types';
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipArrow,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
 import { ActionButtonRequestBody } from '@/app/api/post/route';
-
-import HeartFilled from '../../../../public/icons/heart-filled';
-import HeartHollow from '../../../../public/icons/heart-hollow';
 
 type LikeButtonProps = {
   mainPost: Post;
@@ -180,8 +171,12 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
         <TooltipProvider delayDuration={700}>
           <Tooltip open={isHeartPopoverOpen} onOpenChange={setIsHeartPopoverOpen}>
             <TooltipTrigger asChild>
-              <Button variant='ghost' onClick={handleLikeClick} className='relative p-0'>
-                {userLikeCount > 0 ? <HeartFilled /> : <HeartHollow />}
+              <Button variant='text' onClick={handleLikeClick} className='relative p-0'>
+                {userLikeCount !== 0 ? (
+                  <Heart className='h-5 w-5 fill-primary/80 stroke-none stroke-2 opacity-60 transition-opacity duration-100 hover:opacity-100' />
+                ) : (
+                  <Heart className='h-5 w-5 fill-none stroke-muted/80 stroke-2 transition-colors duration-100 hover:stroke-primary' />
+                )}
                 <div
                   ref={toastRef}
                   className={cn(
@@ -208,8 +203,8 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
         <TooltipProvider delayDuration={700}>
           <Tooltip open={isLikeCountPopoverOpen} onOpenChange={setIsLikeCountPopoverOpen}>
             <TooltipTrigger asChild>
-              <Button variant='ghost' className='relative p-0'>
-                <span className='hidden text-muted/80 transition-colors duration-100 hover:text-primary sm:flex'>
+              <Button variant='text' className='relative p-0'>
+                <span className='min-w-[20px] text-muted/80 transition-colors duration-100 hover:text-primary'>
                   {totalLikeCount}
                 </span>
               </Button>

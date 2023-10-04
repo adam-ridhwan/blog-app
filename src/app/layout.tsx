@@ -34,10 +34,11 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const { userCollection, postCollection } = await connectToDatabase();
+  const { userCollection, postCollection, commentCollection } = await connectToDatabase();
 
   // await userCollection.deleteMany({});
   // await postCollection.deleteMany({});
+  // await commentCollection.deleteMany({});
   // await generateMockUsersAndPosts();
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * FETCH INITIAL POSTS AND AUTHORS

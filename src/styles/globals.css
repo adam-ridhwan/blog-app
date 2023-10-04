@@ -57,31 +57,7 @@ html {
         --hljs-name: #0b68cb;
         --hljs-attr: #cb1d63;
 
-        .filled_svg_icon {
-            height: 1.25rem;
-            width: 1.25rem;
-            fill: hsl(218 25% 39%);
-            stroke: hsl(218 25% 39%);
-            stroke-width: 2;
-            opacity: 60%;
-            transition: opacity 100ms ease-in-out;
-        }
 
-        .filled_svg_icon:hover {
-            opacity: 100;
-        }
-
-        .hollow_svg_icon {
-            height: 1.25rem;
-            width: 1.25rem;
-            fill: none;
-            stroke: hsl(218 25% 59%);
-            stroke-width: 2;
-        }
-
-        .hollow_svg_icon:hover {
-            stroke: hsl(221 83% 16%);
-        }
     }
 
     .converter {
@@ -131,17 +107,7 @@ html {
         --hljs-name: #6bc1ff;
         --hljs-attr: #ff85ab;
 
-        .filled_svg_icon {
-            fill: hsl(35 10% 63%);
-            stroke: hsl(35 10% 63%);
-            stroke-width: 2;
-        }
 
-        .hollow_svg_icon {
-            fill: none;
-            stroke: hsl(35 10% 63%);
-            stroke-width: 2;
-        }
     }
 }
 

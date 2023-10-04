@@ -1,30 +1,33 @@
 'use client';
 
+import 'react-quill/dist/quill.bubble.css';
+
 import * as React from 'react';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, ReactNode, useEffect, useRef, useState } from 'react';
+import { createComment } from '@/actions/createComment';
 import { cn } from '@/util/cn';
 import { MD } from '@/util/constants';
 import { useLocalStorage, useViewportSize } from '@mantine/hooks';
-import DOMPurify from 'isomorphic-dompurify';
 import { useSetAtom } from 'jotai';
 import { MessageSquare, X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Quill from 'quill';
 import ReactQuill from 'react-quill';
+import sanitizeHtml from 'sanitize-html';
 
 import { Post, User } from '@/types/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
-
-import 'react-quill/dist/quill.bubble.css';
 
 const Delta = Quill.import('delta');
 
 type CommentButtonProps = {
   mainPost: Post;
   currentSignedInUser: User;
+  children: ReactNode;
 };
 
 const modules = {
@@ -33,7 +36,7 @@ const modules = {
 
 const EMPTY_COMMENT = '<p><br></p>';
 
-const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }) => {
+const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser, children }) => {
   const { data: session } = useSession();
   const { width } = useViewportSize();
 
@@ -41,6 +44,8 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
     key: `comment|${mainPost._id}`,
     defaultValue: EMPTY_COMMENT,
   });
+
+  const [numberOfComments, setNumberOfComments] = useState(mainPost.comments.length);
 
   const setIsSignInDialogOpen = useSetAtom(isSignInDialogOpenAtom);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -95,11 +100,19 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
    * @summary
    * Sanitizes comment and posts to database
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  const handlePostComment = () => {
-    const cleanComment = DOMPurify.sanitize(comment);
-    console.log({ cleanComment });
+  const handlePostComment = async () => {
+    const cleanComment = sanitizeHtml(comment);
 
     // TODO: post comment to database
+    if (!mainPost._id || !currentSignedInUser._id) return;
+
+    const createCommentResponse = await createComment(mainPost._id, currentSignedInUser._id, cleanComment);
+
+    if (createCommentResponse) {
+      setNumberOfComments(prev => prev + 1);
+      setComment(EMPTY_COMMENT);
+      collapseInput();
+    }
   };
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -142,9 +155,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
               className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
             >
               <MessageSquare className='h-5 w-5' />
-              <span className='hidden gap-1 text-muted/80 transition-colors duration-100 hover:text-primary sm:flex'>
-                {mainPost.comments.length}
-              </span>
+              <span className='min-w-[20px]'>{numberOfComments}</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent className='flex items-center justify-center rounded-md bg-primary font-medium text-secondary'>
@@ -176,9 +187,9 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
           <X className='h-4 w-4 text-muted' />
         </Button>
 
-        <span className='text-2xl font-medium text-primary'>Comments ({mainPost.comments.length})</span>
+        <span className='text-2xl font-medium text-primary'>Comments ({numberOfComments})</span>
 
-        <div className={cn(`relative mb-20 rounded-lg p-5 shadow-md`)}>
+        <div className={cn(`relative mb-10 rounded-lg p-5 shadow-md`)}>
           <div
             className={cn(
               `pointer-events-none absolute flex translate-y-[-21px] select-none flex-row items-center 
@@ -218,7 +229,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
               { 'opacity-1 pointer-events-auto select-auto delay-100': isInputExpanded }
             )}
           >
-            <Button variant='ghost' className='text-muted' onClick={handleCancelPost}>
+            <Button variant='text' className='text-muted' onClick={handleCancelPost}>
               Cancel
             </Button>
             <Button
@@ -232,10 +243,9 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
           </div>
         </div>
 
-        <div className='text flex flex-col items-center whitespace-nowrap italic'>
-          <span className='text-center text-muted'>There are currently no responses for this post.</span>
-          <span className='text-muted'>Be the first to respond.</span>
-        </div>
+        <Separator />
+
+        {children}
       </div>
     </>
   );

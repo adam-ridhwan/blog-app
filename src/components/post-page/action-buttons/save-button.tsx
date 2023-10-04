@@ -20,7 +20,7 @@ const SaveButton = () => {
               className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
             >
               <Bookmark className='h-5 w-5' />
-              <span className='hidden sm:flex'>Save</span>
+              {/*<span className='hidden sm:flex'>Save</span>*/}
             </Button>
           </TooltipTrigger>
           <TooltipContent className='flex items-center justify-center rounded-md bg-primary font-medium text-secondary'>
