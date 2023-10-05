@@ -14,7 +14,7 @@ import { CommentWithUserInfo } from '@/types/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import CommentButton from '@/components/post-page/action-buttons/comment-button';
 import LikeButton from '@/components/post-page/action-buttons/like-button';
-import MoreOptionsButtons from '@/components/post-page/action-buttons/more-options-button';
+import MoreOptionsButton from '@/components/post-page/action-buttons/more-options-button';
 import SaveButton from '@/components/post-page/action-buttons/save-button';
 import ShareButton from '@/components/post-page/action-buttons/share-button';
 import MorePostsList from '@/components/post-page/more-posts-list';
@@ -84,7 +84,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
             <div className='flex flex-row gap-5'>
               <SaveButton />
               <ShareButton />
-              <MoreOptionsButtons />
+              <MoreOptionsButton currentSignedInUser={currentSignedInUser} mainPost={mainPost} />
             </div>
           </div>
 

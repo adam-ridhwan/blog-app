@@ -219,7 +219,6 @@ export const generateMockUsersAndPosts = async () => {
       accounts: [],
       comments: [],
       posts: [],
-      sessions: [],
       followers: [],
     });
 
@@ -230,7 +229,7 @@ export const generateMockUsersAndPosts = async () => {
         title: blogPosts[randomIndex].title,
         subtitle: blogPosts[randomIndex].subtitle,
         content: blogPosts[randomIndex].content,
-        authorId: generatedUser.insertedId,
+        authorId: new ObjectId(generatedUser.insertedId),
         categoryId: new ObjectId('650ce47033901fc25b0af02f'),
         createdAt: new Date(),
         postSlug: `mock-post-${randomIndex}`,
@@ -242,7 +241,7 @@ export const generateMockUsersAndPosts = async () => {
 
       await userCollection.updateOne(
         { _id: generatedUser.insertedId },
-        { $push: { posts: generatedPost.insertedId } }
+        { $push: { posts: new ObjectId(generatedPost.insertedId) } }
       );
     });
   });

@@ -3,20 +3,22 @@ import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 
 export type MongoId = string | ObjectId;
+export const mongoIdSchema = z.union([z.instanceof(ObjectId), z.string()]);
 
-export type Account = {
-  _id?: MongoId;
-  userId: MongoId;
-  type?: ProviderType | undefined;
-  provider: string | undefined;
-  providerAccountId: string;
-  refresh_token?: string;
-  access_token?: string;
-  expires_at?: number;
-  token_type?: string;
-  scope?: string;
-  id_token?: string;
-};
+export const accountSchema = z.object({
+  _id: mongoIdSchema.optional(),
+  userId: mongoIdSchema,
+  type: z.string().optional(),
+  provider: z.string().optional(),
+  providerAccountId: z.string(),
+  refresh_token: z.string().optional(),
+  access_token: z.string().optional(),
+  expires_at: z.number().optional(),
+  token_type: z.string().optional(),
+  scope: z.string().optional(),
+  id_token: z.string().optional(),
+});
+export type Account = z.infer<typeof accountSchema>;
 
 export type Category = {
   _id?: MongoId;
@@ -25,58 +27,48 @@ export type Category = {
   posts: MongoId[];
 };
 
-export const mongoIdSchema = z.union([z.instanceof(ObjectId).optional(), z.string().optional()]);
-
 const commentSchema = z.object({
-  _id: mongoIdSchema,
+  _id: mongoIdSchema.optional(),
   createdAt: z.date(),
   response: z.string(),
   userId: z.instanceof(ObjectId),
   postId: z.instanceof(ObjectId),
   likes: z.array(z.instanceof(ObjectId)),
 });
-
 export type Comment = z.infer<typeof commentSchema>;
 
-export type Post = {
-  _id?: MongoId;
-  createdAt: Date;
-  postSlug: string;
-  title: string;
-  subtitle: string;
-  content: string;
-  img?: string;
-  views: number;
-  categorySlug: string;
-  categoryId: MongoId;
-  authorId: MongoId;
-  comments: MongoId[];
-  likes: MongoId[];
-};
+const postSchema = z.object({
+  _id: mongoIdSchema.optional(),
+  createdAt: z.date(),
+  postSlug: z.string(),
+  title: z.string(),
+  subtitle: z.string(),
+  content: z.string(),
+  img: z.string().optional(),
+  views: z.number(),
+  categorySlug: z.string(),
+  categoryId: z.instanceof(ObjectId),
+  authorId: z.instanceof(ObjectId),
+  comments: z.array(z.instanceof(ObjectId)),
+  likes: z.array(z.instanceof(ObjectId)),
+});
+export type Post = z.infer<typeof postSchema>;
 
 export type CommentWithUserInfo = Comment & Pick<User, 'name' | 'username' | 'image' | 'posts' | 'followers'>;
 
-export type Session = {
-  _id: string;
-  sessionToken: string;
-  userId: string;
-  expires: Date;
-  user: User;
-};
-
-export type User = {
-  _id?: MongoId;
-  name: string;
-  email: string;
-  username: string;
-  emailVerified?: Date;
-  image?: string;
-  accounts: Account[];
-  sessions: Session[];
-  posts: MongoId[];
-  comments: MongoId[];
-  followers: MongoId[];
-};
+const userSchema = z.object({
+  _id: mongoIdSchema.optional(),
+  name: z.string(),
+  email: z.string().email(),
+  username: z.string(),
+  emailVerified: z.date().optional(),
+  image: z.string().optional(),
+  accounts: z.array(accountSchema),
+  posts: z.array(z.instanceof(ObjectId)),
+  comments: z.array(z.instanceof(ObjectId)),
+  followers: z.array(z.instanceof(ObjectId)),
+});
+export type User = z.infer<typeof userSchema>;
 
 export type AuthorDetails = Pick<User, '_id' | 'name' | 'username' | 'image'> & {
   followerCount?: number;

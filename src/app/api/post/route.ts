@@ -2,14 +2,15 @@
 
 import { NextResponse } from 'next/server';
 import { createComment } from '@/actions/createComment';
+import { deleteLikes } from '@/actions/deleteLikes';
 import { getPost } from '@/actions/getPost';
 import { connectToDatabase } from '@/util/connectToDatabase';
-import { COMMENT, LIKE, SAVE, SHARE } from '@/util/constants';
+import { COMMENT, DELETE_LIKES, LIKE, SAVE, SHARE } from '@/util/constants';
 import { ObjectId } from 'mongodb';
 
 import { MongoId } from '@/types/types';
 
-export type Action = typeof LIKE | typeof COMMENT | typeof SAVE | typeof SHARE;
+export type Action = typeof LIKE | typeof COMMENT | typeof SAVE | typeof SHARE | typeof DELETE_LIKES;
 export type ActionButtonRequestBody = {
   actionId: Action;
   postId: MongoId | undefined;
@@ -82,6 +83,15 @@ export async function POST(request: Request) {
     const { insertCommentResponse, newCommentWithUserInfo } = await createComment(postId, userId, comment);
 
     return NextResponse.json({ insertCommentResponse, newCommentWithUserInfo }, { status: 200 });
+  }
+
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * DELETE
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  if (actionId === DELETE_LIKES) {
+    const { deletedPostLikes } = await deleteLikes(postId, userId);
+
+    return NextResponse.json({ deletedPostLikes }, { status: 200 });
   }
 
   return NextResponse.json({ success: 'Route api/post' }, { status: 200 });

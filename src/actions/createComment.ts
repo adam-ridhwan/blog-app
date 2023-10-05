@@ -36,11 +36,11 @@ export const createComment = async (
 
     const pendingUpdatePost = postCollection.updateOne(
       { _id: new ObjectId(postId) },
-      { $push: { comments: commentId } }
+      { $push: { comments: new ObjectId(commentId) } }
     );
     const pendingUpdateUser = userCollection.updateOne(
       { _id: new ObjectId(currentUserId) },
-      { $push: { comments: commentId } }
+      { $push: { comments: new ObjectId(commentId) } }
     );
 
     await Promise.all([pendingUpdatePost, pendingUpdateUser]);

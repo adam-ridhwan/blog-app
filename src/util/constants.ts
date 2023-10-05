@@ -11,3 +11,4 @@ export const LIKE = 'like';
 export const COMMENT = 'comment';
 export const SAVE = 'save';
 export const SHARE = 'share';
+export const DELETE_LIKES = 'delete likes';

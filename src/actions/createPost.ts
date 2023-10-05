@@ -9,7 +9,7 @@ import { CreatePostRequestBody } from '@/app/api/posts/route';
 
 export const createPost = async ({ title, subtitle, content, authorId }: CreatePostRequestBody) => {
   try {
-    const { postCollection } = await connectToDatabase();
+    const { postCollection, userCollection } = await connectToDatabase();
 
     const newPost: Post = {
       authorId,
@@ -27,10 +27,15 @@ export const createPost = async ({ title, subtitle, content, authorId }: CreateP
 
     revalidatePath('/');
 
-    const response = await postCollection.insertOne(newPost);
+    const insertPostResponse = await postCollection.insertOne(newPost);
+
+    await userCollection.updateOne(
+      { _id: new ObjectId(authorId) },
+      { $push: { posts: new ObjectId(insertPostResponse.insertedId) } }
+    );
 
     return {
-      response,
+      response: insertPostResponse,
       newPost,
     };
   } catch (err) {

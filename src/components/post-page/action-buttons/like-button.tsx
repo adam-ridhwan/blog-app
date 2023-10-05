@@ -4,7 +4,8 @@ import * as React from 'react';
 import { FC, useEffect, useRef, useState } from 'react';
 import { cn } from '@/util/cn';
 import { LIKE } from '@/util/constants';
-import { useSetAtom } from 'jotai';
+import { atom, useAtom, useSetAtom } from 'jotai';
+import { useHydrateAtoms } from 'jotai/utils';
 import { Heart } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
@@ -22,19 +23,24 @@ type LikeButtonProps = {
 const DEBOUNCE_DURATION = 300;
 const TRANSITION_DELAY = 300;
 
+export const totalLikeCountAtom = atom(0);
+export const userLikeCountAtom = atom(0);
+
 const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) => {
   const { data: session } = useSession();
 
+  useHydrateAtoms([
+    [totalLikeCountAtom, mainPost.likes.length],
+    [userLikeCountAtom, mainPost.likes.filter(id => id.toString() === currentSignedInUserId).length],
+  ]);
+  const [totalLikeCount, setTotalLikeCount] = useAtom(totalLikeCountAtom);
+  const [userLikeCount, setUserLikeCount] = useAtom(userLikeCountAtom);
+
   const setIsSignInDialogOpen = useSetAtom(isSignInDialogOpenAtom);
-
-  const [totalLikeCount, setTotalLikeCount] = useState(mainPost?.likes?.length);
-  const [userLikeCount, setUserLikeCount] = useState(
-    mainPost.likes.filter(id => id === currentSignedInUserId).length
-  );
-
   const [isHeartPopoverOpen, setIsHeartPopoverOpen] = useState(false);
   const [isLikeCountPopoverOpen, setIsLikeCountPopoverOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
+  // TODO: Implement pulse animation
   // const [shouldPulse, setShouldPulse] = useState(false);
 
   const toastRef = useRef<HTMLDivElement | null>(null);
@@ -172,7 +178,7 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
           <Tooltip open={isHeartPopoverOpen} onOpenChange={setIsHeartPopoverOpen}>
             <TooltipTrigger asChild>
               <Button variant='text' onClick={handleLikeClick} className='relative p-0'>
-                {userLikeCount !== 0 ? (
+                {userLikeCount > 0 ? (
                   <Heart className='h-5 w-5 fill-primary/80 stroke-none stroke-2 opacity-60 transition-opacity duration-100 hover:opacity-100' />
                 ) : (
                   <Heart className='h-5 w-5 fill-none stroke-muted/80 stroke-2 transition-colors duration-100 hover:stroke-primary' />

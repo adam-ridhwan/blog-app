@@ -10,7 +10,8 @@ import { COMMENT, MD } from '@/util/constants';
 import { delay } from '@/util/delay';
 import { formatDate } from '@/util/formatDate';
 import { useLocalStorage, useViewportSize } from '@mantine/hooks';
-import { useSetAtom } from 'jotai';
+import { atom, useAtom, useSetAtom } from 'jotai';
+import { useHydrateAtoms } from 'jotai/utils';
 import { Heart, Loader2, MessageSquare, X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Quill from 'quill';
@@ -39,6 +40,9 @@ const modules = {
 
 const EMPTY_COMMENT = '<p><br></p>';
 
+export const commentsAtom = atom<CommentWithUserInfo[]>([]);
+export const numberOfCommentsAtom = atom(0);
+
 const CommentButton: FC<CommentButtonProps> = ({
   mainPost,
   currentSignedInUser,
@@ -46,15 +50,19 @@ const CommentButton: FC<CommentButtonProps> = ({
 }) => {
   const { data: session } = useSession();
   const { width } = useViewportSize();
+  const [isPending, startTransition] = useTransition();
 
   const [comment, setComment] = useLocalStorage({
     key: `comment|${mainPost._id}`,
     defaultValue: EMPTY_COMMENT,
   });
 
-  const [numberOfComments, setNumberOfComments] = useState(mainPost.comments.length);
-  const [comments, setComments] = useState<CommentWithUserInfo[]>(fetchedCommentsWithUserInfo);
-  const [isPending, startTransition] = useTransition();
+  useHydrateAtoms([
+    [commentsAtom, fetchedCommentsWithUserInfo],
+    [numberOfCommentsAtom, mainPost.comments.length],
+  ]);
+  const [comments, setComments] = useAtom(commentsAtom);
+  const [numberOfComments, setNumberOfComments] = useAtom(numberOfCommentsAtom);
 
   const setIsSignInDialogOpen = useSetAtom(isSignInDialogOpenAtom);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);

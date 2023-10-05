@@ -6,7 +6,7 @@ import { generateRandomString } from '@/util/generateRandomString';
 import { InsertOneResult, ObjectId } from 'mongodb';
 import { type Account as NextAuthAccount, type User as NextAuthUser } from 'next-auth';
 
-import { type Account, type User } from '@/types/types';
+import { accountSchema, type Account, type User } from '@/types/types';
 
 export const createUserAndAccount = async (account: NextAuthAccount | null, user: NextAuthUser) => {
   try {
@@ -15,12 +15,13 @@ export const createUserAndAccount = async (account: NextAuthAccount | null, user
     if (!account) return new Error('Account is null');
     if (!user) return new Error('User is null');
 
+    const validatedAccount = accountSchema.safeParse(account);
+
     const newUser: User = {
       name: user.name!,
       email: user.email!,
       username: '@' + user?.email?.split('@')[0] + '_' + generateRandomString(),
       accounts: [account as Account],
-      sessions: [],
       posts: [],
       comments: [],
       followers: [],

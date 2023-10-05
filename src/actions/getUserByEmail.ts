@@ -1,6 +1,7 @@
 'use server';
 
 import { connectToDatabase } from '@/util/connectToDatabase';
+import { plainify } from '@/util/plainify';
 
 import { User } from '@/types/types';
 
@@ -11,7 +12,7 @@ export async function getUserByEmail(email?: string | undefined | null) {
     const { userCollection } = await connectToDatabase();
     const user = await userCollection.findOne({ email });
 
-    return JSON.parse(JSON.stringify(user))
+    return plainify(user);
   } catch (error) {
     console.error('Error getting user:', error);
     throw new Error('Error occurred while fetching user');
