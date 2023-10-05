@@ -24,6 +24,7 @@ export const createUserAndAccount = async (account: NextAuthAccount | null, user
       accounts: [account as Account],
       posts: [],
       comments: [],
+      savedPosts: [],
       followers: [],
     };
 

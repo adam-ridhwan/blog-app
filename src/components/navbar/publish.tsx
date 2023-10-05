@@ -50,7 +50,6 @@ const Publish = () => {
   const content = useAtomValue(contentAtom);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isToastOpen, setIsToastOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

@@ -220,6 +220,7 @@ export const generateMockUsersAndPosts = async () => {
       comments: [],
       posts: [],
       followers: [],
+      savedPosts: [],
     });
 
     Array.from({ length: 5 }, async () => {

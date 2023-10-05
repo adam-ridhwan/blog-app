@@ -64,6 +64,7 @@ const userSchema = z.object({
   image: z.string().optional(),
   accounts: z.array(accountSchema),
   posts: z.array(z.instanceof(ObjectId)),
+  savedPosts: z.array(z.instanceof(ObjectId)),
   comments: z.array(z.instanceof(ObjectId)),
   followers: z.array(z.instanceof(ObjectId)),
 });
