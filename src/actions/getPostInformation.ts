@@ -2,6 +2,7 @@
 
 import { getPost } from '@/actions/getPost';
 import { connectToDatabase } from '@/util/connectToDatabase';
+import { plainify } from '@/util/plainify';
 import { ObjectId } from 'mongodb';
 
 import { AuthorDetails, Post } from '@/types/types';
@@ -46,8 +47,8 @@ export async function getPostInformation(username: string, postId: string): Prom
         followerCount: fetchedAuthor?.followers.length,
       },
       post: {
-        mainPost: JSON.parse(JSON.stringify(fetchedMainPost)),
-        next4Posts: JSON.parse(JSON.stringify(fetchedNext4Posts)),
+        mainPost: plainify(fetchedMainPost),
+        next4Posts: plainify(fetchedNext4Posts),
       },
     };
   } catch (error) {

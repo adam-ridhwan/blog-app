@@ -38,6 +38,8 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
   const { name, image, followerCount } = author;
   const { mainPost, next4Posts } = post;
 
+  if (!mainPost) notFound();
+
   // TODO: Implement infinite scrolling
   const fetchedCommentsWithUserInfo = await getComments(mainPost.comments);
 
@@ -82,7 +84,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
               />
             </div>
             <div className='flex flex-row gap-5'>
-              <SaveButton />
+              <SaveButton currentSignedInUser={currentSignedInUser} mainPost={mainPost} />
               <ShareButton />
               <MoreOptionsButton currentSignedInUser={currentSignedInUser} mainPost={mainPost} />
             </div>

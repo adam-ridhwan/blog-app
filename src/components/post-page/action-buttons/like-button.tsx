@@ -179,7 +179,7 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
             <TooltipTrigger asChild>
               <Button variant='text' onClick={handleLikeClick} className='relative p-0'>
                 {userLikeCount > 0 ? (
-                  <Heart className='h-5 w-5 fill-primary/80 stroke-none stroke-2 opacity-60 transition-opacity duration-100 hover:opacity-100' />
+                  <Heart className='h-5 w-5 fill-primary/80 stroke-muted/80 stroke-2 opacity-60 transition-opacity duration-100 hover:opacity-100' />
                 ) : (
                   <Heart className='h-5 w-5 fill-none stroke-muted/80 stroke-2 transition-colors duration-100 hover:stroke-primary' />
                 )}

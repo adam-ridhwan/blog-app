@@ -1,33 +1,72 @@
 'use client';
 
 import * as React from 'react';
-import { useState } from 'react';
+import { FC, useState } from 'react';
+import { cn } from '@/util/cn';
 import { Bookmark } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
+import { Post, User } from '@/types/types';
+import { Checkbox } from '@/components/ui/checkbox';
+import Overlay from '@/components/ui/overlay';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
-const SaveButton = () => {
+type SaveButtonProps = {
+  mainPost: Post;
+  currentSignedInUser: User;
+};
+
+const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
+  const [isPostSaved, setIsPostSaved] = useState(
+    mainPost._id ? currentSignedInUser.savedPosts.includes(mainPost._id) : false
+  );
+
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const openPopover = () => setIsPopoverOpen(true);
+  const closePopover = () => {
+    setIsPopoverOpen(false);
+    console.log('closing');
+  };
+
+  const handleSavePost = () => {
+    console.log('saving post');
+    setIsPostSaved(true);
+  };
 
   return (
     <>
-      <TooltipProvider delayDuration={700}>
-        <Tooltip open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-          <TooltipTrigger asChild>
-            <Button
-              variant='ghost'
-              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
-            >
-              <Bookmark className='h-5 w-5' />
-              {/*<span className='hidden sm:flex'>Save</span>*/}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent className='flex items-center justify-center rounded-md bg-primary font-medium text-secondary'>
-            <p>Save</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Overlay isOpen={isPopoverOpen} />
+
+      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+        <TooltipProvider delayDuration={700}>
+          <Tooltip>
+            <PopoverTrigger asChild>
+              <TooltipTrigger
+                className='flex w-max flex-row items-center gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
+                onClick={handleSavePost}
+              >
+                {isPostSaved ? (
+                  <Bookmark className='h-5 w-5 fill-primary/80 stroke-muted/80 stroke-2 opacity-60 transition-opacity duration-100 hover:opacity-100' />
+                ) : (
+                  <Bookmark className='h-5 w-5 fill-none stroke-muted/80 stroke-2 transition-colors duration-100 hover:stroke-primary' />
+                )}
+              </TooltipTrigger>
+            </PopoverTrigger>
+            <TooltipContent className='flex items-center justify-center rounded-md bg-primary font-medium text-secondary'>
+              <p>Save</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <PopoverContent className='flex flex-row items-center gap-3' onFocusOutside={e => e.preventDefault()}>
+          <Checkbox
+            checked={isPostSaved}
+            onCheckedChange={() => setIsPostSaved(prev => !prev)}
+            onClick={closePopover}
+          />
+          <span className='text-muted'>Saved list</span>
+        </PopoverContent>
+      </Popover>
     </>
   );
 };

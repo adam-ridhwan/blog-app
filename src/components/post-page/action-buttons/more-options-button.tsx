@@ -17,6 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import Overlay from '@/components/ui/overlay';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
 import { totalLikeCountAtom, userLikeCountAtom } from '@/components/post-page/action-buttons/like-button';
@@ -63,6 +64,8 @@ const MoreOptionsButton: FC<MoreOptionsButtonProps> = ({ mainPost, currentSigned
 
   return (
     <>
+      <Overlay isOpen={isDropdownMenuOpen} />
+
       <DropdownMenu open={isDropdownMenuOpen} onOpenChange={setIsDropdownMenuOpen} modal={false}>
         <TooltipProvider delayDuration={700}>
           <Tooltip open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>

@@ -63,10 +63,10 @@ const userSchema = z.object({
   emailVerified: z.date().optional(),
   image: z.string().optional(),
   accounts: z.array(accountSchema),
-  posts: z.array(z.instanceof(ObjectId)),
-  savedPosts: z.array(z.instanceof(ObjectId)),
-  comments: z.array(z.instanceof(ObjectId)),
-  followers: z.array(z.instanceof(ObjectId)),
+  posts: z.array(mongoIdSchema),
+  savedPosts: z.array(mongoIdSchema),
+  comments: z.array(mongoIdSchema),
+  followers: z.array(mongoIdSchema),
 });
 export type User = z.infer<typeof userSchema>;
 

@@ -56,9 +56,8 @@ html {
         --hljs-string: #113264;
         --hljs-name: #0b68cb;
         --hljs-attr: #cb1d63;
-
-
     }
+
 
     .converter {
         color: hsl(217, 92%, 35%)
