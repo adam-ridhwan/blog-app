@@ -1,9 +1,8 @@
 'use server';
 
 import { NextResponse } from 'next/server';
+import { createComment } from '@/actions/createComment';
 import { getPost } from '@/actions/getPost';
-import { getUserByEmail } from '@/actions/getUserByEmail';
-import { getUserById } from '@/actions/getUserById';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { COMMENT, LIKE, SAVE, SHARE } from '@/util/constants';
 import { ObjectId } from 'mongodb';
@@ -16,21 +15,22 @@ export type ActionButtonRequestBody = {
   postId: MongoId | undefined;
   userId: string | undefined;
   totalLikeCount?: number | undefined;
+  comment?: string | undefined;
 };
 export type ActionButtonResponseBody = {};
 
 export async function POST(request: Request) {
-  const { actionId, postId, userId, totalLikeCount } = await request.json();
-
-  console.log({ totalLikeCount });
+  const { actionId, postId, userId, totalLikeCount, comment } = await request.json();
 
   if (!postId) return NextResponse.json({ 'Bad request': 'No posts id found' }, { status: 400 });
 
   const { postCollection } = await connectToDatabase();
   const fetchedPost = await getPost(postId);
+  if (!fetchedPost) return NextResponse.json({ 'Bad request': 'No posts found' }, { status: 400 });
 
-  //TODO: Allow users to like posts multiple times: limit 30 likes per user
-  //TODO: Allow users to unlike posts: remove all likes of posts by user
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * LIKE
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   if (actionId === LIKE) {
     if (!totalLikeCount) return NextResponse.json({ 'Bad request': 'No like count' }, { status: 400 });
 
@@ -57,8 +57,6 @@ export async function POST(request: Request) {
           .next()
       )?.likesCount || 0;
 
-    console.log({ existingLikesCount });
-
     // Calculate how many likes the user is allowed to add
     const allowedLikes = 30 - existingLikesCount;
     const finalLikeCount = Math.min(totalLikeCount, allowedLikes);
@@ -77,7 +75,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: 'Liked post' }, { status: 200 });
   }
 
-  if (!fetchedPost) return NextResponse.json({ 'Bad request': 'No posts found' }, { status: 400 });
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * COMMENT
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  if (actionId === COMMENT) {
+    const { insertCommentResponse, newCommentWithUserInfo } = await createComment(postId, userId, comment);
 
-  return NextResponse.json({ success: 'Liked post' }, { status: 200 });
+    return NextResponse.json({ insertCommentResponse, newCommentWithUserInfo }, { status: 200 });
+  }
+
+  return NextResponse.json({ success: 'Route api/post' }, { status: 200 });
 }

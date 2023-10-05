@@ -2,32 +2,36 @@
 
 import 'react-quill/dist/quill.bubble.css';
 
+import { start } from 'repl';
 import * as React from 'react';
-import { FC, ReactNode, useEffect, useRef, useState } from 'react';
-import { createComment } from '@/actions/createComment';
+import { FC, Fragment, useEffect, useRef, useState, useTransition } from 'react';
+import Link from 'next/link';
 import { cn } from '@/util/cn';
-import { MD } from '@/util/constants';
+import { COMMENT, MD } from '@/util/constants';
+import { delay } from '@/util/delay';
+import { formatDate } from '@/util/formatDate';
 import { useLocalStorage, useViewportSize } from '@mantine/hooks';
 import { useSetAtom } from 'jotai';
-import { MessageSquare, X } from 'lucide-react';
+import { Heart, MessageSquare, X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Quill from 'quill';
 import ReactQuill from 'react-quill';
 import sanitizeHtml from 'sanitize-html';
 
-import { Post, User } from '@/types/types';
+import { CommentWithUserInfo, Post, User } from '@/types/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
+import { ActionButtonRequestBody } from '@/app/api/post/route';
 
 const Delta = Quill.import('delta');
 
 type CommentButtonProps = {
   mainPost: Post;
   currentSignedInUser: User;
-  children: ReactNode;
+  fetchedCommentsWithUserInfo: CommentWithUserInfo[];
 };
 
 const modules = {
@@ -36,7 +40,11 @@ const modules = {
 
 const EMPTY_COMMENT = '<p><br></p>';
 
-const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser, children }) => {
+const CommentButton: FC<CommentButtonProps> = ({
+  mainPost,
+  currentSignedInUser,
+  fetchedCommentsWithUserInfo,
+}) => {
   const { data: session } = useSession();
   const { width } = useViewportSize();
 
@@ -46,6 +54,8 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser, 
   });
 
   const [numberOfComments, setNumberOfComments] = useState(mainPost.comments.length);
+  const [comments, setComments] = useState<CommentWithUserInfo[]>(fetchedCommentsWithUserInfo);
+  const [isPending, startTransition] = useTransition();
 
   const setIsSignInDialogOpen = useSetAtom(isSignInDialogOpenAtom);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -58,6 +68,10 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser, 
   const closeDialog = () => setIsDialogOpen(false);
   const expandInput = () => setIsInputExpanded(true);
   const collapseInput = () => setIsInputExpanded(false);
+
+  useEffect(() => {
+    console.log(isPending);
+  }, [isPending]);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * OPENING DIALOG
@@ -100,22 +114,46 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser, 
    * @summary
    * Sanitizes comment and posts to database
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  const handlePostComment = async () => {
-    const cleanComment = sanitizeHtml(comment);
-    if (!quillRef.current) return;
-    const quill = quillRef.current.getEditor();
+  const handlePostComment = () => {
+    startTransition(async () => {
+      const { signal } = new AbortController();
+      if (!mainPost) throw new Error('Post not found');
+      if (!session) throw new Error('Session not found');
+      if (!session?.user?.email) throw new Error('Email session not found');
 
-    // TODO: post comment to database
-    if (!mainPost._id || !currentSignedInUser._id) return;
+      const cleanComment = sanitizeHtml(comment);
 
-    const createCommentResponse = await createComment(mainPost._id, currentSignedInUser._id, cleanComment);
+      const body: ActionButtonRequestBody = {
+        actionId: COMMENT,
+        postId: mainPost._id,
+        userId: currentSignedInUser?._id?.toString(),
+        comment: cleanComment,
+      };
 
-    if (createCommentResponse) {
-      setNumberOfComments(prev => prev + 1);
-      quill.blur();
-      setComment(EMPTY_COMMENT);
-      collapseInput();
-    }
+      const pendingCreateCommentResponse = fetch('/api/post', {
+        signal,
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+
+      const [_, fetchedCreateCommentResponse] = await Promise.all([
+        delay(2000),
+        pendingCreateCommentResponse,
+      ]);
+
+      const { insertCommentResponse, newCommentWithUserInfo } = await fetchedCreateCommentResponse.json();
+
+      if (insertCommentResponse) {
+        if (!quillRef.current) return;
+        const quill = quillRef.current.getEditor();
+        quill.blur();
+        setComment(EMPTY_COMMENT);
+        collapseInput();
+
+        setNumberOfComments(prev => prev + 1);
+        setComments(prev => [...prev, newCommentWithUserInfo]);
+      }
+    });
   };
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -218,11 +256,9 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser, 
             onChange={setComment}
             placeholder={'Post comment...'}
             modules={modules}
-            className={cn(
-              `comment-input ease text-primary outline-0 transition-all duration-400`,
-              { 'py-[52px]': isInputExpanded }
-              // 'border-4 border-emerald-500'
-            )}
+            className={cn(`comment-input ease text-primary outline-0 transition-all duration-400`, {
+              'py-[52px]': isInputExpanded,
+            })}
           />
 
           <div
@@ -232,14 +268,14 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser, 
               { 'opacity-1 pointer-events-auto select-auto delay-100': isInputExpanded }
             )}
           >
-            <Button variant='text' className='text-muted' onClick={handleCancelPost}>
+            <Button variant='text' className='text-muted' onClick={handleCancelPost} disabled={isPending}>
               Cancel
             </Button>
             <Button
               variant='accent'
               onClick={handlePostComment}
               className='h-8 text-white'
-              disabled={comment === EMPTY_COMMENT}
+              disabled={comment === EMPTY_COMMENT || isPending}
             >
               Publish
             </Button>
@@ -248,7 +284,53 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser, 
 
         <Separator />
 
-        {children}
+        <div className='my-5 '>
+          {comments.length > 0 ? (
+            <div className='flex flex-col gap-5'>
+              {comments.map(comment => (
+                <div key={comment._id?.toString()} className='flex flex-col gap-3'>
+                  <Link href={`${comment.username}`} className='flex flex-row items-center gap-2'>
+                    <Avatar className='h-10 w-10'>
+                      <AvatarFallback className='text-primary'>{comment.name?.split('')[0]}</AvatarFallback>
+                    </Avatar>
+
+                    <div className='flex flex-col'>
+                      <span className='font-bold text-primary'>{comment.name}</span>
+                      <div className='flex flex-row items-center gap-2'>
+                        <span className='text-muted '>{formatDate(comment.createdAt)}</span>
+                      </div>
+                    </div>
+                  </Link>
+
+                  <div
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(comment.response) }}
+                    className={cn(`text-primary`)}
+                  />
+
+                  <div className='flex flex-row items-center justify-between'>
+                    <Button variant='text' className='flex flex-row items-center gap-2 p-0'>
+                      {comment.likes.length !== 0 ? (
+                        <Heart className='h-5 w-5 fill-primary/80 stroke-none stroke-2 opacity-60 transition-opacity duration-100 hover:opacity-100' />
+                      ) : (
+                        <Heart className='h-5 w-5 fill-none stroke-muted/80 stroke-2 transition-colors duration-100 hover:stroke-primary' />
+                      )}
+                      <span>{comment.likes.length}</span>
+                    </Button>
+
+                    <Button variant='text'>Reply</Button>
+                  </div>
+
+                  <Separator />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className='text flex flex-col items-center whitespace-nowrap italic'>
+              <span className='text-center text-muted'>There are currently no responses for this post.</span>
+              <span className='text-muted'>Be the first to respond.</span>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

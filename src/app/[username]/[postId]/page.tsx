@@ -17,7 +17,6 @@ import LikeButton from '@/components/post-page/action-buttons/like-button';
 import MoreOptionsButtons from '@/components/post-page/action-buttons/more-options-button';
 import SaveButton from '@/components/post-page/action-buttons/save-button';
 import ShareButton from '@/components/post-page/action-buttons/share-button';
-import CommentSection from '@/components/post-page/comment-section';
 import MorePostsList from '@/components/post-page/more-posts-list';
 
 type PostPageProps = {
@@ -39,8 +38,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
   const { name, image, followerCount } = author;
   const { mainPost, next4Posts } = post;
 
-  const { fetchedCommentsWithUserInfo }: { fetchedCommentsWithUserInfo: CommentWithUserInfo[] } =
-    await getComments(mainPost.comments);
+  const fetchedCommentsWithUserInfo = await getComments(mainPost.comments);
 
   let currentSignedInUser = null;
   if (session && session?.user?.email) {
@@ -76,9 +74,11 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
           <div className='mb-5 flex flex-row justify-between'>
             <div className='flex flex-row gap-5'>
               <LikeButton currentSignedInUserId={currentSignedInUser?._id} mainPost={mainPost} />
-              <CommentButton currentSignedInUser={currentSignedInUser} mainPost={mainPost}>
-                <CommentSection comments={fetchedCommentsWithUserInfo} />
-              </CommentButton>
+              <CommentButton
+                currentSignedInUser={currentSignedInUser}
+                mainPost={mainPost}
+                fetchedCommentsWithUserInfo={fetchedCommentsWithUserInfo}
+              />
             </div>
             <div className='flex flex-row gap-5'>
               <SaveButton />

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authorsAtom, postsAtom } from '@/providers/hydrate-atoms';
-import { wait } from '@/util/wait';
+import { delay } from '@/util/delay';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { Rocket } from 'lucide-react';
@@ -111,7 +111,7 @@ const Publish = () => {
       setAuthors(uniqueAuthors);
       setPosts(prevPosts => [newPost, ...prevPosts]);
 
-      await wait(2000);
+      await delay(2000);
       router.push(`/${newAuthor.username}/${newPost._id}`);
 
       return;

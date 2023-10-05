@@ -3,10 +3,20 @@
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { plainify } from '@/util/plainify';
 import { ObjectId } from 'mongodb';
+import { undefined } from 'zod';
 
-import { Comment, MongoId } from '@/types/types';
+import { Comment, CommentWithUserInfo, MongoId } from '@/types/types';
 
-export const createComment = async (postId: MongoId, currentUserId: MongoId, newComment: string) => {
+export type CreateCommentResponse = {
+  insertCommentResponse: boolean;
+  newCommentWithUserInfo: CommentWithUserInfo;
+};
+
+export const createComment = async (
+  postId: MongoId,
+  currentUserId: MongoId,
+  newComment: string
+): Promise<CreateCommentResponse> => {
   try {
     const { commentCollection, postCollection, userCollection } = await connectToDatabase();
 
@@ -35,9 +45,21 @@ export const createComment = async (postId: MongoId, currentUserId: MongoId, new
 
     await Promise.all([pendingUpdatePost, pendingUpdateUser]);
 
-    console.log(insertCommentResponse.acknowledged);
+    const commenter = await userCollection.findOne({ _id: new ObjectId(currentUserId) });
+    if (!commenter) throw new Error('Commenter not found');
+
+    const newCommentWithUserInfo: CommentWithUserInfo = {
+      ...comment,
+      name: commenter.name,
+      username: commenter.username,
+      image: commenter.image,
+      posts: commenter.posts,
+      followers: commenter.followers,
+    };
+
     return {
       insertCommentResponse: plainify(insertCommentResponse.acknowledged),
+      newCommentWithUserInfo: plainify(newCommentWithUserInfo),
     };
   } catch (err) {
     console.error('Error creating comment:', err);
