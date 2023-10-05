@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { Rocket } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { AuthorDetails, Post } from '@/types/types';
@@ -87,7 +88,7 @@ const Publish = () => {
     }
 
     if (success && newPost && newAuthor) {
-      setIsToastOpen(true);
+      toast.success('Your post has been published');
 
       /**
        * OPTIMISTIC UPDATE (kind of)
@@ -196,12 +197,12 @@ const Publish = () => {
         </DialogContent>
       </Dialog>
 
-      <ToastProvider>
-        <Toast open={isToastOpen} onOpenChange={setIsToastOpen} className='border-2 border-confirmative'>
-          <ToastTitle className='text-confirmative'>Your post has been published</ToastTitle>
-        </Toast>
-        <ToastViewport />
-      </ToastProvider>
+      {/*<ToastProvider>*/}
+      {/*  <Toast open={isToastOpen} onOpenChange={setIsToastOpen} className='border-2 border-confirmative'>*/}
+      {/*    <ToastTitle className='text-confirmative'>Your post has been published</ToastTitle>*/}
+      {/*  </Toast>*/}
+      {/*  <ToastViewport />*/}
+      {/*</ToastProvider>*/}
     </>
   );
 };

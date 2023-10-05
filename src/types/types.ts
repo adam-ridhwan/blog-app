@@ -1,4 +1,3 @@
-import { ProviderType } from '@auth/core/providers';
 import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 

@@ -78,9 +78,7 @@ const MoreOptionsButton: FC<MoreOptionsButtonProps> = ({ mainPost, currentSigned
           </Tooltip>
         </TooltipProvider>
 
-        <DropdownMenuContent align='end' onCloseAutoFocus={e => e.preventDefault()}>
-          {/*<DropdownMenuLabel className='ml-[15px]'>More options</DropdownMenuLabel>*/}
-          {/*<DropdownMenuSeparator />*/}
+        <DropdownMenuContent align='center' onCloseAutoFocus={e => e.preventDefault()}>
           <DropdownMenuItem>
             <Button variant='ghost' onClick={handleDeleteLikes} disabled={userLikeCount === 0}>
               Undo like for this blog post

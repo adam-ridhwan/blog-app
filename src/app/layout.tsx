@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 
 import { ReactNode } from 'react';
+import * as React from 'react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { getPosts } from '@/actions/getPosts';
@@ -11,6 +12,7 @@ import JotaiProvider from '@/providers/jotai-provider';
 import ThemeProvider from '@/providers/theme-provider';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import generateMockUsersAndPosts from '@/util/generateMockUserAndPosts';
+import { Toaster } from 'sonner';
 
 import Navbar from '@/components/navbar/navbar';
 
@@ -73,6 +75,17 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <JotaiProvider>
             <ThemeProvider>
               <HydrateAtoms posts={initialPosts} authors={uniqueAuthors}>
+                <Toaster
+                  position='top-center'
+                  offset={20}
+                  toastOptions={{
+                    style: {
+                      background: 'hsl(var(--primary))',
+                      color: 'var(--color-secondary)',
+                      fontSize: '18px',
+                    },
+                  }}
+                />
                 <Navbar />
                 {children}
               </HydrateAtoms>
