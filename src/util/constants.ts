@@ -12,3 +12,4 @@ export const COMMENT = 'comment';
 export const SAVE = 'save';
 export const SHARE = 'share';
 export const DELETE_LIKES = 'delete likes';
+export const DELETE_SAVED_POST = 'delete saved post';

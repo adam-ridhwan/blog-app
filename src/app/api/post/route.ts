@@ -4,14 +4,20 @@ import { NextResponse } from 'next/server';
 import { addSavePost } from '@/actions/addSavePost';
 import { createComment } from '@/actions/createComment';
 import { deleteLikes } from '@/actions/deleteLikes';
+import { deleteSavedPost } from '@/actions/deleteSavedPost';
 import { getPost } from '@/actions/getPost';
 import { connectToDatabase } from '@/util/connectToDatabase';
-import { COMMENT, DELETE_LIKES, LIKE, SAVE, SHARE } from '@/util/constants';
+import { COMMENT, DELETE_LIKES, DELETE_SAVED_POST, LIKE, SAVE, SHARE } from '@/util/constants';
 import { ObjectId } from 'mongodb';
 
-import { MongoId } from '@/types/types';
+export type Action =
+  | typeof LIKE
+  | typeof COMMENT
+  | typeof SAVE
+  | typeof SHARE
+  | typeof DELETE_LIKES
+  | typeof DELETE_SAVED_POST;
 
-export type Action = typeof LIKE | typeof COMMENT | typeof SAVE | typeof SHARE | typeof DELETE_LIKES;
 export type ActionButtonRequestBody = {
   actionId: Action;
   postId: string;
@@ -103,6 +109,15 @@ export async function POST(request: Request) {
     console.log({ savedPostResponse });
 
     return NextResponse.json({ savedPostResponse }, { status: 200 });
+  }
+
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * REMOVE SAVED POST
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  if (actionId === DELETE_SAVED_POST) {
+    const { deletedSavedPostResponse } = await deleteSavedPost(postId, userId);
+
+    return NextResponse.json({ deletedSavedPostResponse }, { status: 200 });
   }
 
   return NextResponse.json({ success: 'Route api/post' }, { status: 200 });

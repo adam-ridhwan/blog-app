@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { FC, useState, useTransition } from 'react';
-import { SAVE } from '@/util/constants';
+import { DELETE_SAVED_POST, SAVE } from '@/util/constants';
 import { Bookmark } from 'lucide-react';
 
 import { Post, User } from '@/types/types';
@@ -32,7 +32,6 @@ const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
     if (isPostSaved) return;
 
     startTransition(async () => {
-      console.log('saving post');
       const { signal } = new AbortController();
       if (!mainPost) throw new Error('Post not found');
       if (!currentSignedInUser) throw new Error('User not found');
@@ -57,7 +56,6 @@ const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
       const fetchedSavePost = await pendingSavePost.json();
 
       if (fetchedSavePost) {
-        console.log('saved post');
         setIsPostSaved(true);
       }
     });
@@ -65,7 +63,45 @@ const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
 
   // TODO: Implement this
   const handleRemoveSavedPost = () => {
-    console.log('removing saved post');
+    const { signal } = new AbortController();
+    if (!mainPost) throw new Error('Post not found');
+    if (!currentSignedInUser) throw new Error('User not found');
+
+    const postId = mainPost._id;
+    const userId = currentSignedInUser._id;
+
+    if (!postId || !userId) throw new Error('IDs not found');
+
+    startTransition(async () => {
+      console.log('removing saved post');
+
+      const { signal } = new AbortController();
+      if (!mainPost) throw new Error('Post not found');
+      if (!currentSignedInUser) throw new Error('User not found');
+
+      const postId = mainPost._id;
+      const userId = currentSignedInUser._id;
+
+      if (!postId || !userId) throw new Error('IDs not found');
+
+      const body: ActionButtonRequestBody = {
+        actionId: DELETE_SAVED_POST,
+        postId: postId.toString(),
+        userId: userId.toString(),
+      };
+
+      const pendingDeletePost = await fetch('/api/post', {
+        signal,
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+
+      const deletedPostResponse = await pendingDeletePost.json();
+
+      if (deletedPostResponse) {
+        setIsPostSaved(prev => !prev);
+      }
+    });
   };
 
   return (
@@ -95,12 +131,7 @@ const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
         </TooltipProvider>
 
         <PopoverContent className='flex flex-row items-center gap-3'>
-          <Checkbox
-            disabled={isPending}
-            checked={isPostSaved}
-            onCheckedChange={() => setIsPostSaved(prev => !prev)}
-            onClick={handleRemoveSavedPost}
-          />
+          <Checkbox disabled={isPending} checked={isPostSaved} onCheckedChange={handleRemoveSavedPost} />
           <span className='text-muted'>Saved list</span>
         </PopoverContent>
       </Popover>
