@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const { userCollection, postCollection, commentCollection, accountCollection } = await connectToDatabase();
-
+  //
   // await userCollection.deleteMany({});
   // await postCollection.deleteMany({});
   // await commentCollection.deleteMany({});

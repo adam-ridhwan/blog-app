@@ -40,7 +40,7 @@ const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
       const postId = mainPost._id;
       const userId = currentSignedInUser._id;
 
-      if (!postId || !userId) throw new Error('ID not found');
+      if (!postId || !userId) throw new Error('IDs not found');
 
       const body: ActionButtonRequestBody = {
         actionId: SAVE,

@@ -9,7 +9,7 @@ import { useHydrateAtoms } from 'jotai/utils';
 import { Heart } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
-import { Post } from '@/types/types';
+import { Post, User } from '@/types/types';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
@@ -17,7 +17,7 @@ import { ActionButtonRequestBody } from '@/app/api/post/route';
 
 type LikeButtonProps = {
   mainPost: Post;
-  currentSignedInUserId: string;
+  currentSignedInUser: User;
 };
 
 const DEBOUNCE_DURATION = 300;
@@ -26,12 +26,12 @@ const TRANSITION_DELAY = 300;
 export const totalLikeCountAtom = atom(0);
 export const userLikeCountAtom = atom(0);
 
-const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) => {
+const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUser }) => {
   const { data: session } = useSession();
 
   useHydrateAtoms([
     [totalLikeCountAtom, mainPost.likes.length],
-    [userLikeCountAtom, mainPost.likes.filter(id => id.toString() === currentSignedInUserId).length],
+    [userLikeCountAtom, mainPost.likes.filter(id => id.toString() === currentSignedInUser._id).length],
   ]);
   const [totalLikeCount, setTotalLikeCount] = useAtom(totalLikeCountAtom);
   const [userLikeCount, setUserLikeCount] = useAtom(userLikeCountAtom);
@@ -119,13 +119,17 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
     const { signal } = new AbortController();
 
     if (!mainPost) throw new Error('Post not found');
-    if (!session) throw new Error('Session not found');
-    if (!session?.user?.email) throw new Error('Email session not found');
+    if (!currentSignedInUser) throw new Error('User not found');
+
+    const postId = mainPost._id;
+    const userId = currentSignedInUser._id;
+
+    if (!postId || !userId) throw new Error('ID not found');
 
     const body: ActionButtonRequestBody = {
       actionId: LIKE,
-      postId: mainPost._id,
-      userId: currentSignedInUserId,
+      postId: postId.toString(),
+      userId: userId.toString(),
       totalLikeCount,
     };
 

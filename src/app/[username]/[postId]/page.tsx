@@ -76,7 +76,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
 
           <div className='mb-5 flex flex-row justify-between'>
             <div className='flex flex-row gap-5'>
-              <LikeButton currentSignedInUserId={currentSignedInUser?._id} mainPost={mainPost} />
+              <LikeButton currentSignedInUser={currentSignedInUser} mainPost={mainPost} />
               <CommentButton
                 currentSignedInUser={currentSignedInUser}
                 mainPost={mainPost}

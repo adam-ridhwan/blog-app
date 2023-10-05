@@ -41,13 +41,18 @@ const MoreOptionsButton: FC<MoreOptionsButtonProps> = ({ mainPost, currentSigned
     if (!session || !session?.user?.email) return setIsSignInDialogOpen(true);
 
     const { signal } = new AbortController();
-    if (!session) throw new Error('Session not found');
-    if (!session?.user?.email) throw new Error('Email session not found');
+    if (!mainPost) throw new Error('Post not found');
+    if (!currentSignedInUser) throw new Error('User not found');
+
+    const postId = mainPost._id;
+    const userId = currentSignedInUser._id;
+
+    if (!postId || !userId) throw new Error('ID not found');
 
     const body: ActionButtonRequestBody = {
       actionId: DELETE_LIKES,
-      postId: mainPost._id,
-      userId: currentSignedInUser?._id?.toString(),
+      postId: postId.toString(),
+      userId: userId.toString(),
     };
 
     const deletedPostLikesResponse = await fetch('/api/post', {
