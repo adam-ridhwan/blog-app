@@ -13,8 +13,8 @@ export type CreateCommentResponse = {
 };
 
 export const createComment = async (
-  postId: MongoId,
-  currentUserId: MongoId,
+  postId: string,
+  currentUserId: string,
   newComment: string
 ): Promise<CreateCommentResponse> => {
   try {
@@ -26,8 +26,8 @@ export const createComment = async (
     const comment: Comment = {
       createdAt: new Date(),
       response: newComment,
-      postId,
-      userId: currentUserId,
+      postId: new ObjectId(postId),
+      userId: new ObjectId(currentUserId),
       likes: [],
     };
 

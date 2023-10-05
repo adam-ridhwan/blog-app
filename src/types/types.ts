@@ -1,5 +1,6 @@
 import { ProviderType } from '@auth/core/providers';
 import { ObjectId } from 'mongodb';
+import { z } from 'zod';
 
 export type MongoId = string | ObjectId;
 
@@ -24,14 +25,18 @@ export type Category = {
   posts: MongoId[];
 };
 
-export type Comment = {
-  _id?: MongoId;
-  createdAt: Date;
-  response: string;
-  userId: MongoId;
-  postId: MongoId;
-  likes: MongoId[];
-};
+export const mongoIdSchema = z.union([z.instanceof(ObjectId).optional(), z.string().optional()]);
+
+const commentSchema = z.object({
+  _id: mongoIdSchema,
+  createdAt: z.date(),
+  response: z.string(),
+  userId: z.instanceof(ObjectId),
+  postId: z.instanceof(ObjectId),
+  likes: z.array(z.instanceof(ObjectId)),
+});
+
+export type Comment = z.infer<typeof commentSchema>;
 
 export type Post = {
   _id?: MongoId;
@@ -61,7 +66,7 @@ export type Session = {
 
 export type User = {
   _id?: MongoId;
-  name?: string;
+  name: string;
   email: string;
   username: string;
   emailVerified?: Date;

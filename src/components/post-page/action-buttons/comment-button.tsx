@@ -2,9 +2,8 @@
 
 import 'react-quill/dist/quill.bubble.css';
 
-import { start } from 'repl';
 import * as React from 'react';
-import { FC, Fragment, useEffect, useRef, useState, useTransition } from 'react';
+import { FC, useEffect, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { cn } from '@/util/cn';
 import { COMMENT, MD } from '@/util/constants';
