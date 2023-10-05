@@ -43,6 +43,13 @@ const Navbar = () => {
   const navbarPositionRef = useRef(0);
   const prevBodyScrollY = useRef(0);
 
+  useEffect(() => {
+    if (!navbarRef.current) return;
+
+    navbarPositionRef.current = 0;
+    navbarRef.current.style.transform = `translateY(${0}px)`;
+  }, [pathname]);
+
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * REMOVE HASH FROM URL
    * If user is redirected from OAuth facebook, remove the hash
