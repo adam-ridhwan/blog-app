@@ -38,6 +38,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
   const { name, image, followerCount } = author;
   const { mainPost, next4Posts } = post;
 
+  // TODO: Implement infinite scrolling
   const fetchedCommentsWithUserInfo = await getComments(mainPost.comments);
 
   let currentSignedInUser = null;

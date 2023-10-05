@@ -167,7 +167,7 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUserId }) =>
 
   return (
     <>
-      <div className='flex flex-row items-center gap-1'>
+      <div className='flex flex-row items-center'>
         <TooltipProvider delayDuration={700}>
           <Tooltip open={isHeartPopoverOpen} onOpenChange={setIsHeartPopoverOpen}>
             <TooltipTrigger asChild>

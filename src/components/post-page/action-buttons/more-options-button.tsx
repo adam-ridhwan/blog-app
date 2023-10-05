@@ -21,14 +21,11 @@ const MoreOptionsButtons = () => {
 
   return (
     <>
-      <DropdownMenu open={isDropdownMenuOpen} onOpenChange={setIsDropdownMenuOpen}>
+      <DropdownMenu open={isDropdownMenuOpen} onOpenChange={setIsDropdownMenuOpen} modal={false}>
         <TooltipProvider delayDuration={700}>
           <Tooltip open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
             <DropdownMenuTrigger asChild>
-              <TooltipTrigger
-                onClick={() => setIsDropdownMenuOpen(!isDropdownMenuOpen)}
-                className='flex w-max flex-row items-center gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
-              >
+              <TooltipTrigger className='flex w-max flex-row items-center gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'>
                 <MoreHorizontal className='h-5 w-5' />
               </TooltipTrigger>
             </DropdownMenuTrigger>
@@ -40,8 +37,8 @@ const MoreOptionsButtons = () => {
         </TooltipProvider>
 
         <DropdownMenuContent align='end' onCloseAutoFocus={e => e.preventDefault()}>
-          <DropdownMenuLabel className='ml-[15px]'>More options</DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          {/*<DropdownMenuLabel className='ml-[15px]'>More options</DropdownMenuLabel>*/}
+          {/*<DropdownMenuSeparator />*/}
           <DropdownMenuItem>
             <Button variant='ghost'>Undo like for this blog post</Button>
           </DropdownMenuItem>

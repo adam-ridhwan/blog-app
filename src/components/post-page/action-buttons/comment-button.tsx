@@ -11,7 +11,7 @@ import { delay } from '@/util/delay';
 import { formatDate } from '@/util/formatDate';
 import { useLocalStorage, useViewportSize } from '@mantine/hooks';
 import { useSetAtom } from 'jotai';
-import { Heart, MessageSquare, X } from 'lucide-react';
+import { Heart, Loader2, MessageSquare, X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Quill from 'quill';
 import ReactQuill from 'react-quill';
@@ -67,10 +67,6 @@ const CommentButton: FC<CommentButtonProps> = ({
   const closeDialog = () => setIsDialogOpen(false);
   const expandInput = () => setIsInputExpanded(true);
   const collapseInput = () => setIsInputExpanded(false);
-
-  useEffect(() => {
-    console.log(isPending);
-  }, [isPending]);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * OPENING DIALOG
@@ -150,7 +146,7 @@ const CommentButton: FC<CommentButtonProps> = ({
         collapseInput();
 
         setNumberOfComments(prev => prev + 1);
-        setComments(prev => [...prev, newCommentWithUserInfo]);
+        setComments(prev => [newCommentWithUserInfo, ...prev]);
       }
     });
   };
@@ -192,7 +188,7 @@ const CommentButton: FC<CommentButtonProps> = ({
             <Button
               variant='ghost'
               onClick={handleOpenDialog}
-              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
+              className='flex w-max flex-row p-0 text-muted/80 hover:bg-transparent hover:text-primary'
             >
               <MessageSquare className='h-5 w-5' />
               <span className='min-w-[20px]'>{numberOfComments}</span>
@@ -224,7 +220,7 @@ const CommentButton: FC<CommentButtonProps> = ({
         )}
       >
         <Button variant='ghost' size='icon' className='ml-auto' onClick={handleCloseDialog}>
-          <X className='h-4 w-4 text-muted' />
+          <X className='h-5 w-5 text-muted' />
         </Button>
 
         <span className='text-2xl font-medium text-primary'>Comments ({numberOfComments})</span>
@@ -273,10 +269,10 @@ const CommentButton: FC<CommentButtonProps> = ({
             <Button
               variant='accent'
               onClick={handlePostComment}
-              className='h-8 text-white'
+              className='h-8 w-[80px] text-white'
               disabled={comment === EMPTY_COMMENT || isPending}
             >
-              Publish
+              {isPending ? <Loader2 className='h-5 w-5 animate-spin' /> : 'Publish'}
             </Button>
           </div>
         </div>
