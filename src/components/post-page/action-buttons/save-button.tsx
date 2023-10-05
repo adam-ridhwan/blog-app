@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { FC, useState } from 'react';
-import { cn } from '@/util/cn';
+import { FC, useState, useTransition } from 'react';
+import { SAVE } from '@/util/constants';
 import { Bookmark } from 'lucide-react';
 
 import { Post, User } from '@/types/types';
@@ -10,6 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import Overlay from '@/components/ui/overlay';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ActionButtonRequestBody } from '@/app/api/post/route';
 
 type SaveButtonProps = {
   mainPost: Post;
@@ -17,20 +18,54 @@ type SaveButtonProps = {
 };
 
 const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
+  const [isPending, startTransition] = useTransition();
+
   const [isPostSaved, setIsPostSaved] = useState(
     mainPost._id ? currentSignedInUser.savedPosts.includes(mainPost._id) : false
   );
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const openPopover = () => setIsPopoverOpen(true);
-  const closePopover = () => {
-    setIsPopoverOpen(false);
-    console.log('closing');
-  };
+  const closePopover = () => setIsPopoverOpen(false);
 
   const handleSavePost = () => {
-    console.log('saving post');
-    setIsPostSaved(true);
+    if (isPostSaved) return;
+
+    startTransition(async () => {
+      console.log('saving post');
+      const { signal } = new AbortController();
+      if (!mainPost) throw new Error('Post not found');
+      if (!currentSignedInUser) throw new Error('User not found');
+
+      const postId = mainPost._id;
+      const userId = currentSignedInUser._id;
+
+      if (!postId || !userId) throw new Error('ID not found');
+
+      const body: ActionButtonRequestBody = {
+        actionId: SAVE,
+        postId: postId.toString(),
+        userId: userId.toString(),
+      };
+
+      const pendingSavePost = await fetch('/api/post', {
+        signal,
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+
+      const fetchedSavePost = await pendingSavePost.json();
+
+      if (fetchedSavePost) {
+        console.log('saved post');
+        setIsPostSaved(true);
+      }
+    });
+  };
+
+  // TODO: Implement this
+  const handleRemoveSavedPost = () => {
+    console.log('removing saved post');
   };
 
   return (
@@ -42,6 +77,7 @@ const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
           <Tooltip>
             <PopoverTrigger asChild>
               <TooltipTrigger
+                disabled={isPending}
                 className='flex w-max flex-row items-center gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
                 onClick={handleSavePost}
               >
@@ -58,11 +94,12 @@ const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
           </Tooltip>
         </TooltipProvider>
 
-        <PopoverContent className='flex flex-row items-center gap-3' onFocusOutside={e => e.preventDefault()}>
+        <PopoverContent className='flex flex-row items-center gap-3'>
           <Checkbox
+            disabled={isPending}
             checked={isPostSaved}
             onCheckedChange={() => setIsPostSaved(prev => !prev)}
-            onClick={closePopover}
+            onClick={handleRemoveSavedPost}
           />
           <span className='text-muted'>Saved list</span>
         </PopoverContent>

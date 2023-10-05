@@ -121,15 +121,19 @@ const CommentButton: FC<CommentButtonProps> = ({
     startTransition(async () => {
       const { signal } = new AbortController();
       if (!mainPost) throw new Error('Post not found');
-      if (!session) throw new Error('Session not found');
-      if (!session?.user?.email) throw new Error('Email session not found');
+      if (!currentSignedInUser) throw new Error('User not found');
+
+      const postId = mainPost._id;
+      const userId = currentSignedInUser._id;
+
+      if (!postId || !userId) throw new Error('ID not found');
 
       const cleanComment = sanitizeHtml(comment);
 
       const body: ActionButtonRequestBody = {
         actionId: COMMENT,
-        postId: mainPost._id,
-        userId: currentSignedInUser?._id?.toString(),
+        postId: postId.toString(),
+        userId: userId.toString(),
         comment: cleanComment,
       };
 

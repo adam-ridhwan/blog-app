@@ -1,6 +1,7 @@
 'use server';
 
 import { NextResponse } from 'next/server';
+import { addSavePost } from '@/actions/addSavePost';
 import { createComment } from '@/actions/createComment';
 import { deleteLikes } from '@/actions/deleteLikes';
 import { getPost } from '@/actions/getPost';
@@ -13,8 +14,8 @@ import { MongoId } from '@/types/types';
 export type Action = typeof LIKE | typeof COMMENT | typeof SAVE | typeof SHARE | typeof DELETE_LIKES;
 export type ActionButtonRequestBody = {
   actionId: Action;
-  postId: MongoId | undefined;
-  userId: string | undefined;
+  postId: string;
+  userId: string;
   totalLikeCount?: number | undefined;
   comment?: string | undefined;
 };
@@ -92,6 +93,16 @@ export async function POST(request: Request) {
     const { deletedPostLikes } = await deleteLikes(postId, userId);
 
     return NextResponse.json({ deletedPostLikes }, { status: 200 });
+  }
+
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * SAVE
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  if (actionId === SAVE) {
+    const { savedPostResponse } = await addSavePost(postId, userId);
+    console.log({ savedPostResponse });
+
+    return NextResponse.json({ savedPostResponse }, { status: 200 });
   }
 
   return NextResponse.json({ success: 'Route api/post' }, { status: 200 });
