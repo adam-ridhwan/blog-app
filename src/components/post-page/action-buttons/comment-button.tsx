@@ -5,6 +5,7 @@ import 'react-quill/dist/quill.bubble.css';
 import * as React from 'react';
 import { FC, useEffect, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { cn } from '@/util/cn';
 import { COMMENT, MD } from '@/util/constants';
 import { delay } from '@/util/delay';
@@ -40,14 +41,12 @@ const modules = {
 
 const EMPTY_COMMENT = '<p><br></p>';
 
-export const commentsAtom = atom<CommentWithUserInfo[]>([]);
-export const numberOfCommentsAtom = atom(0);
-
 const CommentButton: FC<CommentButtonProps> = ({
   mainPost,
   currentSignedInUser,
   fetchedCommentsWithUserInfo,
 }) => {
+  const router = useRouter();
   const { data: session } = useSession();
   const { width } = useViewportSize();
   const [isPending, startTransition] = useTransition();
@@ -57,12 +56,8 @@ const CommentButton: FC<CommentButtonProps> = ({
     defaultValue: EMPTY_COMMENT,
   });
 
-  useHydrateAtoms([
-    [commentsAtom, fetchedCommentsWithUserInfo],
-    [numberOfCommentsAtom, mainPost.comments.length],
-  ]);
-  const [comments, setComments] = useAtom(commentsAtom);
-  const [numberOfComments, setNumberOfComments] = useAtom(numberOfCommentsAtom);
+  const [comments, setComments] = useState(fetchedCommentsWithUserInfo);
+  const [numberOfComments, setNumberOfComments] = useState(mainPost.comments.length);
 
   const setIsSignInDialogOpen = useSetAtom(isSignInDialogOpenAtom);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -137,10 +132,11 @@ const CommentButton: FC<CommentButtonProps> = ({
         comment: cleanComment,
       };
 
-      const pendingCreateCommentResponse = fetch('/api/post', {
+      const pendingCreateCommentResponse = fetch('/api/post?tag=comments', {
         signal,
         method: 'POST',
         body: JSON.stringify(body),
+        cache: 'no-store',
       });
 
       const [_, fetchedCreateCommentResponse] = await Promise.all([

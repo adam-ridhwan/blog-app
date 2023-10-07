@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { plainify } from '@/util/plainify';
 import { ObjectId } from 'mongodb';

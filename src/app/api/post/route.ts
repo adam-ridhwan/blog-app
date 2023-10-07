@@ -1,6 +1,7 @@
 'use server';
 
-import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
+import { NextRequest, NextResponse } from 'next/server';
 import { addSavePost } from '@/actions/addSavePost';
 import { createComment } from '@/actions/createComment';
 import { deleteLikes } from '@/actions/deleteLikes';
@@ -27,8 +28,9 @@ export type ActionButtonRequestBody = {
 };
 export type ActionButtonResponseBody = {};
 
-export async function POST(request: Request) {
-  const { actionId, postId, userId, totalLikeCount, comment } = await request.json();
+export async function POST(request: NextRequest) {
+  const { actionId, postId, userId, totalLikeCount, comment, next } = await request.json();
+  const tag = request.nextUrl.searchParams.get('tag');
 
   if (!postId) return NextResponse.json({ 'Bad request': 'No posts id found' }, { status: 400 });
 
@@ -89,6 +91,12 @@ export async function POST(request: Request) {
   if (actionId === COMMENT) {
     const { insertCommentResponse, newCommentWithUserInfo } = await createComment(postId, userId, comment);
 
+    if (!tag) {
+      return Response.json({ message: 'Missing tag param' }, { status: 400 });
+    }
+
+    revalidateTag(tag);
+
     return NextResponse.json({ insertCommentResponse, newCommentWithUserInfo }, { status: 200 });
   }
 
@@ -106,7 +114,6 @@ export async function POST(request: Request) {
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   if (actionId === SAVE) {
     const { savedPostResponse } = await addSavePost(postId, userId);
-    console.log({ savedPostResponse });
 
     return NextResponse.json({ savedPostResponse }, { status: 200 });
   }

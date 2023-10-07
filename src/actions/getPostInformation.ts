@@ -52,7 +52,7 @@ export async function getPostInformation(username: string, postId: string): Prom
       },
     };
   } catch (error) {
-    console.error('Error getting author:', error);
-    // throw new Error('Error occurred while fetching author');
+    console.error('Error getting post information:', error);
+    throw new Error('Error occurred while fetching post information');
   }
 }
