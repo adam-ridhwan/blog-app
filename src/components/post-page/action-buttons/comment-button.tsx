@@ -6,12 +6,14 @@ import * as React from 'react';
 import { FC, useEffect, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { getComments } from '@/actions/getComments';
 import { commentsAtom, postsAtom } from '@/providers/hydrate-atoms';
 import { cn } from '@/util/cn';
 import { COMMENT, MD } from '@/util/constants';
 import { delay } from '@/util/delay';
 import { formatDate } from '@/util/formatDate';
 import { useLocalStorage, useViewportSize } from '@mantine/hooks';
+import { useRenderCount } from '@uidotdev/usehooks';
 import { atom, useAtom, useSetAtom } from 'jotai';
 import { useHydrateAtoms } from 'jotai/utils';
 import { Heart, Loader2, MessageSquare, X } from 'lucide-react';
@@ -19,6 +21,7 @@ import { useSession } from 'next-auth/react';
 import Quill from 'quill';
 import ReactQuill from 'react-quill';
 import sanitizeHtml from 'sanitize-html';
+import { useEffectOnce } from 'usehooks-ts';
 
 import { CommentWithUserInfo, Post, User } from '@/types/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -33,7 +36,6 @@ const Delta = Quill.import('delta');
 type CommentButtonProps = {
   mainPost: Post;
   currentSignedInUser: User;
-  fetchedCommentsWithUserInfo: CommentWithUserInfo[];
 };
 
 const modules = {
@@ -42,15 +44,12 @@ const modules = {
 
 const EMPTY_COMMENT = '<p><br></p>';
 
-const postAtom = atom<Post | null>(null);
-
-const CommentButton: FC<CommentButtonProps> = ({
-  mainPost,
-  currentSignedInUser,
-  fetchedCommentsWithUserInfo,
-}) => {
+const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }) => {
+  const pathname = usePathname();
+  const [username, postId] = pathname.split('/').slice(1);
   const { data: session } = useSession();
   const { width } = useViewportSize();
+
   const [isPending, startTransition] = useTransition();
 
   const [comment, setComment] = useLocalStorage({
@@ -58,17 +57,19 @@ const CommentButton: FC<CommentButtonProps> = ({
     defaultValue: EMPTY_COMMENT,
   });
 
-  useHydrateAtoms(
-    [
-      [commentsAtom, fetchedCommentsWithUserInfo],
-      [postAtom, mainPost],
-    ],
-    { dangerouslyForceHydrate: true }
-  );
-
   const [posts, setPosts] = useAtom(postsAtom);
-  const [comments, setComments] = useAtom(commentsAtom);
-  const numberOfComments = comments.length;
+  const [commentsWithUserInfo, setCommentsWithUserInfo] = useState<CommentWithUserInfo[]>([]);
+
+  /*
+   * Get the number of comments from the global postsAtom OR commentsWithUserInfo
+   * 1st priority: global postsAtom
+   * 2nd priority: commentsWithUserInfo
+   *
+   * If the post is not found in the global postsAtom, then use commentsWithUserInfo
+   * 2nd priority is used the user navigates to the post page directly using a link
+   */
+  const numberOfComments =
+    posts.find(post => post._id === mainPost._id)?.comments.length || commentsWithUserInfo.length;
 
   const setIsSignInDialogOpen = useSetAtom(isSignInDialogOpenAtom);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -81,6 +82,20 @@ const CommentButton: FC<CommentButtonProps> = ({
   const closeDialog = () => setIsDialogOpen(false);
   const expandInput = () => setIsInputExpanded(true);
   const collapseInput = () => setIsInputExpanded(false);
+
+  useEffectOnce(() => {
+    (async () => {
+      const response = await fetch(`/api/comments`, {
+        method: 'POST',
+        body: JSON.stringify({ username, postId }),
+      });
+
+      const { comments } = await response.json();
+      if (!comments) throw new Error('Comments not found');
+
+      setCommentsWithUserInfo(comments);
+    })();
+  });
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * OPENING DIALOG
@@ -109,7 +124,7 @@ const CommentButton: FC<CommentButtonProps> = ({
    * @summary
    * Blurs quill editor, collapses input, and resets comment
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  const handleCancelPost = () => {
+  const handleCancelComment = () => {
     if (!quillRef.current) return;
     const quill = quillRef.current.getEditor();
 
@@ -167,11 +182,11 @@ const CommentButton: FC<CommentButtonProps> = ({
         setPosts(
           posts.map(post => {
             return post._id === postId
-              ? { ...post, comments: [...post.comments, insertCommentResponse] }
+              ? { ...post, comments: [...post.comments, newCommentWithUserInfo._id] }
               : post;
           })
         );
-        setComments(prev => [newCommentWithUserInfo, ...prev]);
+        setCommentsWithUserInfo(prev => [newCommentWithUserInfo, ...prev]);
       }
     });
   };
@@ -288,7 +303,7 @@ const CommentButton: FC<CommentButtonProps> = ({
               { 'opacity-1 pointer-events-auto select-auto delay-100': isInputExpanded }
             )}
           >
-            <Button variant='text' className='text-muted' onClick={handleCancelPost} disabled={isPending}>
+            <Button variant='text' className='text-muted' onClick={handleCancelComment} disabled={isPending}>
               Cancel
             </Button>
             <Button
@@ -305,9 +320,9 @@ const CommentButton: FC<CommentButtonProps> = ({
         <Separator />
 
         <div className='my-5 '>
-          {comments.length > 0 ? (
+          {mainPost.comments.length > 0 ? (
             <div className='flex flex-col gap-5'>
-              {comments.map(comment => (
+              {commentsWithUserInfo.map(comment => (
                 <div key={comment._id?.toString()} className='flex flex-col gap-3'>
                   <Link href={`${comment.username}`} className='flex flex-row items-center gap-2'>
                     <Avatar className='h-10 w-10'>

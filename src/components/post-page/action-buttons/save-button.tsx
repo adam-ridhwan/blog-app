@@ -61,9 +61,7 @@ const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
     });
   };
 
-  // TODO: Implement this
   const handleRemoveSavedPost = () => {
-    const { signal } = new AbortController();
     if (!mainPost) throw new Error('Post not found');
     if (!currentSignedInUser) throw new Error('User not found');
 
@@ -73,8 +71,6 @@ const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
     if (!postId || !userId) throw new Error('IDs not found');
 
     startTransition(async () => {
-      console.log('removing saved post');
-
       const { signal } = new AbortController();
       if (!mainPost) throw new Error('Post not found');
       if (!currentSignedInUser) throw new Error('User not found');

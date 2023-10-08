@@ -6,11 +6,11 @@ import { ObjectId } from 'mongodb';
 
 import { CommentWithUserInfo, MongoId } from '@/types/types';
 
-export const getComments = async (mainPostComments: MongoId[]): Promise<CommentWithUserInfo[]> => {
+export const getComments = async (commentIds: MongoId[]): Promise<CommentWithUserInfo[]> => {
   try {
     const { commentCollection, userCollection } = await connectToDatabase();
 
-    const objectIdComments = mainPostComments.map(comment => new ObjectId(comment));
+    const objectIdComments = commentIds.map(comment => new ObjectId(comment));
 
     const fetchedComments = await commentCollection
       .find({ _id: { $in: objectIdComments } })

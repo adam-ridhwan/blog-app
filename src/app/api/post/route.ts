@@ -6,6 +6,7 @@ import { addSavePost } from '@/actions/addSavePost';
 import { createComment } from '@/actions/createComment';
 import { deleteLikes } from '@/actions/deleteLikes';
 import { deleteSavedPost } from '@/actions/deleteSavedPost';
+import { getComments } from '@/actions/getComments';
 import { getPost } from '@/actions/getPost';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { COMMENT, DELETE_LIKES, DELETE_SAVED_POST, LIKE, SAVE, SHARE } from '@/util/constants';

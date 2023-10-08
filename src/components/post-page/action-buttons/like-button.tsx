@@ -4,6 +4,7 @@ import * as React from 'react';
 import { FC, useEffect, useRef, useState } from 'react';
 import { cn } from '@/util/cn';
 import { LIKE } from '@/util/constants';
+import { useRenderCount } from '@uidotdev/usehooks';
 import { atom, useAtom, useSetAtom } from 'jotai';
 import { useHydrateAtoms } from 'jotai/utils';
 import { Heart } from 'lucide-react';
@@ -213,8 +214,8 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUser }) => {
         <TooltipProvider delayDuration={700}>
           <Tooltip open={isLikeCountPopoverOpen} onOpenChange={setIsLikeCountPopoverOpen}>
             <TooltipTrigger asChild>
-              <Button variant='text' className='relative p-0'>
-                <span className='min-w-[20px] text-muted/80 transition-colors duration-100 hover:text-primary'>
+              <Button variant='text' className='relative ml-1 p-0'>
+                <span className='min-w-[20px] text-left text-muted/80 transition-colors duration-100 hover:text-primary'>
                   {totalLikeCount}
                 </span>
               </Button>
