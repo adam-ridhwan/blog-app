@@ -332,7 +332,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
                     <div className='flex flex-col'>
                       <span className='font-bold text-primary'>{comment.name}</span>
                       <div className='flex flex-row items-center gap-2'>
-                        <span className='text-muted '>{formatDate(comment.createdAt)}</span>
+                        <span className='text-muted'>{formatDate(comment.createdAt)}</span>
                       </div>
                     </div>
                   </Link>

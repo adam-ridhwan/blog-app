@@ -3,13 +3,11 @@
 import * as React from 'react';
 import { FC, useState } from 'react';
 import { DELETE_LIKES } from '@/util/constants';
-import { delay } from '@/util/delay';
 import { useAtom, useSetAtom } from 'jotai';
 import { MoreHorizontal } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import sanitizeHtml from 'sanitize-html';
 
-import { CommentWithUserInfo, Post, User } from '@/types/types';
+import { Post, User } from '@/types/types';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,

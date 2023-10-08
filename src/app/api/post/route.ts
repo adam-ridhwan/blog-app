@@ -9,10 +9,12 @@ import { deleteSavedPost } from '@/actions/deleteSavedPost';
 import { getComments } from '@/actions/getComments';
 import { getPost } from '@/actions/getPost';
 import { connectToDatabase } from '@/util/connectToDatabase';
-import { COMMENT, DELETE_LIKES, DELETE_SAVED_POST, LIKE, SAVE, SHARE } from '@/util/constants';
+import { COMMENT, DELETE_LIKES, DELETE_SAVED_POST, GET, LIKE, SAVE, SHARE } from '@/util/constants';
+import { plainify } from '@/util/plainify';
 import { ObjectId } from 'mongodb';
 
 export type Action =
+  | typeof GET
   | typeof LIKE
   | typeof COMMENT
   | typeof SAVE
@@ -75,14 +77,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ 'Limit exceeded': 'You can like up to 30 times per post' }, { status: 200 });
     }
 
-    const likesToAdd = Array(totalLikeCount).fill(new ObjectId(userId));
+    const likes = Array(totalLikeCount).fill(new ObjectId(userId));
 
-    const likesToAddResponse = await postCollection.updateOne(
+    const response = await postCollection.updateOne(
       { _id: new ObjectId(postId) },
-      { $push: { likes: { $each: likesToAdd } } }
+      { $push: { likes: { $each: likes } } }
     );
 
-    return NextResponse.json({ success: 'Liked post' }, { status: 200 });
+    return NextResponse.json(
+      {
+        response: response.acknowledged,
+        likes: plainify(likes),
+      },
+      { status: 200 }
+    );
   }
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────

@@ -2,24 +2,30 @@
 
 import * as React from 'react';
 import { FC, useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { postsAtom } from '@/providers/hydrate-atoms';
 import { cn } from '@/util/cn';
 import { LIKE } from '@/util/constants';
 import { useRenderCount } from '@uidotdev/usehooks';
 import { atom, useAtom, useSetAtom } from 'jotai';
 import { useHydrateAtoms } from 'jotai/utils';
 import { Heart } from 'lucide-react';
+import { ObjectId } from 'mongodb';
 import { useSession } from 'next-auth/react';
+import { useEffectOnce } from 'usehooks-ts';
+import { string, z } from 'zod';
 
-import { Post, User } from '@/types/types';
+import { mongoIdSchema, Post, User } from '@/types/types';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
 import { ActionButtonRequestBody } from '@/app/api/post/route';
 
 type LikeButtonProps = {
-  mainPost: Post;
   currentSignedInUser: User;
 };
+
+const LikesSchema = z.array(z.string());
 
 const DEBOUNCE_DURATION = 300;
 const TRANSITION_DELAY = 300;
@@ -27,13 +33,13 @@ const TRANSITION_DELAY = 300;
 export const totalLikeCountAtom = atom(0);
 export const userLikeCountAtom = atom(0);
 
-const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUser }) => {
+const LikeButton: FC<LikeButtonProps> = ({ currentSignedInUser }) => {
+  const pathname = usePathname();
+  const [_, postId] = pathname.split('/').slice(1);
+
   const { data: session } = useSession();
 
-  useHydrateAtoms([
-    [totalLikeCountAtom, mainPost.likes.length],
-    [userLikeCountAtom, mainPost.likes.filter(id => id.toString() === currentSignedInUser._id).length],
-  ]);
+  const [posts, setPosts] = useAtom(postsAtom);
   const [totalLikeCount, setTotalLikeCount] = useAtom(totalLikeCountAtom);
   const [userLikeCount, setUserLikeCount] = useAtom(userLikeCountAtom);
 
@@ -53,8 +59,28 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUser }) => {
   const useEffectToastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const updateDbAfterDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Mount and unmount
-  useEffect(() => {
+  useEffectOnce(() => {
+    const { signal } = new AbortController();
+
+    (async () => {
+      const { likes } = await fetch('/api/likes', {
+        signal,
+        method: 'POST',
+        body: JSON.stringify({ postId }),
+      }).then(res => res.json());
+      if (!likes) throw new Error('Likes not found');
+
+      const validatedLikes = LikesSchema.safeParse(likes);
+      if (!validatedLikes.success) {
+        return;
+      }
+
+      setTotalLikeCount(validatedLikes.data.length);
+      setUserLikeCount(validatedLikes.data.filter(id => id.toString() === currentSignedInUser._id).length);
+    })();
+  });
+
+  useEffectOnce(() => {
     if (toastRef.current) {
       toastRef.current.style.transform = 'translateY(-20px)';
       toastRef.current.style.opacity = '0';
@@ -64,7 +90,7 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUser }) => {
       if (toggleToastTimeoutRef.current) clearTimeout(toggleToastTimeoutRef.current);
       lastClickedRef.current = null;
     };
-  }, []);
+  });
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * HANDLE DEBOUNCED LIKE CLICK
@@ -119,17 +145,14 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUser }) => {
   const addLikeCountToDatabase = async (totalLikeCount: number) => {
     const { signal } = new AbortController();
 
-    if (!mainPost) throw new Error('Post not found');
     if (!currentSignedInUser) throw new Error('User not found');
 
-    const postId = mainPost._id;
     const userId = currentSignedInUser._id;
-
-    if (!postId || !userId) throw new Error('ID not found');
+    if (!userId) throw new Error('ID not found');
 
     const body: ActionButtonRequestBody = {
       actionId: LIKE,
-      postId: postId.toString(),
+      postId,
       userId: userId.toString(),
       totalLikeCount,
     };
@@ -138,9 +161,18 @@ const LikeButton: FC<LikeButtonProps> = ({ mainPost, currentSignedInUser }) => {
       signal,
       method: 'POST',
       body: JSON.stringify(body),
-    });
+    }).then(res => res.json());
 
-    console.log(await response.json());
+    if (response) {
+      // prettier-ignore
+      setPosts(
+        posts.map(post => {
+          return post._id === postId
+            ? { ...post, likes: [...post.likes, ...response.likes] }
+            : post;
+        })
+      );
+    }
   };
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────

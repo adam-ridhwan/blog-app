@@ -8,7 +8,7 @@ import { cn } from '@/util/cn';
 import { MD } from '@/util/constants';
 import { formatDate } from '@/util/formatDate';
 import { useViewportSize } from '@mantine/hooks';
-import { Heart, MessageCircle } from 'lucide-react';
+import { Heart, MessageCircle, MessageSquare } from 'lucide-react';
 
 import { AuthorDetails, type Post } from '@/types/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -116,7 +116,7 @@ const PostItem: FC<CardProps> = ({
               <span>{likes.length}</span>
             </div>
             <div className='mr-3 flex flex-row items-center gap-1'>
-              <MessageCircle className='h-5 w-5' />
+              <MessageSquare className='h-5 w-5' />
               <span>{comments?.length}</span>
             </div>
             <SeparatorDot />

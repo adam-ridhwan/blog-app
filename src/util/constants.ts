@@ -7,6 +7,7 @@ export const LG = 1024;
 export const XL = 1280;
 export const XXL = 1536;
 
+export const GET = 'get';
 export const LIKE = 'like';
 export const COMMENT = 'comment';
 export const SAVE = 'save';

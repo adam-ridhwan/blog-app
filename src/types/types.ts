@@ -46,10 +46,10 @@ const postSchema = z.object({
   img: z.string().optional(),
   views: z.number(),
   categorySlug: z.string(),
-  categoryId: z.instanceof(ObjectId),
-  authorId: z.instanceof(ObjectId),
-  comments: z.array(z.instanceof(ObjectId)),
-  likes: z.array(z.instanceof(ObjectId)),
+  categoryId: mongoIdSchema,
+  authorId: mongoIdSchema,
+  comments: z.array(mongoIdSchema),
+  likes: z.array(mongoIdSchema),
 });
 export type Post = z.infer<typeof postSchema>;
 
