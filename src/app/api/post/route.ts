@@ -29,8 +29,7 @@ export type ActionButtonRequestBody = {
 export type ActionButtonResponseBody = {};
 
 export async function POST(request: NextRequest) {
-  const { actionId, postId, userId, totalLikeCount, comment, next } = await request.json();
-  const tag = request.nextUrl.searchParams.get('tag');
+  const { actionId, postId, userId, totalLikeCount, comment } = await request.json();
 
   if (!postId) return NextResponse.json({ 'Bad request': 'No posts id found' }, { status: 400 });
 
@@ -90,12 +89,6 @@ export async function POST(request: NextRequest) {
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   if (actionId === COMMENT) {
     const { insertCommentResponse, newCommentWithUserInfo } = await createComment(postId, userId, comment);
-
-    if (!tag) {
-      return Response.json({ message: 'Missing tag param' }, { status: 400 });
-    }
-
-    revalidateTag(tag);
 
     return NextResponse.json({ insertCommentResponse, newCommentWithUserInfo }, { status: 200 });
   }

@@ -5,7 +5,8 @@ import 'react-quill/dist/quill.bubble.css';
 import * as React from 'react';
 import { FC, useEffect, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { commentsAtom, postsAtom } from '@/providers/hydrate-atoms';
 import { cn } from '@/util/cn';
 import { COMMENT, MD } from '@/util/constants';
 import { delay } from '@/util/delay';
@@ -41,12 +42,13 @@ const modules = {
 
 const EMPTY_COMMENT = '<p><br></p>';
 
+const postAtom = atom<Post | null>(null);
+
 const CommentButton: FC<CommentButtonProps> = ({
   mainPost,
   currentSignedInUser,
   fetchedCommentsWithUserInfo,
 }) => {
-  const router = useRouter();
   const { data: session } = useSession();
   const { width } = useViewportSize();
   const [isPending, startTransition] = useTransition();
@@ -56,8 +58,17 @@ const CommentButton: FC<CommentButtonProps> = ({
     defaultValue: EMPTY_COMMENT,
   });
 
-  const [comments, setComments] = useState(fetchedCommentsWithUserInfo);
-  const [numberOfComments, setNumberOfComments] = useState(mainPost.comments.length);
+  useHydrateAtoms(
+    [
+      [commentsAtom, fetchedCommentsWithUserInfo],
+      [postAtom, mainPost],
+    ],
+    { dangerouslyForceHydrate: true }
+  );
+
+  const [posts, setPosts] = useAtom(postsAtom);
+  const [comments, setComments] = useAtom(commentsAtom);
+  const numberOfComments = comments.length;
 
   const setIsSignInDialogOpen = useSetAtom(isSignInDialogOpenAtom);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -132,11 +143,10 @@ const CommentButton: FC<CommentButtonProps> = ({
         comment: cleanComment,
       };
 
-      const pendingCreateCommentResponse = fetch('/api/post?tag=comments', {
+      const pendingCreateCommentResponse = fetch('/api/post', {
         signal,
         method: 'POST',
         body: JSON.stringify(body),
-        cache: 'no-store',
       });
 
       const [_, fetchedCreateCommentResponse] = await Promise.all([
@@ -153,7 +163,14 @@ const CommentButton: FC<CommentButtonProps> = ({
         setComment(EMPTY_COMMENT);
         collapseInput();
 
-        setNumberOfComments(prev => prev + 1);
+        // Need to update the global postsAtom and commentsAtom for client-side rendering
+        setPosts(
+          posts.map(post => {
+            return post._id === postId
+              ? { ...post, comments: [...post.comments, insertCommentResponse] }
+              : post;
+          })
+        );
         setComments(prev => [newCommentWithUserInfo, ...prev]);
       }
     });
@@ -196,10 +213,10 @@ const CommentButton: FC<CommentButtonProps> = ({
             <Button
               variant='ghost'
               onClick={handleOpenDialog}
-              className='flex w-max flex-row p-0 text-muted/80 hover:bg-transparent hover:text-primary'
+              className='flex w-max flex-row gap-1 p-0 text-muted/80 hover:bg-transparent hover:text-primary'
             >
               <MessageSquare className='h-5 w-5' />
-              <span className='min-w-[20px]'>{numberOfComments}</span>
+              <span className='min-w-[20px] text-left'>{numberOfComments}</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent className='flex items-center justify-center rounded-md bg-primary font-medium text-secondary'>
