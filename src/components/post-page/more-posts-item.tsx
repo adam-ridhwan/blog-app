@@ -46,7 +46,7 @@ const MorePostsItem: FC<MorePostsProps> = ({
           </Avatar>
 
           <span className='font-bold text-primary'>{name}</span>
-          <span className='text-muted'>{formatDate(createdAt)}</span>
+          <span className='text-muted'>{formatDate(createdAt.toString())}</span>
         </Link>
 
         <div className='flex h-[105px] flex-col'>

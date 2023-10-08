@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb';
 
 import { CommentWithUserInfo, MongoId } from '@/types/types';
 
-export const getComments = async (commentIds: MongoId[]): Promise<CommentWithUserInfo[]> => {
+export const getComments = async (commentIds: string[]): Promise<CommentWithUserInfo[]> => {
   try {
     const { commentCollection, userCollection } = await connectToDatabase();
 

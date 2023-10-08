@@ -65,7 +65,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
                 <div className='flex flex-col'>
                   <span className='font-bold text-primary'>{name}</span>
                   <div className='flex flex-row items-center gap-2'>
-                    <span className='text-muted'>{formatDate(mainPost.createdAt)}</span>
+                    <span className='text-muted'>{formatDate(mainPost.createdAt.toString())}</span>
                   </div>
                 </div>
               </Link>

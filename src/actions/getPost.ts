@@ -1,11 +1,16 @@
 import { connectToDatabase } from '@/util/connectToDatabase';
-import { ObjectId } from 'mongodb';
+import { plainify } from '@/util/plainify';
+import { ObjectId, WithId } from 'mongodb';
 
-export const getPost = async (postId: string) => {
+import { Post } from '@/types/types';
+
+export const getPost = async (postId: string): Promise<Post> => {
   try {
     const { postCollection } = await connectToDatabase();
 
-    return await postCollection.findOne({ _id: new ObjectId(postId) });
+    const post = await postCollection.findOne({ _id: new ObjectId(postId) });
+
+    return plainify(post);
   } catch (err) {
     console.error('Error getting post:', err);
     throw new Error('Error occurred while fetching post');

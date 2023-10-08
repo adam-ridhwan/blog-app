@@ -6,22 +6,20 @@ import * as React from 'react';
 import { FC, useEffect, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { getComments } from '@/actions/getComments';
-import { commentsAtom, postsAtom } from '@/providers/hydrate-atoms';
+import { postsAtom } from '@/providers/hydrate-atoms';
 import { cn } from '@/util/cn';
 import { COMMENT, MD } from '@/util/constants';
 import { delay } from '@/util/delay';
 import { formatDate } from '@/util/formatDate';
 import { useLocalStorage, useViewportSize } from '@mantine/hooks';
-import { useRenderCount } from '@uidotdev/usehooks';
-import { atom, useAtom, useSetAtom } from 'jotai';
-import { useHydrateAtoms } from 'jotai/utils';
+import { useAtom, useSetAtom } from 'jotai';
 import { Heart, Loader2, MessageSquare, X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Quill from 'quill';
 import ReactQuill from 'react-quill';
 import sanitizeHtml from 'sanitize-html';
 import { useEffectOnce } from 'usehooks-ts';
+import { z } from 'zod';
 
 import { CommentWithUserInfo, Post, User } from '@/types/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -85,15 +83,34 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
 
   useEffectOnce(() => {
     (async () => {
-      const response = await fetch(`/api/comments`, {
+      const { comments }: { comments: CommentWithUserInfo } = await fetch(`/api/comments`, {
         method: 'POST',
         body: JSON.stringify({ username, postId }),
-      });
-
-      const { comments } = await response.json();
+      }).then(res => res.json());
       if (!comments) throw new Error('Comments not found');
 
-      setCommentsWithUserInfo(comments);
+      const commentSchema = z.object({
+        _id: z.string(),
+        createdAt: z.string(),
+        response: z.string(),
+        userId: z.string(),
+        postId: z.string(),
+        likes: z.array(z.string()),
+        name: z.string(),
+        username: z.string(),
+        image: z.string().optional(),
+        posts: z.array(z.string()),
+        followers: z.array(z.string()),
+      });
+
+      const validatedComments = z.array(commentSchema).safeParse(comments);
+      console.log(validatedComments);
+      if (!validatedComments.success) {
+        console.error(validatedComments.error);
+        return;
+      }
+
+      setCommentsWithUserInfo(validatedComments.data);
     })();
   });
 
@@ -332,7 +349,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
                     <div className='flex flex-col'>
                       <span className='font-bold text-primary'>{comment.name}</span>
                       <div className='flex flex-row items-center gap-2'>
-                        <span className='text-muted'>{formatDate(comment.createdAt)}</span>
+                        <span className='text-muted'>{formatDate(comment.createdAt.toString())}</span>
                       </div>
                     </div>
                   </Link>

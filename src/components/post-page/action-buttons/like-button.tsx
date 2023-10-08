@@ -25,8 +25,6 @@ type LikeButtonProps = {
   currentSignedInUser: User;
 };
 
-const LikesSchema = z.array(z.string());
-
 const DEBOUNCE_DURATION = 300;
 const TRANSITION_DELAY = 300;
 
@@ -47,7 +45,7 @@ const LikeButton: FC<LikeButtonProps> = ({ currentSignedInUser }) => {
   const [isHeartPopoverOpen, setIsHeartPopoverOpen] = useState(false);
   const [isLikeCountPopoverOpen, setIsLikeCountPopoverOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
-  // TODO: Implement pulse animation
+  // TODO: Implement pulse animation for toast like
   // const [shouldPulse, setShouldPulse] = useState(false);
 
   const toastRef = useRef<HTMLDivElement | null>(null);
@@ -70,7 +68,7 @@ const LikeButton: FC<LikeButtonProps> = ({ currentSignedInUser }) => {
       }).then(res => res.json());
       if (!likes) throw new Error('Likes not found');
 
-      const validatedLikes = LikesSchema.safeParse(likes);
+      const validatedLikes = z.array(z.string()).safeParse(likes);
       if (!validatedLikes.success) {
         return;
       }

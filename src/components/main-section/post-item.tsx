@@ -80,7 +80,7 @@ const PostItem: FC<CardProps> = ({
           <div className='flex flex-col'>
             <span className='font-bold text-primary'>{name}</span>
             <div className='flex flex-row items-center gap-2'>
-              <span className='text-muted'>{formatDate(createdAt)}</span>
+              <span className='text-muted'>{formatDate(createdAt.toString())}</span>
             </div>
           </div>
         </Link>
