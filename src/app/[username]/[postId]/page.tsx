@@ -79,7 +79,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
               <div className='flex flex-row gap-5'>
                 <SaveButton currentSignedInUser={currentSignedInUser} mainPost={mainPost} />
                 <ShareButton />
-                <MoreOptionsButton currentSignedInUser={currentSignedInUser} mainPost={mainPost} />
+                <MoreOptionsButton currentSignedInUser={currentSignedInUser} />
               </div>
             </div>
 

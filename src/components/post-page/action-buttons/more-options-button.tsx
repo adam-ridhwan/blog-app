@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 import { FC, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { postsAtom } from '@/providers/hydrate-atoms';
 import { DELETE_LIKES } from '@/util/constants';
 import { useAtom, useSetAtom } from 'jotai';
 import { MoreHorizontal } from 'lucide-react';
@@ -22,12 +24,15 @@ import { totalLikeCountAtom, userLikeCountAtom } from '@/components/post-page/ac
 import { ActionButtonRequestBody } from '@/app/api/post/route';
 
 type MoreOptionsButtonProps = {
-  mainPost: Post;
   currentSignedInUser: User;
 };
 
-const MoreOptionsButton: FC<MoreOptionsButtonProps> = ({ mainPost, currentSignedInUser }) => {
+const MoreOptionsButton: FC<MoreOptionsButtonProps> = ({ currentSignedInUser }) => {
   const { data: session } = useSession();
+  const pathname = usePathname();
+  const [_, postId] = pathname.split('/').slice(1);
+
+  const [posts, setPosts] = useAtom(postsAtom);
   const [totalLikeCount, setTotalLikeCount] = useAtom(totalLikeCountAtom);
   const [userLikeCount, setUserLikeCount] = useAtom(userLikeCountAtom);
 
@@ -39,17 +44,16 @@ const MoreOptionsButton: FC<MoreOptionsButtonProps> = ({ mainPost, currentSigned
     if (!session || !session?.user?.email) return setIsSignInDialogOpen(true);
 
     const { signal } = new AbortController();
-    if (!mainPost) throw new Error('Post not found');
+
     if (!currentSignedInUser) throw new Error('User not found');
 
-    const postId = mainPost._id;
     const userId = currentSignedInUser._id;
 
     if (!postId || !userId) throw new Error('ID not found');
 
     const body: ActionButtonRequestBody = {
       actionId: DELETE_LIKES,
-      postId: postId.toString(),
+      postId,
       userId: userId.toString(),
     };
 
@@ -63,6 +67,13 @@ const MoreOptionsButton: FC<MoreOptionsButtonProps> = ({ mainPost, currentSigned
 
     setTotalLikeCount(totalLikeCount - userLikeCount);
     setUserLikeCount(0);
+    setPosts(
+      posts.map(post => {
+        return post._id === postId
+          ? { ...post, likes: post.likes.filter(id => id !== userId) }
+          : post;
+      })
+    ); // prettier-ignore
   };
 
   return (

@@ -4,10 +4,12 @@ import * as React from 'react';
 import { FC, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { postsAtom } from '@/providers/hydrate-atoms';
 import { cn } from '@/util/cn';
 import { MD } from '@/util/constants';
 import { formatDate } from '@/util/formatDate';
 import { useViewportSize } from '@mantine/hooks';
+import { useAtom, useAtomValue } from 'jotai';
 import { Heart, MessageCircle, MessageSquare } from 'lucide-react';
 
 import { AuthorDetails, type Post } from '@/types/types';
@@ -29,6 +31,9 @@ const PostItem: FC<CardProps> = ({
   const titleRef = useRef<HTMLDivElement>(null);
   const [isTitleWrappedInTwoLines, setTsTitleWrappedInTwoLines] = useState(false);
   const { width } = useViewportSize();
+
+  const posts = useAtomValue(postsAtom);
+  const post = posts.find(post => post._id === _id);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * WRAP TITLE
@@ -113,11 +118,11 @@ const PostItem: FC<CardProps> = ({
           <CardFooter>
             <div className='mr-3 flex flex-row items-center gap-1'>
               <Heart className='h-5 w-5' />
-              <span>{likes.length}</span>
+              <span>{post?.likes.length}</span>
             </div>
             <div className='mr-3 flex flex-row items-center gap-1'>
               <MessageSquare className='h-5 w-5' />
-              <span>{comments?.length}</span>
+              <span>{post?.comments?.length}</span>
             </div>
             <SeparatorDot />
             <span className='ml-3'>{views} views</span>

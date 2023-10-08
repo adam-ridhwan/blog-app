@@ -109,8 +109,8 @@ const LikeButton: FC<LikeButtonProps> = ({ currentSignedInUser }) => {
     if (userLikeCount < 30) {
       const currentTime = Date.now();
 
-      setUserLikeCount(prev => prev + 1);
       setTotalLikeCount(prev => prev + 1);
+      setUserLikeCount(prev => prev + 1);
 
       // If the click is within the debounce window, accumulate the count
       // Else the click is outside the debounce window, reset the accumulated count and start again

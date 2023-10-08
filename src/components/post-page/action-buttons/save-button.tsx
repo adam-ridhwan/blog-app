@@ -47,13 +47,11 @@ const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
         userId: userId.toString(),
       };
 
-      const pendingSavePost = await fetch('/api/post', {
+      const fetchedSavePost = await fetch('/api/post', {
         signal,
         method: 'POST',
         body: JSON.stringify(body),
-      });
-
-      const fetchedSavePost = await pendingSavePost.json();
+      }).then(res => res.json());
 
       if (fetchedSavePost) {
         setIsPostSaved(true);
