@@ -320,7 +320,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
         <Separator />
 
         <div className='my-5 '>
-          {mainPost.comments.length > 0 ? (
+          {numberOfComments ? (
             <div className='flex flex-col gap-5'>
               {commentsWithUserInfo.map(comment => (
                 <div key={comment._id?.toString()} className='flex flex-col gap-3'>

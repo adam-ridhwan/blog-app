@@ -11,6 +11,7 @@ import { getServerSession } from 'next-auth';
 import sanitizeHtml from 'sanitize-html';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 import CommentButton from '@/components/post-page/action-buttons/comment-button';
 import LikeButton from '@/components/post-page/action-buttons/like-button';
 import MoreOptionsButton from '@/components/post-page/action-buttons/more-options-button';
@@ -25,21 +26,18 @@ type PostPageProps = {
   };
 };
 
-export const dynamic = 'force-dynamic';
-
 const PostPage: FC<PostPageProps> = async ({ params }) => {
   const { username, postId } = params;
   const session = await getServerSession();
 
   const postInformation = await getPostInformation(decodeURIComponent(username), postId);
-
   if (!postInformation) notFound();
 
   const { author, post } = postInformation;
+  if (!author || !post) notFound();
+
   const { name, image, followerCount } = author;
   const { mainPost, next4Posts } = post;
-
-  if (!mainPost) notFound();
 
   let currentSignedInUser = null;
   if (session && session?.user?.email) {
@@ -75,11 +73,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
           <div className='mb-5 flex flex-row justify-between'>
             <div className='flex flex-row gap-5'>
               <LikeButton currentSignedInUser={currentSignedInUser} mainPost={mainPost} />
-              <CommentButton
-                currentSignedInUser={currentSignedInUser}
-                mainPost={mainPost}
-                // fetchedCommentsWithUserInfo={fetchedCommentsWithUserInfo}
-              />
+              <CommentButton currentSignedInUser={currentSignedInUser} mainPost={mainPost} />
             </div>
             <div className='flex flex-row gap-5'>
               <SaveButton currentSignedInUser={currentSignedInUser} mainPost={mainPost} />
