@@ -73,9 +73,10 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
               </div>
             </div>
 
-            <div className='relative mb-5 aspect-video w-full max-w-[750px]'>
-              <Image src='/sand.jpg' alt='sand' fill className='rounded-lg object-cover' />
-            </div>
+            {/* TODO: Implement images */}
+            {/*<div className='relative mb-5 aspect-video w-full max-w-[750px]'>*/}
+            {/*  <Image src='/sand.jpg' alt='sand' fill className='rounded-lg object-cover' />*/}
+            {/*</div>*/}
 
             <div
               className='content-section flex flex-col gap-5 text-xl leading-8 text-paragraph'

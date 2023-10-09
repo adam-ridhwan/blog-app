@@ -98,7 +98,7 @@ const PostItem: FC<CardProps> = ({
             <CardContent>
               <p
                 className={cn(
-                  `hidden text-muted`,
+                  `text-muted`,
                   { 'two-line-ellipsis hidden': isTitleWrappedInTwoLines },
                   { 'three-line-ellipsis': !isTitleWrappedInTwoLines },
                   { 'enable-ellipsis': width > MD }
@@ -109,9 +109,10 @@ const PostItem: FC<CardProps> = ({
             </CardContent>
           </div>
 
-          <div className='relative aspect-video h-max w-full rounded-2xl md:h-[108px] md:w-[180px]'>
-            <Image src='/sand.jpg' alt='' fill className='rounded-2xl object-cover' />
-          </div>
+          {/* TODO: Implement images */}
+          {/*<div className='relative aspect-video h-max w-full rounded-2xl md:h-[108px] md:w-[180px]'>*/}
+          {/*  <Image src='/sand.jpg' alt='' fill className='rounded-2xl object-cover' />*/}
+          {/*</div>*/}
         </Link>
 
         <Link href={`${username}/${_id}`}>

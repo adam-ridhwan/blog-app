@@ -28,25 +28,27 @@ const MorePostsItem: FC<MorePostsProps> = ({
 }) => {
   return (
     <>
-      <Card className='flex justify-between md:h-[380px] md:min-h-[350px] md:border-none md:p-0 md:shadow-none'>
-        <Link href={`${_id}`} className='flex min-h-[112px] flex-col'>
-          <div className='relative aspect-video h-max w-full rounded-2xl md:h-[160px] md:w-[325px]'>
-            <Image src='/sand.jpg' alt='' fill className='rounded-2xl object-cover' />
-          </div>
-        </Link>
+      {/*<Card className='flex justify-between md:h-[380px] md:min-h-[350px] md:border-none md:p-0 md:shadow-none'>*/}
+      <Card className='flex md:border-none md:p-0 md:shadow-none'>
+        {/* TODO: Implement images */}
+        {/*<Link href={`${_id}`} className='flex min-h-[112px] flex-col'>*/}
+        {/*  <div className='relative aspect-video h-max w-full rounded-2xl md:h-[160px] md:w-[325px]'>*/}
+        {/*    <Image src='/sand.jpg' alt='' fill className='rounded-2xl object-cover' />*/}
+        {/*  </div>*/}
+        {/*</Link>*/}
 
-        <Link href={`/${decodeURIComponent(username)}`} className='flex flex-row items-center gap-2'>
-          <Avatar className='h-5 w-5'>
-            {image ? (
-              <Image src={image} alt='' />
-            ) : (
-              <AvatarFallback className='text-sm'>{name?.split('')[0]}</AvatarFallback>
-            )}
-          </Avatar>
+        {/*<Link href={`/${decodeURIComponent(username)}`} className='flex flex-row items-center gap-2'>*/}
+        {/*  <Avatar className='h-5 w-5'>*/}
+        {/*    {image ? (*/}
+        {/*      <Image src={image} alt='' />*/}
+        {/*    ) : (*/}
+        {/*      <AvatarFallback className='text-sm'>{name?.split('')[0]}</AvatarFallback>*/}
+        {/*    )}*/}
+        {/*  </Avatar>*/}
 
-          <span className='font-bold text-primary'>{name}</span>
-          <span className='text-muted'>{formatDate(createdAt.toString())}</span>
-        </Link>
+        {/*  <span className='font-bold text-primary'>{name}</span>*/}
+        {/*  <span className='text-muted'>{formatDate(createdAt.toString())}</span>*/}
+        {/*</Link>*/}
 
         <Link href={`/${decodeURIComponent(username)}`} className='flex h-[105px] flex-col'>
           <CardHeader>

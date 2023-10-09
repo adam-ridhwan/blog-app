@@ -35,10 +35,11 @@ const CardSkeleton = forwardRef<HTMLDivElement, CardSkeletonProps>(({ className 
             </CardContent>
           </div>
 
+          {/* TODO: Implement images */}
           {/* Image */}
-          <div className='relative hidden aspect-video h-max w-full rounded-2xl md:flex md:h-[108px] md:w-[180px]'>
-            <Skeleton className={cn('h-full w-full rounded-2xl bg-primary/30', className)} />
-          </div>
+          {/*<div className='relative hidden aspect-video h-max w-full rounded-2xl md:flex md:h-[108px] md:w-[180px]'>*/}
+          {/*  <Skeleton className={cn('h-full w-full rounded-2xl bg-primary/30', className)} />*/}
+          {/*</div>*/}
         </div>
 
         {/* Likes, comments, views */}
