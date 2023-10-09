@@ -7,6 +7,7 @@ import PostList from '@/components/main-section/post-list';
 import BuiltWith from '@/components/side-menu/built-with';
 import Draft from '@/components/side-menu/draft';
 import EditorPosts from '@/components/side-menu/editor-posts';
+import SavedPosts from '@/components/side-menu/saved-posts';
 import SideMenu from '@/components/side-menu/side-menu';
 import TrendingPosts from '@/components/side-menu/trending-posts';
 import WhoToFollow from '@/components/side-menu/who-to-follow';
@@ -41,7 +42,8 @@ export default async function Home() {
           <TrendingPosts trendingPostsAndAuthors={plainify(trendingPostsAndAuthors)} />
           <Draft />
           <WhoToFollow trendingAuthors={plainify(trendingAuthors)} />
-          <EditorPosts />
+          {/*<EditorPosts />*/}
+          <SavedPosts savedPosts={plainify(trendingPostsAndAuthors)} />
           <BuiltWith />
         </>
       </SideMenu>
