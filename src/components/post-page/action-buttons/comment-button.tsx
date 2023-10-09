@@ -21,7 +21,7 @@ import sanitizeHtml from 'sanitize-html';
 import { useEffectOnce } from 'usehooks-ts';
 import { z } from 'zod';
 
-import { CommentWithUserInfo, Post, User } from '@/types/types';
+import { CommentWithUserInfo, Post } from '@/types/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -49,7 +49,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
 
   const [isPending, startTransition] = useTransition();
 
-  const [comment, setComment] = useLocalStorage({
+  const [comment, setComment, removeComment] = useLocalStorage({
     key: `comment|${mainPost._id}`,
     defaultValue: EMPTY_COMMENT,
   });
@@ -198,6 +198,8 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
           })
         );
         setCommentsWithUserInfo(prev => [newComment, ...prev]);
+
+        removeComment();
       }
     });
   };

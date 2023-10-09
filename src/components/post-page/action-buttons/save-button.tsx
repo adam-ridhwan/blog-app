@@ -31,8 +31,6 @@ const SaveButton: FC<SaveButtonProps> = () => {
   const openPopover = () => setIsPopoverOpen(true);
   const closePopover = () => setIsPopoverOpen(false);
 
-  console.log({ currentUser });
-
   const handleSavePost = () => {
     if (!currentUser) return setIsSignInDialogOpen(true);
     if (isPostSaved) return;

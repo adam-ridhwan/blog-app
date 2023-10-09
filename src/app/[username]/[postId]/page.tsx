@@ -28,7 +28,6 @@ type PostPageProps = {
 
 const PostPage: FC<PostPageProps> = async ({ params }) => {
   const { username, postId } = params;
-  const session = await getServerSession();
 
   const postInformation = await getPostInformation(decodeURIComponent(username), postId);
   if (!postInformation) notFound();
@@ -38,11 +37,6 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
 
   const { name, image, followerCount } = author;
   const { mainPost, next4Posts } = post;
-
-  let currentSignedInUser = null;
-  if (session && session?.user?.email) {
-    currentSignedInUser = await getUserByEmail(session.user.email);
-  }
 
   return (
     <>
