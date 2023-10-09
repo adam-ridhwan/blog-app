@@ -5,12 +5,6 @@ import { cn } from '@/util/cn';
 import { XL } from '@/util/constants';
 import { useViewportSize } from '@mantine/hooks';
 
-import BuiltWith from '@/components/side-menu/built-with';
-import Draft from '@/components/side-menu/draft';
-import EditorPosts from '@/components/side-menu/editor-posts';
-import TrendingPosts from '@/components/side-menu/trending-posts';
-import WhoToFollow from '@/components/side-menu/who-to-follow';
-
 type SideMenuProps = {
   children: ReactNode;
 };
@@ -43,10 +37,10 @@ const SideMenu: FC<SideMenuProps> = ({ children }) => {
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * GET THE PLACEHOLDER MEASUREMENTS
-   * Calculates the height and the top of the placeholder
-   * The measurements will be used for actual sidebar
-   * ────────────────
-   * Height is needed in the dependency to recalculate the height of the placeholder when the viewport
+   * - Calculates the height and the top of the placeholder
+   * - The measurements will be used for actual sidebar
+   *
+   * - Height is needed in the dependency to recalculate the height of the placeholder when the viewport
    * when user resizes the viewport
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffect(() => {
@@ -60,6 +54,29 @@ const SideMenu: FC<SideMenuProps> = ({ children }) => {
 
     if (placeholder.height !== height) return setPlaceholder(prev => ({ ...prev, height }));
   }, [placeholder, height, width]);
+
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * DETECT SIDEBAR HEIGHT CHANGE
+   * - When sidebar height changes, the placeholder height should also change.
+   * - Accordions are used for the sidebar. When the accordion is expanded, the sidebar height changes.
+   * - Need to recalculate the height of the placeholder to prevent the sidebar from jumping when the
+   * accordion is expanded
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  useEffect(() => {
+    const observeTarget = sideMenuRef.current;
+
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        setPlaceholder(prev => ({ ...prev, height: entry.target.clientHeight }));
+      }
+    });
+
+    if (observeTarget) {
+      resizeObserver.observe(observeTarget);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [sideMenuRef]);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * SIDEBAR SCROLL BEHAVIOR

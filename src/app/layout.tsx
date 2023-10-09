@@ -76,6 +76,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     return false;
   });
 
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   *
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+
   return (
     <html lang='en'>
       <body className={`${inter.className} max-h-screen min-h-screen w-full max-w-[100vw]`}>

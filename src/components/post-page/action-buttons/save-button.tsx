@@ -28,9 +28,10 @@ const SaveButton: FC<SaveButtonProps> = () => {
 
   const setIsSignInDialogOpen = useSetAtom(isSignInDialogOpenAtom);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const openPopover = () => setIsPopoverOpen(true);
-  const closePopover = () => setIsPopoverOpen(false);
 
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * SAVE POST
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const handleSavePost = () => {
     if (!currentUser) return setIsSignInDialogOpen(true);
     if (isPostSaved) return;
@@ -71,6 +72,9 @@ const SaveButton: FC<SaveButtonProps> = () => {
     });
   };
 
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * REMOVE SAVED POST
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const handleRemoveSavedPost = () => {
     startTransition(async () => {
       const { signal } = new AbortController();

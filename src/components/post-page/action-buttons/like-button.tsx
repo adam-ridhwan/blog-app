@@ -6,17 +6,18 @@ import { usePathname } from 'next/navigation';
 import { currentUserAtom, postsAtom } from '@/providers/hydrate-atoms';
 import { cn } from '@/util/cn';
 import { LIKE } from '@/util/constants';
-import { useRenderCount } from '@uidotdev/usehooks';
-import { atom, useAtom, useSetAtom } from 'jotai';
-import { useHydrateAtoms } from 'jotai/utils';
+import { delay } from '@/util/delay';
+import { useLongPress } from '@uidotdev/usehooks';
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { Heart } from 'lucide-react';
-import { ObjectId } from 'mongodb';
 import { useSession } from 'next-auth/react';
+import { toast } from 'sonner';
+import useSWR from 'swr';
 import { useEffectOnce } from 'usehooks-ts';
-import { string, z } from 'zod';
+import { z } from 'zod';
 
-import { mongoIdSchema, Post, User } from '@/types/types';
 import { Button } from '@/components/ui/button';
+import LoadingSpinner from '@/components/ui/loading-spinner';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
 import { ActionButtonRequestBody } from '@/app/api/post/route';
@@ -24,7 +25,8 @@ import { ActionButtonRequestBody } from '@/app/api/post/route';
 type LikeButtonProps = {};
 
 const DEBOUNCE_DURATION = 300;
-const TRANSITION_DELAY = 300;
+const TRANSITION_DELAY = 150;
+export const MAX_LIKE_COUNT = 30;
 
 export const totalLikeCountAtom = atom(0);
 export const userLikeCountAtom = atom(0);
@@ -35,7 +37,7 @@ const LikeButton: FC<LikeButtonProps> = () => {
 
   const { data: session } = useSession();
 
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
+  const currentUser = useAtomValue(currentUserAtom);
   const [posts, setPosts] = useAtom(postsAtom);
   const [totalLikeCount, setTotalLikeCount] = useAtom(totalLikeCountAtom);
   const [userLikeCount, setUserLikeCount] = useAtom(userLikeCountAtom);
@@ -44,8 +46,22 @@ const LikeButton: FC<LikeButtonProps> = () => {
   const [isHeartPopoverOpen, setIsHeartPopoverOpen] = useState(false);
   const [isLikeCountPopoverOpen, setIsLikeCountPopoverOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
+
   // TODO: Implement pulse animation for toast like
   // const [shouldPulse, setShouldPulse] = useState(false);
+
+  // TODO: Implement long pressing to like
+  const attrs = useLongPress(
+    () => {
+      // console.log('Long press activated');
+    },
+    {
+      // onStart: event => console.log('Press started'),
+      // onFinish: event => console.log('Press Finished'),
+      // onCancel: event => console.log('Press cancelled'),
+      threshold: 500,
+    }
+  );
 
   const toastRef = useRef<HTMLDivElement | null>(null);
 
@@ -104,9 +120,10 @@ const LikeButton: FC<LikeButtonProps> = () => {
     setIsHeartPopoverOpen(false);
     setIsToastOpen(true);
 
-    if (userLikeCount < 30) {
+    if (userLikeCount < MAX_LIKE_COUNT) {
       const currentTime = Date.now();
 
+      // Optimistic update
       setTotalLikeCount(prev => prev + 1);
       setUserLikeCount(prev => prev + 1);
 
@@ -155,21 +172,27 @@ const LikeButton: FC<LikeButtonProps> = () => {
       totalLikeCount,
     };
 
-    const response = await fetch('/api/post', {
+    const { response, likes } = await fetch('/api/post', {
       signal,
       method: 'POST',
       body: JSON.stringify(body),
     }).then(res => res.json());
 
     if (response) {
-      // prettier-ignore
-      setPosts(
-        posts.map(post => {
-          return post._id === postId
-            ? { ...post, likes: [...post.likes, ...response.likes] }
-            : post;
-        })
-      );
+      const updatedPosts = posts.map(post =>
+        post._id === postId
+          ? { ...post, likes: [...post.likes, ...likes] }
+          : post
+      ); // prettier-ignore
+      setPosts(updatedPosts);
+    }
+
+    if (!response) {
+      toast.error('Failed to like post');
+      await delay(1000);
+      // Revert optimistic update
+      setTotalLikeCount(prev => prev - totalLikeCount);
+      setUserLikeCount(prev => prev - totalLikeCount);
     }
   };
 
@@ -198,7 +221,7 @@ const LikeButton: FC<LikeButtonProps> = () => {
         if (!toastRef.current) return;
         toastRef.current.style.transform = 'translateY(40px)';
         toastRef.current.style.transition = 'none';
-      }, 150);
+      }, TRANSITION_DELAY);
     }
 
     return () => {
@@ -212,7 +235,13 @@ const LikeButton: FC<LikeButtonProps> = () => {
         <TooltipProvider delayDuration={700}>
           <Tooltip open={isHeartPopoverOpen} onOpenChange={setIsHeartPopoverOpen}>
             <TooltipTrigger asChild>
-              <Button variant='text' onClick={handleLikeClick} className='relative p-0'>
+              <Button
+                variant='text'
+                onClick={handleLikeClick}
+                className='relative p-0'
+                // disabled={isLoading}
+                {...attrs}
+              >
                 {userLikeCount > 0 ? (
                   <Heart className='h-5 w-5 fill-primary/80 stroke-muted/80 stroke-2 opacity-60 transition-opacity duration-100 hover:opacity-100' />
                 ) : (

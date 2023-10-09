@@ -13,11 +13,9 @@ import PostItem from '@/components/main-section/post-item';
 
 const LIMIT = 5;
 
-type PostListProps = {
-  children: ReactNode;
-};
+type PostListProps = {};
 
-const PostList: FC<PostListProps> = ({ children }) => {
+const PostList: FC<PostListProps> = () => {
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * LOGIC
    * 1) First 5 posts are fetched from server
@@ -119,8 +117,6 @@ const PostList: FC<PostListProps> = ({ children }) => {
     <>
       <main className='relative mb-6 mt-[100px] md:flex md:flex-col md:items-center'>
         <div className='flex max-w-[728px] flex-col gap-5 md:items-center'>
-          {children}
-
           {posts?.map((post, i) => {
             const lastPost = i === posts?.length - 1;
             const author = authors?.find(author => author._id === post.authorId);

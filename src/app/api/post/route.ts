@@ -79,14 +79,15 @@ export async function POST(request: NextRequest) {
 
     const likes = Array(totalLikeCount).fill(new ObjectId(userId));
 
-    const response = await postCollection.updateOne(
-      { _id: new ObjectId(postId) },
-      { $push: { likes: { $each: likes } } }
-    );
+    // const response = await postCollection.updateOne(
+    //   { _id: new ObjectId(postId) },
+    //   { $push: { likes: { $each: likes } } }
+    // );
 
     return NextResponse.json(
       {
-        response: response.acknowledged,
+        // response: response.acknowledged,
+        response: false,
         likes: plainify(likes),
       },
       { status: 200 }

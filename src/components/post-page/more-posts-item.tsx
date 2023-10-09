@@ -3,7 +3,6 @@ import { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/util/cn';
-import { MD } from '@/util/constants';
 import { formatDate } from '@/util/formatDate';
 import { Heart, MessageCircle } from 'lucide-react';
 
@@ -49,32 +48,34 @@ const MorePostsItem: FC<MorePostsProps> = ({
           <span className='text-muted'>{formatDate(createdAt.toString())}</span>
         </Link>
 
-        <div className='flex h-[105px] flex-col'>
+        <Link href={`/${decodeURIComponent(username)}`} className='flex h-[105px] flex-col'>
           <CardHeader>
             <CardTitle className={cn(`two-line-ellipsis text-primary`)}>{title}</CardTitle>
           </CardHeader>
           <CardContent>
             <MorePostsSubtitle content={content} subtitle={subtitle} />
           </CardContent>
-        </div>
+        </Link>
 
-        <CardFooter>
-          <Button
-            variant='text'
-            className='none mr-3 flex h-max flex-row items-center gap-1 p-0 hover:bg-none'
-          >
-            <Heart className='h-5 w-5' />
-            <span className='text-md'>{likes.length}</span>
-          </Button>
+        <Link href={`/${decodeURIComponent(username)}`}>
+          <CardFooter>
+            <Button
+              variant='text'
+              className='none mr-3 flex h-max flex-row items-center gap-1 p-0 hover:bg-none'
+            >
+              <Heart className='h-5 w-5' />
+              <span className='text-md'>{likes.length}</span>
+            </Button>
 
-          <Button
-            variant='text'
-            className='none mr-3 flex h-max flex-row items-center gap-1 p-0 hover:bg-none'
-          >
-            <MessageCircle className='h-5 w-5' />
-            <span className='text-md'>{comments?.length}</span>
-          </Button>
-        </CardFooter>
+            <Button
+              variant='text'
+              className='none mr-3 flex h-max flex-row items-center gap-1 p-0 hover:bg-none'
+            >
+              <MessageCircle className='h-5 w-5' />
+              <span className='text-md'>{comments?.length}</span>
+            </Button>
+          </CardFooter>
+        </Link>
       </Card>
 
       <Separator className='mt-8 md:hidden' />
