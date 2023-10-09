@@ -49,7 +49,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
 
   const [isPending, startTransition] = useTransition();
 
-  const [comment, setComment, removeComment] = useLocalStorage({
+  const [commentLocalStorage, setCommentLocalStorage, removeCommentLocalStorage] = useLocalStorage({
     key: `comment|${mainPost._id}`,
     defaultValue: EMPTY_COMMENT,
   });
@@ -122,7 +122,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const handleOpenDialog = () => {
     if (!currentUser) return setIsSignInDialogOpen(true);
-    if (comment !== EMPTY_COMMENT) expandInput();
+    if (commentLocalStorage !== EMPTY_COMMENT) expandInput();
     openDialog();
   };
 
@@ -132,7 +132,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
    * If comment is empty, collapse input
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const handleCloseDialog = () => {
-    if (comment === EMPTY_COMMENT) collapseInput();
+    if (commentLocalStorage === EMPTY_COMMENT) collapseInput();
     closeDialog();
   };
 
@@ -147,7 +147,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
 
     quill.blur();
     collapseInput();
-    setComment(EMPTY_COMMENT);
+    setCommentLocalStorage(EMPTY_COMMENT);
   };
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -168,7 +168,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
         actionId: COMMENT,
         postId,
         userId: userId.toString(),
-        comment: sanitizeHtml(comment),
+        comment: sanitizeHtml(commentLocalStorage),
       };
 
       const pendingCreateCommentResponse = fetch('/api/post', {
@@ -188,7 +188,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
         if (!quillRef.current) return;
         const quill = quillRef.current.getEditor();
         quill.blur();
-        setComment(EMPTY_COMMENT);
+        setCommentLocalStorage(EMPTY_COMMENT);
         collapseInput();
 
         // Need to update the global postsAtom and commentsAtom for client-side rendering
@@ -199,7 +199,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
         );
         setCommentsWithUserInfo(prev => [newComment, ...prev]);
 
-        removeComment();
+        removeCommentLocalStorage();
       }
     });
   };
@@ -298,8 +298,8 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
             ref={quillRef}
             onFocus={expandInput}
             theme='bubble'
-            value={comment}
-            onChange={setComment}
+            value={commentLocalStorage}
+            onChange={setCommentLocalStorage}
             placeholder={'Post comment...'}
             modules={modules}
             className={cn(`comment-input ease text-primary outline-0 transition-all duration-400`, {
@@ -321,7 +321,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
               variant='accent'
               onClick={handlePostComment}
               className='h-8 w-[80px] text-white'
-              disabled={comment === EMPTY_COMMENT || isPending}
+              disabled={commentLocalStorage === EMPTY_COMMENT || isPending}
             >
               {isPending ? <Loader2 className='h-5 w-5 animate-spin' /> : 'Publish'}
             </Button>
