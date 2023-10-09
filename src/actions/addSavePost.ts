@@ -14,7 +14,7 @@ export const addSavePost = async (postId: string, userId: string) => {
     );
 
     return {
-      savedPostResponse: savedPostResponse.acknowledged,
+      response: savedPostResponse.acknowledged,
     };
   } catch (error) {
     console.error('Error saving post:', error);

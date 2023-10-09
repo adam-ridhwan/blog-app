@@ -2,98 +2,101 @@
 
 import * as React from 'react';
 import { FC, useState, useTransition } from 'react';
+import { usePathname } from 'next/navigation';
+import { currentUserAtom } from '@/providers/hydrate-atoms';
 import { DELETE_SAVED_POST, SAVE } from '@/util/constants';
+import { useAtom } from 'jotai';
+import { useSetAtom } from 'jotai/index';
 import { Bookmark } from 'lucide-react';
 
-import { Post, User } from '@/types/types';
 import { Checkbox } from '@/components/ui/checkbox';
 import Overlay from '@/components/ui/overlay';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
 import { ActionButtonRequestBody } from '@/app/api/post/route';
 
-type SaveButtonProps = {
-  mainPost: Post;
-  currentSignedInUser: User;
-};
+type SaveButtonProps = {};
 
-const SaveButton: FC<SaveButtonProps> = ({ mainPost, currentSignedInUser }) => {
+const SaveButton: FC<SaveButtonProps> = () => {
+  const pathname = usePathname();
+  const [_, postId] = pathname.split('/').slice(1);
   const [isPending, startTransition] = useTransition();
 
-  const [isPostSaved, setIsPostSaved] = useState(
-    mainPost._id ? currentSignedInUser.savedPosts.includes(mainPost._id) : false
-  );
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
+  const [isPostSaved, setIsPostSaved] = useState(currentUser?.savedPosts.includes(postId));
 
+  const setIsSignInDialogOpen = useSetAtom(isSignInDialogOpenAtom);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const openPopover = () => setIsPopoverOpen(true);
   const closePopover = () => setIsPopoverOpen(false);
 
+  console.log({ currentUser });
+
   const handleSavePost = () => {
+    if (!currentUser) return setIsSignInDialogOpen(true);
     if (isPostSaved) return;
+
+    setIsPostSaved(true);
 
     startTransition(async () => {
       const { signal } = new AbortController();
-      if (!mainPost) throw new Error('Post not found');
-      if (!currentSignedInUser) throw new Error('User not found');
 
-      const postId = mainPost._id;
-      const userId = currentSignedInUser._id;
-
-      if (!postId || !userId) throw new Error('IDs not found');
+      if (!currentUser || !currentUser._id) throw new Error('User not found');
 
       const body: ActionButtonRequestBody = {
         actionId: SAVE,
-        postId: postId.toString(),
-        userId: userId.toString(),
+        postId,
+        userId: currentUser?._id.toString(),
       };
 
-      const fetchedSavePost = await fetch('/api/post', {
+      const { response } = await fetch('/api/post', {
         signal,
         method: 'POST',
         body: JSON.stringify(body),
       }).then(res => res.json());
 
-      if (fetchedSavePost) {
+      if (!response) {
+        setIsPostSaved(false);
+        throw new Error('Failed to save post');
+      }
+
+      if (response) {
         setIsPostSaved(true);
+        if (!currentUser.savedPosts.includes(postId)) {
+          setCurrentUser({
+            ...currentUser,
+            savedPosts: [...currentUser.savedPosts, postId],
+          });
+        }
       }
     });
   };
 
   const handleRemoveSavedPost = () => {
-    if (!mainPost) throw new Error('Post not found');
-    if (!currentSignedInUser) throw new Error('User not found');
-
-    const postId = mainPost._id;
-    const userId = currentSignedInUser._id;
-
-    if (!postId || !userId) throw new Error('IDs not found');
-
     startTransition(async () => {
       const { signal } = new AbortController();
-      if (!mainPost) throw new Error('Post not found');
-      if (!currentSignedInUser) throw new Error('User not found');
 
-      const postId = mainPost._id;
-      const userId = currentSignedInUser._id;
-
-      if (!postId || !userId) throw new Error('IDs not found');
+      if (!currentUser || !currentUser._id) throw new Error('User not found');
 
       const body: ActionButtonRequestBody = {
         actionId: DELETE_SAVED_POST,
-        postId: postId.toString(),
-        userId: userId.toString(),
+        postId,
+        userId: currentUser?._id.toString(),
       };
 
-      const pendingDeletePost = await fetch('/api/post', {
+      const { response } = await fetch('/api/post', {
         signal,
         method: 'POST',
         body: JSON.stringify(body),
-      });
+      }).then(res => res.json());
 
-      const deletedPostResponse = await pendingDeletePost.json();
-
-      if (deletedPostResponse) {
-        setIsPostSaved(prev => !prev);
+      if (response) {
+        setIsPostSaved(false);
+        setCurrentUser({
+          ...currentUser,
+          savedPosts: currentUser.savedPosts.filter(id => id !== postId),
+        });
       }
     });
   };

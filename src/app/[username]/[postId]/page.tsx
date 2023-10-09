@@ -46,7 +46,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
 
   return (
     <>
-      <div className='flex h-[100dvh] flex-col'>
+      <div className='flex min-h-[100dvh] flex-col'>
         <div className='container flex flex-col items-center pb-[30px] pt-[100px]'>
           <div className='mb-3 w-full md:max-w-[680px]'>
             <h1 className='text-balance title leading-9 text-primary'>{mainPost?.title}</h1>
@@ -73,13 +73,13 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
 
             <div className='mb-5 flex flex-row justify-between'>
               <div className='flex flex-row gap-5'>
-                <LikeButton currentSignedInUser={currentSignedInUser} />
-                <CommentButton currentSignedInUser={currentSignedInUser} mainPost={mainPost} />
+                <LikeButton />
+                <CommentButton mainPost={mainPost} />
               </div>
               <div className='flex flex-row gap-5'>
-                <SaveButton currentSignedInUser={currentSignedInUser} mainPost={mainPost} />
+                <SaveButton />
                 <ShareButton />
-                <MoreOptionsButton currentSignedInUser={currentSignedInUser} />
+                <MoreOptionsButton />
               </div>
             </div>
 

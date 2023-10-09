@@ -97,36 +97,36 @@ export async function POST(request: NextRequest) {
    * COMMENT
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   if (actionId === COMMENT) {
-    const { insertCommentResponse, newCommentWithUserInfo } = await createComment(postId, userId, comment);
+    const { response, newComment } = await createComment(postId, userId, comment);
 
-    return NextResponse.json({ insertCommentResponse, newCommentWithUserInfo }, { status: 200 });
+    return NextResponse.json({ response, newComment }, { status: 200 });
   }
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * DELETE
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   if (actionId === DELETE_LIKES) {
-    const { deletedPostLikes } = await deleteLikes(postId, userId);
+    const { response } = await deleteLikes(postId, userId);
 
-    return NextResponse.json({ deletedPostLikes }, { status: 200 });
+    return NextResponse.json({ response }, { status: 200 });
   }
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * SAVE
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   if (actionId === SAVE) {
-    const { savedPostResponse } = await addSavePost(postId, userId);
+    const { response } = await addSavePost(postId, userId);
 
-    return NextResponse.json({ savedPostResponse }, { status: 200 });
+    return NextResponse.json({ response }, { status: 200 });
   }
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
    * REMOVE SAVED POST
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   if (actionId === DELETE_SAVED_POST) {
-    const { deletedSavedPostResponse } = await deleteSavedPost(postId, userId);
+    const { response } = await deleteSavedPost(postId, userId);
 
-    return NextResponse.json({ deletedSavedPostResponse }, { status: 200 });
+    return NextResponse.json({ response }, { status: 200 });
   }
 
   return NextResponse.json({ success: 'Route api/post' }, { status: 200 });

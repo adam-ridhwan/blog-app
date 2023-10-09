@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { currentUserAtom } from '@/providers/hydrate-atoms';
 import { atom, useAtom } from 'jotai';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
@@ -35,6 +36,8 @@ const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { data: session, status } = useSession();
+
+  const [user, setUser] = useAtom(currentUserAtom);
 
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
   const [isSignInDialogOpen, setIsSignInDialogOpen] = useAtom(isSignInDialogOpenAtom);
@@ -184,7 +187,13 @@ const Navbar = () => {
 
                     <DropdownMenuGroup className='group cursor-pointer py-[16px]'>
                       <DropdownMenuItem className='p-0 text-sm text-muted'>
-                        <button className='flex flex-col px-[24px] py-[8px]' onClick={() => signOut()}>
+                        <button
+                          className='flex flex-col px-[24px] py-[8px]'
+                          onClick={async () => {
+                            setUser(null);
+                            await signOut();
+                          }}
+                        >
                           <span className='group-hover:text-primary'>Sign out</span>
                           <span>{session?.user?.email}</span>
                         </button>

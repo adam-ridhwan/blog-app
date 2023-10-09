@@ -18,6 +18,6 @@ export const deleteLikes = async (postId: string, userId: string) => {
   const [deletedPostLikes] = await Promise.all([pendingDeletePostLikes]);
 
   return {
-    deletedPostLikes: deletedPostLikes.acknowledged,
+    response: deletedPostLikes.acknowledged,
   };
 };

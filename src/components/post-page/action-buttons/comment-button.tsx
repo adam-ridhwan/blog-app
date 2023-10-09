@@ -6,7 +6,7 @@ import * as React from 'react';
 import { FC, useEffect, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { postsAtom } from '@/providers/hydrate-atoms';
+import { currentUserAtom, postsAtom } from '@/providers/hydrate-atoms';
 import { cn } from '@/util/cn';
 import { COMMENT, MD } from '@/util/constants';
 import { delay } from '@/util/delay';
@@ -33,7 +33,6 @@ const Delta = Quill.import('delta');
 
 type CommentButtonProps = {
   mainPost: Post;
-  currentSignedInUser: User;
 };
 
 const modules = {
@@ -42,7 +41,7 @@ const modules = {
 
 const EMPTY_COMMENT = '<p><br></p>';
 
-const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }) => {
+const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
   const pathname = usePathname();
   const [username, postId] = pathname.split('/').slice(1);
   const { data: session } = useSession();
@@ -55,6 +54,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
     defaultValue: EMPTY_COMMENT,
   });
 
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
   const [posts, setPosts] = useAtom(postsAtom);
   const [commentsWithUserInfo, setCommentsWithUserInfo] = useState<CommentWithUserInfo[]>([]);
 
@@ -83,7 +83,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
 
   useEffectOnce(() => {
     (async () => {
-      const { comments }: { comments: CommentWithUserInfo } = await fetch(`/api/comments`, {
+      const { comments } = await fetch(`/api/comments`, {
         method: 'POST',
         body: JSON.stringify({ username, postId }),
       }).then(res => res.json());
@@ -92,7 +92,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
       const commentSchema = z.object({
         _id: z.string(),
         createdAt: z.string(),
-        response: z.string(),
+        comment: z.string(),
         userId: z.string(),
         postId: z.string(),
         likes: z.array(z.string()),
@@ -104,7 +104,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
       });
 
       const validatedComments = z.array(commentSchema).safeParse(comments);
-      console.log(validatedComments);
+
       if (!validatedComments.success) {
         console.error(validatedComments.error);
         return;
@@ -121,7 +121,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
    * Otherwise, open comment dialog
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const handleOpenDialog = () => {
-    if (!session || !session?.user?.email) return setIsSignInDialogOpen(true);
+    if (!currentUser) return setIsSignInDialogOpen(true);
     if (comment !== EMPTY_COMMENT) expandInput();
     openDialog();
   };
@@ -158,21 +158,17 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
   const handlePostComment = () => {
     startTransition(async () => {
       const { signal } = new AbortController();
-      if (!mainPost) throw new Error('Post not found');
-      if (!currentSignedInUser) throw new Error('User not found');
 
-      const postId = mainPost._id;
-      const userId = currentSignedInUser._id;
+      if (!currentUser) throw new Error('User not found');
 
-      if (!postId || !userId) throw new Error('ID not found');
-
-      const cleanComment = sanitizeHtml(comment);
+      const userId = currentUser._id;
+      if (!userId) throw new Error('ID not found');
 
       const body: ActionButtonRequestBody = {
         actionId: COMMENT,
-        postId: postId.toString(),
+        postId,
         userId: userId.toString(),
-        comment: cleanComment,
+        comment: sanitizeHtml(comment),
       };
 
       const pendingCreateCommentResponse = fetch('/api/post', {
@@ -186,9 +182,9 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
         pendingCreateCommentResponse,
       ]);
 
-      const { insertCommentResponse, newCommentWithUserInfo } = await fetchedCreateCommentResponse.json();
+      const { response, newComment } = await fetchedCreateCommentResponse.json();
 
-      if (insertCommentResponse) {
+      if (response) {
         if (!quillRef.current) return;
         const quill = quillRef.current.getEditor();
         quill.blur();
@@ -198,12 +194,10 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
         // Need to update the global postsAtom and commentsAtom for client-side rendering
         setPosts(
           posts.map(post => {
-            return post._id === postId
-              ? { ...post, comments: [...post.comments, newCommentWithUserInfo._id] }
-              : post;
+            return post._id === postId ? { ...post, comments: [...post.comments, newComment._id] } : post;
           })
         );
-        setCommentsWithUserInfo(prev => [newCommentWithUserInfo, ...prev]);
+        setCommentsWithUserInfo(prev => [newComment, ...prev]);
       }
     });
   };
@@ -291,12 +285,10 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
             )}
           >
             <Avatar className='h-10 w-10'>
-              <AvatarFallback className='text-primary'>
-                {currentSignedInUser?.name?.split('')[0]}
-              </AvatarFallback>
+              <AvatarFallback className='text-primary'>{currentUser?.name?.split('')[0]}</AvatarFallback>
             </Avatar>
             <div className='flex flex-col'>
-              <span className='font-medium text-primary'>{currentSignedInUser?.name}</span>
+              <span className='font-medium text-primary'>{currentUser?.name}</span>
             </div>
           </div>
 
@@ -355,7 +347,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost, currentSignedInUser }
                   </Link>
 
                   <div
-                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(comment.response) }}
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(comment.comment) }}
                     className={cn(`text-primary`)}
                   />
 

@@ -10,6 +10,6 @@ export const deleteSavedPost = async (postId: string, userId: string) => {
   );
 
   return {
-    deletedSavedPostResponse: deletedSavedPost.acknowledged,
+    response: deletedSavedPost.acknowledged,
   };
 };

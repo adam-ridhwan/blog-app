@@ -1,16 +1,14 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import { plainify } from '@/util/plainify';
 import { ObjectId } from 'mongodb';
-import { undefined } from 'zod';
 
-import { Comment, CommentWithUserInfo, MongoId } from '@/types/types';
+import { Comment, CommentWithUserInfo } from '@/types/types';
 
 export type CreateCommentResponse = {
-  insertCommentResponse: boolean;
-  newCommentWithUserInfo: CommentWithUserInfo;
+  response: boolean;
+  newComment: CommentWithUserInfo;
 };
 
 export const createComment = async (
@@ -26,7 +24,7 @@ export const createComment = async (
 
     const comment: Comment = {
       createdAt: new Date(),
-      response: newComment,
+      comment: newComment,
       postId: new ObjectId(postId),
       userId: new ObjectId(currentUserId),
       likes: [],
@@ -59,8 +57,8 @@ export const createComment = async (
     };
 
     return {
-      insertCommentResponse: plainify(insertCommentResponse.acknowledged),
-      newCommentWithUserInfo: plainify(newCommentWithUserInfo),
+      response: plainify(insertCommentResponse.acknowledged),
+      newComment: plainify(newCommentWithUserInfo),
     };
   } catch (err) {
     console.error('Error creating comment:', err);

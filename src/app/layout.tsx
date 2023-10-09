@@ -5,6 +5,7 @@ import * as React from 'react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { getPosts } from '@/actions/getPosts';
+import { getUserByEmail } from '@/actions/getUserByEmail';
 import { getUsersById } from '@/actions/getUsersById';
 import AuthProvider from '@/providers/auth-provider';
 import HydrateAtoms from '@/providers/hydrate-atoms';
@@ -12,6 +13,7 @@ import JotaiProvider from '@/providers/jotai-provider';
 import ThemeProvider from '@/providers/theme-provider';
 import { connectToDatabase } from '@/util/connectToDatabase';
 import generateMockUsersAndPosts from '@/util/generateMockUserAndPosts';
+import { getServerSession } from 'next-auth';
 import { Toaster } from 'sonner';
 
 import Navbar from '@/components/navbar/navbar';
@@ -36,6 +38,12 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  const session = await getServerSession();
+
+  let currentSignedInUser = null;
+  if (session && session?.user?.email) {
+    currentSignedInUser = await getUserByEmail(session.user.email);
+  }
   const { userCollection, postCollection, commentCollection, accountCollection } = await connectToDatabase();
 
   // await userCollection.deleteMany({});
@@ -74,7 +82,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <AuthProvider>
           <JotaiProvider>
             <ThemeProvider>
-              <HydrateAtoms posts={initialPosts} authors={uniqueAuthors}>
+              <HydrateAtoms posts={initialPosts} authors={uniqueAuthors} currentUser={currentSignedInUser}>
                 <Toaster
                   position='top-center'
                   offset={20}

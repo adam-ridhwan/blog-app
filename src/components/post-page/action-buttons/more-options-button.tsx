@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { FC, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { postsAtom } from '@/providers/hydrate-atoms';
+import { currentUserAtom, postsAtom } from '@/providers/hydrate-atoms';
 import { DELETE_LIKES } from '@/util/constants';
 import { useAtom, useSetAtom } from 'jotai';
 import { MoreHorizontal } from 'lucide-react';
@@ -23,15 +23,14 @@ import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
 import { totalLikeCountAtom, userLikeCountAtom } from '@/components/post-page/action-buttons/like-button';
 import { ActionButtonRequestBody } from '@/app/api/post/route';
 
-type MoreOptionsButtonProps = {
-  currentSignedInUser: User;
-};
+type MoreOptionsButtonProps = {};
 
-const MoreOptionsButton: FC<MoreOptionsButtonProps> = ({ currentSignedInUser }) => {
+const MoreOptionsButton: FC<MoreOptionsButtonProps> = () => {
   const { data: session } = useSession();
   const pathname = usePathname();
   const [_, postId] = pathname.split('/').slice(1);
 
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
   const [posts, setPosts] = useAtom(postsAtom);
   const [totalLikeCount, setTotalLikeCount] = useAtom(totalLikeCountAtom);
   const [userLikeCount, setUserLikeCount] = useAtom(userLikeCountAtom);
@@ -45,32 +44,28 @@ const MoreOptionsButton: FC<MoreOptionsButtonProps> = ({ currentSignedInUser }) 
 
     const { signal } = new AbortController();
 
-    if (!currentSignedInUser) throw new Error('User not found');
-
-    const userId = currentSignedInUser._id;
-
-    if (!postId || !userId) throw new Error('ID not found');
+    if (!currentUser || !currentUser._id) throw new Error('User not found');
 
     const body: ActionButtonRequestBody = {
       actionId: DELETE_LIKES,
       postId,
-      userId: userId.toString(),
+      userId: currentUser._id.toString(),
     };
 
-    const deletedPostLikesResponse = await fetch('/api/post', {
+    const { response } = await fetch('/api/post', {
       signal,
       method: 'POST',
       body: JSON.stringify(body),
-    });
+    }).then(res => res.json());
 
-    if (!deletedPostLikesResponse.ok) throw new Error('Could not delete likes');
+    if (!response) throw new Error('Could not delete likes');
 
     setTotalLikeCount(totalLikeCount - userLikeCount);
     setUserLikeCount(0);
     setPosts(
       posts.map(post => {
         return post._id === postId
-          ? { ...post, likes: post.likes.filter(id => id !== userId) }
+          ? { ...post, likes: post.likes.filter(id => id !== currentUser._id) }
           : post;
       })
     ); // prettier-ignore

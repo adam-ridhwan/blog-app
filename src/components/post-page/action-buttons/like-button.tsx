@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { FC, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { postsAtom } from '@/providers/hydrate-atoms';
+import { currentUserAtom, postsAtom } from '@/providers/hydrate-atoms';
 import { cn } from '@/util/cn';
 import { LIKE } from '@/util/constants';
 import { useRenderCount } from '@uidotdev/usehooks';
@@ -21,9 +21,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
 import { ActionButtonRequestBody } from '@/app/api/post/route';
 
-type LikeButtonProps = {
-  currentSignedInUser: User;
-};
+type LikeButtonProps = {};
 
 const DEBOUNCE_DURATION = 300;
 const TRANSITION_DELAY = 300;
@@ -31,12 +29,13 @@ const TRANSITION_DELAY = 300;
 export const totalLikeCountAtom = atom(0);
 export const userLikeCountAtom = atom(0);
 
-const LikeButton: FC<LikeButtonProps> = ({ currentSignedInUser }) => {
+const LikeButton: FC<LikeButtonProps> = () => {
   const pathname = usePathname();
   const [_, postId] = pathname.split('/').slice(1);
 
   const { data: session } = useSession();
 
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
   const [posts, setPosts] = useAtom(postsAtom);
   const [totalLikeCount, setTotalLikeCount] = useAtom(totalLikeCountAtom);
   const [userLikeCount, setUserLikeCount] = useAtom(userLikeCountAtom);
@@ -69,12 +68,13 @@ const LikeButton: FC<LikeButtonProps> = ({ currentSignedInUser }) => {
       if (!likes) throw new Error('Likes not found');
 
       const validatedLikes = z.array(z.string()).safeParse(likes);
+
       if (!validatedLikes.success) {
         return;
       }
 
       setTotalLikeCount(validatedLikes.data.length);
-      setUserLikeCount(validatedLikes.data.filter(id => id.toString() === currentSignedInUser._id).length);
+      setUserLikeCount(validatedLikes.data.filter(id => id.toString() === currentUser?._id).length);
     })();
   });
 
@@ -143,9 +143,9 @@ const LikeButton: FC<LikeButtonProps> = ({ currentSignedInUser }) => {
   const addLikeCountToDatabase = async (totalLikeCount: number) => {
     const { signal } = new AbortController();
 
-    if (!currentSignedInUser) throw new Error('User not found');
+    if (!currentUser) throw new Error('User not found');
 
-    const userId = currentSignedInUser._id;
+    const userId = currentUser._id;
     if (!userId) throw new Error('ID not found');
 
     const body: ActionButtonRequestBody = {

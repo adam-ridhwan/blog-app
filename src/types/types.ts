@@ -30,7 +30,7 @@ export type Category = {
 const commentSchema = z.object({
   _id: mongoIdSchema.optional(),
   createdAt: z.date().or(z.string()),
-  response: z.string(),
+  comment: z.string(),
   userId: mongoIdSchema,
   postId: mongoIdSchema,
   likes: z.array(mongoIdSchema),
