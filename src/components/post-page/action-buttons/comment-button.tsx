@@ -45,7 +45,6 @@ const EMPTY_COMMENT = '<p><br></p>';
 const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
   const pathname = usePathname();
   const [username, postId] = pathname.split('/').slice(1);
-  const { data: session } = useSession();
   const { width } = useViewportSize();
 
   const [isPending, startTransition] = useTransition();
@@ -336,7 +335,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
             <div className='flex flex-col gap-5'>
               {commentsWithUserInfo.map(comment => (
                 <div key={comment._id?.toString()} className='flex flex-col gap-3'>
-                  <Link href={`${comment.username}`} className='flex flex-row items-center gap-2'>
+                  <Link href={`/${comment.username}`} className='flex flex-row items-center gap-2'>
                     <Avatar className='h-10 w-10'>
                       <AvatarFallback className='text-primary'>{comment.name?.split('')[0]}</AvatarFallback>
                     </Avatar>

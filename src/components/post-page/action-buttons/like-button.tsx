@@ -46,6 +46,7 @@ const LikeButton: FC<LikeButtonProps> = () => {
   const [isHeartPopoverOpen, setIsHeartPopoverOpen] = useState(false);
   const [isLikeCountPopoverOpen, setIsLikeCountPopoverOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
   // TODO: Implement pulse animation for toast like
   // const [shouldPulse, setShouldPulse] = useState(false);
@@ -81,6 +82,7 @@ const LikeButton: FC<LikeButtonProps> = () => {
         method: 'POST',
         body: JSON.stringify({ postId }),
       }).then(res => res.json());
+
       if (!likes) throw new Error('Likes not found');
 
       const validatedLikes = z.array(z.string()).safeParse(likes);
@@ -91,6 +93,7 @@ const LikeButton: FC<LikeButtonProps> = () => {
 
       setTotalLikeCount(validatedLikes.data.length);
       setUserLikeCount(validatedLikes.data.filter(id => id.toString() === currentUser?._id).length);
+      setIsFetching(false);
     })();
   });
 
@@ -239,10 +242,10 @@ const LikeButton: FC<LikeButtonProps> = () => {
                 variant='text'
                 onClick={handleLikeClick}
                 className='relative p-0'
-                // disabled={isLoading}
+                disabled={isFetching}
                 {...attrs}
               >
-                {userLikeCount > 0 ? (
+                {userLikeCount > 0 && !isFetching ? (
                   <Heart className='h-5 w-5 fill-primary/80 stroke-muted/80 stroke-2 opacity-60 transition-opacity duration-100 hover:opacity-100' />
                 ) : (
                   <Heart className='h-5 w-5 fill-none stroke-muted/80 stroke-2 transition-colors duration-100 hover:stroke-primary' />
@@ -275,7 +278,7 @@ const LikeButton: FC<LikeButtonProps> = () => {
             <TooltipTrigger asChild>
               <Button variant='text' className='relative ml-1 p-0'>
                 <span className='min-w-[20px] text-left text-muted/80 transition-colors duration-100 hover:text-primary'>
-                  {totalLikeCount}
+                  {isFetching ? '--' : totalLikeCount}
                 </span>
               </Button>
             </TooltipTrigger>

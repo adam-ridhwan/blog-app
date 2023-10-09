@@ -16,9 +16,9 @@ const Draft = () => {
 
         <CardFooter>
           <Link
-            href='/'
+            href={'/write-a-post'}
             className='flex h-[40px] w-full items-center justify-center rounded-full border border-border
-                bg-transparent text-muted underline-offset-4 hover:underline'
+                bg-transparent text-sm font-medium text-muted hover:text-primary'
           >
             Continue editing
           </Link>

@@ -87,6 +87,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         response: response.acknowledged,
+        // response: false,
         likes: plainify(likes),
       },
       { status: 200 }

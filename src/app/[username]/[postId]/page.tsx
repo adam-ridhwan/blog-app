@@ -3,15 +3,11 @@ import { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getComments } from '@/actions/getComments';
 import { getPostInformation } from '@/actions/getPostInformation';
-import { getUserByEmail } from '@/actions/getUserByEmail';
 import { formatDate } from '@/util/formatDate';
-import { getServerSession } from 'next-auth';
 import sanitizeHtml from 'sanitize-html';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Skeleton } from '@/components/ui/skeleton';
 import CommentButton from '@/components/post-page/action-buttons/comment-button';
 import LikeButton from '@/components/post-page/action-buttons/like-button';
 import MoreOptionsButton from '@/components/post-page/action-buttons/more-options-button';
@@ -47,7 +43,7 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
             <h2 className='text-balance subtitle text-muted'>{mainPost?.subtitle}</h2>
 
             <div className='mb-3 flex flex-row items-center gap-3'>
-              <Link href={`${username}`} className='flex flex-row items-center gap-2'>
+              <Link href={`/${username}`} className='flex flex-row items-center gap-2'>
                 <Avatar className='h-12 w-12'>
                   {image ? (
                     <Image src={image} alt='' />
