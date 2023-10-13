@@ -27,6 +27,16 @@ export type Category = {
   posts: MongoId[];
 };
 
+const replySchema = z.object({
+  _id: mongoIdSchema.optional(),
+  createdAt: z.date().or(z.string()),
+  reply: z.string(),
+  commentId: mongoIdSchema,
+  userId: mongoIdSchema,
+  likes: z.array(mongoIdSchema),
+});
+export type Reply = z.infer<typeof replySchema>;
+
 const commentSchema = z.object({
   _id: mongoIdSchema.optional(),
   createdAt: z.date().or(z.string()),
@@ -34,8 +44,20 @@ const commentSchema = z.object({
   userId: mongoIdSchema,
   postId: mongoIdSchema,
   likes: z.array(mongoIdSchema),
+  replies: z.array(mongoIdSchema),
 });
 export type Comment = z.infer<typeof commentSchema>;
+
+const commentSchemaDTO = z.object({
+  _id: mongoIdSchema.optional(),
+  createdAt: z.date().or(z.string()),
+  comment: z.string(),
+  userId: mongoIdSchema,
+  postId: mongoIdSchema,
+  likes: z.array(mongoIdSchema),
+  replies: z.array(replySchema),
+});
+export type CommentDTO = z.infer<typeof commentSchemaDTO>;
 
 const postSchema = z.object({
   _id: mongoIdSchema.optional(),
@@ -77,7 +99,9 @@ const partialUserSchema = userSchema.pick({
   followers: true,
 });
 export const commentWithUserInfoSchema = commentSchema.merge(partialUserSchema);
+export const commentWithUserInfoDTOSchema = commentSchemaDTO.merge(partialUserSchema);
 export type CommentWithUserInfo = z.infer<typeof commentWithUserInfoSchema>;
+export type CommentWithUserInfoDTO = z.infer<typeof commentWithUserInfoDTOSchema>;
 
 export type AuthorDetails = Pick<User, '_id' | 'name' | 'username' | 'image'> & {
   followerCount?: number;

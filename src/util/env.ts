@@ -9,6 +9,7 @@ const env = cleanEnv(process.env, {
   ACCOUNT_COLLECTION: str(),
   CATEGORY_COLLECTION: str(),
   COMMENT_COLLECTION: str(),
+  REPLY_COLLECTION: str(),
   POST_COLLECTION: str(),
   SESSION_COLLECTION: str(),
   USER_COLLECTION: str(),

@@ -53,6 +53,6 @@ export async function getPostInformation(username: string, postId: string): Prom
     };
   } catch (error) {
     console.error('Error getting post information:', error);
-    throw new Error('Error occurred while fetching post information');
+    // throw new Error('Error occurred while fetching post information');
   }
 }

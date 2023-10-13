@@ -44,12 +44,14 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   if (session && session?.user?.email) {
     currentSignedInUser = await getUserByEmail(session.user.email);
   }
-  const { userCollection, postCollection, commentCollection, accountCollection } = await connectToDatabase();
+  const { userCollection, postCollection, commentCollection, accountCollection, replyCollection } =
+    await connectToDatabase();
 
   // await userCollection.deleteMany({});
   // await postCollection.deleteMany({});
   // await commentCollection.deleteMany({});
   // await accountCollection.deleteMany({});
+  // await replyCollection.deleteMany({});
   // await generateMockUsersAndPosts();
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────

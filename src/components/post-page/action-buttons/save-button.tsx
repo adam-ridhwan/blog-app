@@ -4,7 +4,7 @@ import * as React from 'react';
 import { FC, useState, useTransition } from 'react';
 import { usePathname } from 'next/navigation';
 import { currentUserAtom } from '@/providers/hydrate-atoms';
-import { DELETE_SAVED_POST, SAVE } from '@/util/constants';
+import { DELETE_SAVED_POST, SAVE_POST } from '@/util/constants';
 import { useAtom } from 'jotai';
 import { useSetAtom } from 'jotai/index';
 import { Bookmark } from 'lucide-react';
@@ -30,7 +30,7 @@ const SaveButton: FC<SaveButtonProps> = () => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
-   * SAVE POST
+   * SAVE_POST POST
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   const handleSavePost = () => {
     if (!currentUser) return setIsSignInDialogOpen(true);
@@ -44,7 +44,7 @@ const SaveButton: FC<SaveButtonProps> = () => {
       if (!currentUser || !currentUser._id) throw new Error('User not found');
 
       const body: ActionButtonRequestBody = {
-        actionId: SAVE,
+        actionId: SAVE_POST,
         postId,
         userId: currentUser?._id.toString(),
       };

@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { currentUserAtom, postsAtom } from '@/providers/hydrate-atoms';
 import { cn } from '@/util/cn';
-import { COMMENT, MD } from '@/util/constants';
+import { COMMENT_POST, MD } from '@/util/constants';
 import { delay } from '@/util/delay';
 import { formatDate } from '@/util/formatDate';
 import { useLocalStorage, useViewportSize } from '@mantine/hooks';
@@ -21,13 +21,15 @@ import sanitizeHtml from 'sanitize-html';
 import { useEffectOnce } from 'usehooks-ts';
 import { z } from 'zod';
 
-import { CommentWithUserInfo, Post } from '@/types/types';
+import { CommentWithUserInfo, CommentWithUserInfoDTO, mongoIdSchema, Post } from '@/types/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { isSignInDialogOpenAtom } from '@/components/navbar/navbar';
+import CommentList from '@/components/post-page/action-buttons/comment-list';
+import Reply from '@/components/post-page/action-buttons/reply';
 import { ActionButtonRequestBody } from '@/app/api/post/route';
 
 const Delta = Quill.import('delta');
@@ -56,7 +58,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
 
   const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
   const [posts, setPosts] = useAtom(postsAtom);
-  const [commentsWithUserInfo, setCommentsWithUserInfo] = useState<CommentWithUserInfo[]>([]);
+  const [commentsWithUserInfo, setCommentsWithUserInfo] = useState<CommentWithUserInfoDTO[]>([]);
 
   /*
    * Get the number of comments from the global postsAtom OR commentsWithUserInfo
@@ -81,6 +83,9 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
   const expandInput = () => setIsInputExpanded(true);
   const collapseInput = () => setIsInputExpanded(false);
 
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * FETCH COMMENTS WITH USER INFO
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
   useEffectOnce(() => {
     (async () => {
       const { comments } = await fetch(`/api/comments`, {
@@ -101,6 +106,16 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
         image: z.string().optional(),
         posts: z.array(z.string()),
         followers: z.array(z.string()),
+        replies: z.array(
+          z.object({
+            _id: z.string(),
+            createdAt: z.date().or(z.string()),
+            reply: z.string(),
+            commentId: z.string(),
+            userId: z.string(),
+            likes: z.array(z.string()),
+          })
+        ),
       });
 
       const validatedComments = z.array(commentSchema).safeParse(comments);
@@ -137,7 +152,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
   };
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
-   * CANCEL POSTING COMMENT
+   * CANCEL POSTING COMMENT_POST
    * @summary
    * Blurs quill editor, collapses input, and resets comment
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
@@ -151,7 +166,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
   };
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
-   * POSTING COMMENT
+   * POSTING COMMENT_POST
    * @summary
    * Sanitizes comment and posts to database
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
@@ -165,7 +180,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
       if (!userId) throw new Error('ID not found');
 
       const body: ActionButtonRequestBody = {
-        actionId: COMMENT,
+        actionId: COMMENT_POST,
         postId,
         userId: userId.toString(),
         comment: sanitizeHtml(commentLocalStorage),
@@ -330,53 +345,7 @@ const CommentButton: FC<CommentButtonProps> = ({ mainPost }) => {
 
         <Separator />
 
-        <div className='my-5 '>
-          {numberOfComments ? (
-            <div className='flex flex-col gap-5'>
-              {commentsWithUserInfo.map(comment => (
-                <div key={comment._id?.toString()} className='flex flex-col gap-3'>
-                  <Link href={`/${comment.username}`} className='flex flex-row items-center gap-2'>
-                    <Avatar className='h-10 w-10'>
-                      <AvatarFallback className='text-primary'>{comment.name?.split('')[0]}</AvatarFallback>
-                    </Avatar>
-
-                    <div className='flex flex-col'>
-                      <span className='font-bold text-primary'>{comment.name}</span>
-                      <div className='flex flex-row items-center gap-2'>
-                        <span className='text-muted'>{formatDate(comment.createdAt.toString())}</span>
-                      </div>
-                    </div>
-                  </Link>
-
-                  <div
-                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(comment.comment) }}
-                    className={cn(`text-primary`)}
-                  />
-
-                  <div className='flex flex-row items-center justify-between'>
-                    <Button variant='text' className='flex flex-row items-center gap-2 p-0'>
-                      {comment.likes.length !== 0 ? (
-                        <Heart className='h-5 w-5 fill-primary/80 stroke-none stroke-2 opacity-60 transition-opacity duration-100 hover:opacity-100' />
-                      ) : (
-                        <Heart className='h-5 w-5 fill-none stroke-muted/80 stroke-2 transition-colors duration-100 hover:stroke-primary' />
-                      )}
-                      <span>{comment.likes.length}</span>
-                    </Button>
-
-                    <Button variant='text'>Reply</Button>
-                  </div>
-
-                  <Separator />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className='text flex flex-col items-center whitespace-nowrap italic'>
-              <span className='text-center text-muted'>There are currently no responses for this post.</span>
-              <span className='text-muted'>Be the first to respond.</span>
-            </div>
-          )}
-        </div>
+        <CommentList numberOfComments={numberOfComments} commentsWithUserInfo={commentsWithUserInfo} />
       </div>
     </>
   );

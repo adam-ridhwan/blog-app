@@ -185,7 +185,7 @@ const Publish = () => {
                 <DialogDescription className='mt-20 text-2xl text-primary'>
                   Publishing to <b>Adam Ridhwan</b>
                 </DialogDescription>
-                <DialogDescription className='mb-2 text-lg'>Add a category</DialogDescription>
+                {/*<DialogDescription className='mb-2 text-lg'>Add a category</DialogDescription>*/}
               </div>
 
               <Button type='submit' variant='accent' className='w-max'>

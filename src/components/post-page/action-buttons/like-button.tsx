@@ -5,7 +5,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { currentUserAtom, postsAtom } from '@/providers/hydrate-atoms';
 import { cn } from '@/util/cn';
-import { LIKE } from '@/util/constants';
+import { LIKE_POST } from '@/util/constants';
 import { delay } from '@/util/delay';
 import { useLongPress } from '@uidotdev/usehooks';
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -110,7 +110,7 @@ const LikeButton: FC<LikeButtonProps> = () => {
   });
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
-   * HANDLE DEBOUNCED LIKE CLICK
+   * HANDLE DEBOUNCED LIKE_POST CLICK
    * @summary
    * This function is called when the user clicks the like button.
    * It uses a debounce implementation to prevent multiple clicks within a short time, causing spammed
@@ -154,7 +154,7 @@ const LikeButton: FC<LikeButtonProps> = () => {
   };
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
-   * ADD LIKE COUNT TO DATABASE
+   * ADD LIKE_POST COUNT TO DATABASE
    * @param totalLikeCount The number of likes to add to the database
    * @summary
    * This function is called when the debounce window has ended.
@@ -169,7 +169,7 @@ const LikeButton: FC<LikeButtonProps> = () => {
     if (!userId) throw new Error('ID not found');
 
     const body: ActionButtonRequestBody = {
-      actionId: LIKE,
+      actionId: LIKE_POST,
       postId,
       userId: userId.toString(),
       totalLikeCount,

@@ -22,7 +22,7 @@ const MorePostsList: FC<MorePostsProps> = ({
     <>
       <div className='w-full flex-1 bg-foreground pb-[100px] pt-[50px] text-primary'>
         <div className='container flex max-w-[750px] flex-col gap-[20px]'>
-          <Link href={`${decodeURIComponent(username)}`} className='flex flex-row items-end justify-between'>
+          <Link href={`/${decodeURIComponent(username)}`} className='flex flex-row items-end justify-between'>
             <Avatar className='h-20 w-20'>
               {image ? (
                 <Image src={image} alt='' />

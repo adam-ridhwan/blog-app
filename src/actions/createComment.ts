@@ -28,6 +28,7 @@ export const createComment = async (
       postId: new ObjectId(postId),
       userId: new ObjectId(currentUserId),
       likes: [],
+      replies: [],
     };
 
     const insertCommentResponse = await commentCollection.insertOne(comment);

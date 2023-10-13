@@ -9,18 +9,26 @@ import { deleteSavedPost } from '@/actions/deleteSavedPost';
 import { getComments } from '@/actions/getComments';
 import { getPost } from '@/actions/getPost';
 import { connectToDatabase } from '@/util/connectToDatabase';
-import { COMMENT, DELETE_LIKES, DELETE_SAVED_POST, GET, LIKE, SAVE, SHARE } from '@/util/constants';
+import {
+  COMMENT_POST,
+  DELETE_LIKES,
+  DELETE_SAVED_POST,
+  GET,
+  LIKE_POST,
+  REPLY_COMMENT,
+  SAVE_POST,
+} from '@/util/constants';
 import { plainify } from '@/util/plainify';
 import { ObjectId } from 'mongodb';
 
 export type Action =
   | typeof GET
-  | typeof LIKE
-  | typeof COMMENT
-  | typeof SAVE
-  | typeof SHARE
+  | typeof LIKE_POST
+  | typeof COMMENT_POST
+  | typeof SAVE_POST
   | typeof DELETE_LIKES
-  | typeof DELETE_SAVED_POST;
+  | typeof DELETE_SAVED_POST
+  | typeof REPLY_COMMENT;
 
 export type ActionButtonRequestBody = {
   actionId: Action;
@@ -41,9 +49,9 @@ export async function POST(request: NextRequest) {
   if (!fetchedPost) return NextResponse.json({ 'Bad request': 'No posts found' }, { status: 400 });
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
-   * LIKE
+   * LIKE_POST
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  if (actionId === LIKE) {
+  if (actionId === LIKE_POST) {
     if (!totalLikeCount) return NextResponse.json({ 'Bad request': 'No like count' }, { status: 400 });
 
     // Get the current number of likes by this user on the post
@@ -95,9 +103,9 @@ export async function POST(request: NextRequest) {
   }
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
-   * COMMENT
+   * COMMENT_POST
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  if (actionId === COMMENT) {
+  if (actionId === COMMENT_POST) {
     const { response, newComment } = await createComment(postId, userId, comment);
 
     return NextResponse.json({ response, newComment }, { status: 200 });
@@ -113,9 +121,9 @@ export async function POST(request: NextRequest) {
   }
 
   /** ────────────────────────────────────────────────────────────────────────────────────────────────────
-   * SAVE
+   * SAVE_POST
    * ────────────────────────────────────────────────────────────────────────────────────────────────── */
-  if (actionId === SAVE) {
+  if (actionId === SAVE_POST) {
     const { response } = await addSavePost(postId, userId);
 
     return NextResponse.json({ response }, { status: 200 });
@@ -128,6 +136,13 @@ export async function POST(request: NextRequest) {
     const { response } = await deleteSavedPost(postId, userId);
 
     return NextResponse.json({ response }, { status: 200 });
+  }
+
+  /** ────────────────────────────────────────────────────────────────────────────────────────────────────
+   * REPLY COMMENT
+   * ────────────────────────────────────────────────────────────────────────────────────────────────── */
+  if (actionId === REPLY_COMMENT) {
+    console.log('REPLY_COMMENT');
   }
 
   return NextResponse.json({ success: 'Route api/post' }, { status: 200 });
