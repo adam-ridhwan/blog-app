@@ -7,7 +7,7 @@ export async function getAccount(userId: ObjectId | string | undefined, provider
   try {
     const { accountCollection } = await connectToDatabase();
 
-    const existingAccount = accountCollection.findOne({ userId, provider });
+    const existingAccount = accountCollection.findOne({ userId: new ObjectId(userId), provider });
 
     return !existingAccount ? null : existingAccount;
   } catch (error) {
