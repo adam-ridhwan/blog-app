@@ -28,20 +28,20 @@ const modules = {
   toolbar: [['bold', 'italic', 'underline', 'strike']],
 };
 
-type ReplyProps = {
+type Props = {
   comment: CommentWithUserInfoDTO;
 };
 
 const EMPTY_COMMENT = '<p><br></p>';
 
-const Reply: FC<ReplyProps> = ({ comment }) => {
+const Reply: FC<Props> = ({ comment }) => {
   const pathname = usePathname();
   const [_, postId] = pathname.split('/').slice(1);
   const [isPending, startTransition] = useTransition();
 
   const currentUser = useAtomValue(currentUserAtom);
 
-  const [isReplayBoxOpen, setIsReplayBoxOpen] = useState(false);
+  const [isReplyBoxOpen, setIsReplyBoxOpen] = useState(false);
 
   const quillRef = useRef<ReactQuill | null>(null);
 
@@ -82,7 +82,7 @@ const Reply: FC<ReplyProps> = ({ comment }) => {
         const quill = quillRef.current.getEditor();
         quill.blur();
         setCommentLocalStorage(EMPTY_COMMENT);
-        setIsReplayBoxOpen(false);
+        setIsReplyBoxOpen(false);
 
         // Need to update the global postsAtom and commentsAtom for client-side rendering
         // setPosts(
@@ -98,7 +98,7 @@ const Reply: FC<ReplyProps> = ({ comment }) => {
   };
 
   const handleCancelReply = () => {
-    setIsReplayBoxOpen(false);
+    setIsReplyBoxOpen(false);
     removeCommentLocalStorage();
   };
 
@@ -143,7 +143,7 @@ const Reply: FC<ReplyProps> = ({ comment }) => {
           <span>{comment.likes.length}</span>
         </Button>
 
-        <Button variant='text' onClick={() => setIsReplayBoxOpen(prev => !prev)}>
+        <Button variant='text' onClick={() => setIsReplyBoxOpen(prev => !prev)}>
           Reply
         </Button>
       </div>
@@ -151,8 +151,8 @@ const Reply: FC<ReplyProps> = ({ comment }) => {
       <div className='ml-2 border-l-4 border-l-muted/10'>
         <div
           className={cn('ml-6 flex-col rounded-lg p-5 pb-4 shadow-md', {
-            hidden: !isReplayBoxOpen,
-            flex: isReplayBoxOpen,
+            hidden: !isReplyBoxOpen,
+            flex: isReplyBoxOpen,
           })}
         >
           <ReactQuill

@@ -42,39 +42,39 @@ const CommentList: FC<CommentListProps> = ({ numberOfComments, commentsWithUserI
                 />
 
                 <div className='mb-4'>
-                  <Reply comment={comment} />
+                  {/*<Reply comment={comment} />*/}
 
-                  <div>
-                    {comment.replies.map((reply: ReplyType) => {
-                      return (
-                        <div key={reply?._id?.toString()} className='m ml-2 border-l-4 border-l-muted/10'>
-                          <div className='ml-6 flex flex-col gap-3 rounded-lg py-5'>
-                            <Link href={`/${comment.username}`} className='flex flex-row items-center gap-2'>
-                              <Avatar className='h-10 w-10'>
-                                <AvatarFallback className='text-primary'>
-                                  {comment.name?.split('')[0]}
-                                </AvatarFallback>
-                              </Avatar>
+                  {/*<div>*/}
+                  {/*  {comment.replies.map((reply: ReplyType) => {*/}
+                  {/*    return (*/}
+                  {/*      <div key={reply?._id?.toString()} className='m ml-2 border-l-4 border-l-muted/10'>*/}
+                  {/*        <div className='ml-6 flex flex-col gap-3 rounded-lg py-5'>*/}
+                  {/*          <Link href={`/${comment.username}`} className='flex flex-row items-center gap-2'>*/}
+                  {/*            <Avatar className='h-10 w-10'>*/}
+                  {/*              <AvatarFallback className='text-primary'>*/}
+                  {/*                {comment.name?.split('')[0]}*/}
+                  {/*              </AvatarFallback>*/}
+                  {/*            </Avatar>*/}
 
-                              <div className='flex flex-col'>
-                                <span className='font-bold text-primary'>{comment.name}</span>
-                                <div className='flex flex-row items-center gap-2'>
-                                  <span className='text-muted'>
-                                    {formatDate(comment.createdAt.toString())}
-                                  </span>
-                                </div>
-                              </div>
-                            </Link>
+                  {/*            <div className='flex flex-col'>*/}
+                  {/*              <span className='font-bold text-primary'>{comment.name}</span>*/}
+                  {/*              <div className='flex flex-row items-center gap-2'>*/}
+                  {/*                <span className='text-muted'>*/}
+                  {/*                  {formatDate(comment.createdAt.toString())}*/}
+                  {/*                </span>*/}
+                  {/*              </div>*/}
+                  {/*            </div>*/}
+                  {/*          </Link>*/}
 
-                            <div
-                              dangerouslySetInnerHTML={{ __html: sanitizeHtml(reply.reply) }}
-                              className={cn(`text-primary`)}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  {/*          <div*/}
+                  {/*            dangerouslySetInnerHTML={{ __html: sanitizeHtml(reply.reply) }}*/}
+                  {/*            className={cn(`text-primary`)}*/}
+                  {/*          />*/}
+                  {/*        </div>*/}
+                  {/*      </div>*/}
+                  {/*    );*/}
+                  {/*  })}*/}
+                  {/*</div>*/}
                 </div>
 
                 <Separator />
