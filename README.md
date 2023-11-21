@@ -104,14 +104,14 @@ roadblocks. I almost wanted to quit trying to implement this feature but I could
 properly for a few days. However, I kept going and finally implemented this feature successfully with no
 bugs!
 
-#### So how does it work?
-
 <br/>
 
 https://github.com/adam-ridhwan/pondero/assets/76563028/fc751f95-9353-40bb-b742-0ce0a4651f42
 
 <br/>
 <br/>
+
+#### So how does it work?
 
 1) Well, first I rendered the first 5 posts from the server and sent it over to the
    client
