@@ -260,13 +260,17 @@ https://github.com/adam-ridhwan/pondero/assets/76563028/44a1da7a-fb91-4fda-bf44-
 
 ## Roadmap
 
+I still have a lot to do on this project, so here is a list of what I am going to do: -
+
 - [x] ~~Create posts page~~
 - [x] ~~Create individual post page~~
 - [x] ~~Create writing page~~
 - [x] ~~Authentication using NextAuth with Google, GitHub, Facebook providers~~
 - [x] ~~Allow users to post a blog to home page~~
 - [x] ~~Implement sticky sidebar~~
-- [x] Allow image uploads as thumbnail
+- [ ] Fix slight jump of sidebar when scrolling up
+- [ ] Allow users to upload profile picture or just profile picture from providers.
+- [ ] Allow image uploads as thumbnail
 - [ ] Allow users to like a comment
 - [ ] Allow users to delete a post
 - [ ] Allow users to delete a comment
