@@ -230,7 +230,7 @@ are all CRUD operations that persists the values and information in the database
 <br/>
 <div align="center">
 
-https://github.com/adam-ridhwan/pondero/assets/76563028/44a1da7a-fb91-4fda-bf44-36108dcde04c
+https://github.com/adam-ridhwan/pondero/assets/76563028/7ea87393-05ba-4700-8b18-8f2d9f96e595
 
 </div>
 <br/>
@@ -249,6 +249,14 @@ scrolling up. This will make it so that the user will always have access to the 
 navigate to trending posts, see other users, etc.
 
 <br/>
+<div align="center">
+
+https://github.com/adam-ridhwan/pondero/assets/76563028/44a1da7a-fb91-4fda-bf44-36108dcde04c
+
+</div>
+<br/>
+<br/>
+
 
 ## Roadmap
 
