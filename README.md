@@ -80,7 +80,7 @@ Google/GitHub/Facebook providers.
 <br/>
 <div align="center">
 
-https://github.com/adam-ridhwan/pondero/assets/76563028/a0f21736-e4c4-479c-b7a8-c39da196b63b
+https://github.com/adam-ridhwan/pondero/assets/76563028/2a5278c6-f753-48fc-a008-14a7dda25b45
 
 </div>
 <br/>
@@ -93,9 +93,11 @@ loading skeleton in between navigation for better user experience. The loading s
 indication that the posts is loading, while the data is being fetched from the database.
 
 <br/>
+<div align="center">
 
-https://github.com/adam-ridhwan/pondero/assets/76563028/4ba96cb3-7722-461d-9e94-ce28deeafc04
+https://github.com/adam-ridhwan/pondero/assets/76563028/ff060236-305b-4a37-b9ea-ac673880d5c4
 
+</div>
 <br/>
 <br/>
 
@@ -107,9 +109,11 @@ properly for a few days. However, I kept going and finally implemented this feat
 bugs!
 
 <br/>
+<div align="center">
 
-https://github.com/adam-ridhwan/pondero/assets/76563028/fc751f95-9353-40bb-b742-0ce0a4651f42
+https://github.com/adam-ridhwan/pondero/assets/76563028/5e9a4f2f-70cb-41c7-8f74-ad9f97ce3b1d
 
+</div>
 <br/>
 <br/>
 
@@ -210,9 +214,11 @@ The text styles are as follows: -
 11) Codeblocks
 
 <br/>
+<div align="center">
 
-https://github.com/adam-ridhwan/pondero/assets/76563028/66ee8dfc-660c-4db8-bf26-11e792907ed3
+https://github.com/adam-ridhwan/pondero/assets/76563028/7c06d4ae-aed1-47a4-9d19-20725dd97fb9
 
+</div>
 <br/>
 <br/>
 
@@ -221,10 +227,12 @@ https://github.com/adam-ridhwan/pondero/assets/76563028/66ee8dfc-660c-4db8-bf26-
 Users have the ability to like a post, comment on a post, save a post and share posts using a link. These
 are all CRUD operations that persists the values and information in the database.
 
-<br/> 
+<br/>
+<div align="center">
 
-https://github.com/adam-ridhwan/pondero/assets/76563028/857c1d46-0b4e-412f-a7e9-27917cbc2579
+https://github.com/adam-ridhwan/pondero/assets/76563028/44a1da7a-fb91-4fda-bf44-36108dcde04c
 
+</div>
 <br/>
 <br/>
 
