@@ -78,7 +78,7 @@ Of course, to use the app, you must be signed to use all of the features in the 
 Google/GitHub/Facebook providers.
 
 <br/>
-
+https://github.com/adam-ridhwan/pondero/assets/76563028/362b0cad-2a92-4aa6-b538-263f6b0a2f37
 <br/>
 <br/>
 
@@ -89,7 +89,7 @@ loading skeleton in between navigation for better user experience. The loading s
 indication that the posts is loading, while the data is being fetched from the database.
 
 <br/>
-
+https://github.com/adam-ridhwan/pondero/assets/76563028/4ba96cb3-7722-461d-9e94-ce28deeafc04
 <br/>
 <br/>
 
@@ -101,6 +101,11 @@ properly for a few days. However, I kept going and finally implemented this feat
 bugs!
 
 #### So how does it work?
+
+<br/>
+https://github.com/adam-ridhwan/pondero/assets/76563028/fc751f95-9353-40bb-b742-0ce0a4651f42
+<br/>
+<br/>
 
 1) Well, first I rendered the first 5 posts from the server and sent it over to the
    client
