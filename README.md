@@ -78,9 +78,11 @@ Of course, to use the app, you must be signed to use all of the features in the 
 Google/GitHub/Facebook providers.
 
 <br/>
+<div align="center">
 
-https://github.com/adam-ridhwan/pondero/assets/76563028/362b0cad-2a92-4aa6-b538-263f6b0a2f37
+https://github.com/adam-ridhwan/pondero/assets/76563028/037c5e12-4003-4043-b59d-c73a77831ab8
 
+</div>
 <br/>
 <br/>
 
