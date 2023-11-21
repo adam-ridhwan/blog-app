@@ -74,7 +74,7 @@ Below are some screenshots of how the app works.
 
 ### 1) Signin/Signout
 
-Of course, to use the app, you must be signed to use all of the features in the app, using
+Of course, to use the app, you must be signed in to use all of the features in the app, using
 Google/GitHub/Facebook providers.
 
 <br/>
