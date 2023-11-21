@@ -80,7 +80,7 @@ Google/GitHub/Facebook providers.
 <br/>
 <div align="center">
 
-https://github.com/adam-ridhwan/pondero/assets/76563028/037c5e12-4003-4043-b59d-c73a77831ab8
+https://github.com/adam-ridhwan/pondero/assets/76563028/a0f21736-e4c4-479c-b7a8-c39da196b63b
 
 </div>
 <br/>
